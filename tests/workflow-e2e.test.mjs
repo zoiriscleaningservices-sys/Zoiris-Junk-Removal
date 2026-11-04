@@ -533,8 +533,10 @@ describe('End-to-End Customer & Owner Command Center Workflows (Playwright)', ()
     await page.waitForSelector('#settings-form');
 
     await page.click('a[data-route="/owner/security/"]');
-    await page.waitForSelector('.cc-table');
+    await page.waitForSelector('#sec-pw-form');
     const secText = await page.locator('#cc-workspace').textContent();
+    assert.match(secText, /Devices signed in/);
+    assert.match(secText, /Logged in from/);
     assert.match(secText, /lead\.status_changed/);
     assert.match(secText, /customer\.merged/);
     assert.match(secText, /location\.coverage_updated/);
