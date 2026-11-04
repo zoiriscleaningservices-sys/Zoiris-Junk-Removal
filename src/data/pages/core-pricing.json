@@ -1,0 +1,36 @@
+{
+  "id": "core-pricing",
+  "type": "core",
+  "path": "/pricing/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Junk Removal Pricing & Estimates in Mobile, AL | Zoiris",
+    "description": "How Zoiris prices junk removal and electronics pickup in Mobile, AL: what affects your estimate and how to get an accurate quote quickly.",
+    "h1": "Pricing & Estimates",
+    "primaryKeyword": "junk removal cost Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "commercial",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Pricing & Estimates",
+    "parentId": "core-home"
+  },
+  "purpose": "Transparent explanation of quote factors without inventing prices.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

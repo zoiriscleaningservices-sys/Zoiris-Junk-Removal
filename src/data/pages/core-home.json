@@ -1,0 +1,37 @@
+{
+  "id": "core-home",
+  "type": "core",
+  "path": "/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Zoiris Junk Removal | Junk & E-Waste Pickup in Mobile, AL",
+    "description": "Zoiris Junk Removal hauls away unwanted furniture, appliances, and household junk, and picks up qualifying electronics for homes and businesses in Mobile, AL.",
+    "h1": "Junk Gone. Electronics Handled Responsibly.",
+    "primaryKeyword": "Zoiris Junk Removal",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "WebSite",
+      "LocalBusiness"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Home",
+    "parentId": null
+  },
+  "purpose": "Brand homepage: explains what Zoiris removes, where it works, and how to call or request a pickup.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

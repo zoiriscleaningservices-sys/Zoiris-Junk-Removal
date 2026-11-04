@@ -1,0 +1,17 @@
+{
+  "name": "Zoiris Command Center",
+  "short_name": "Zoiris",
+  "description": "Private owner app for Zoiris Junk Removal — requests, map, schedule and photos.",
+  "start_url": "/owner/command-center/",
+  "scope": "/owner/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1522",
+  "theme_color": "#0e1a2b",
+  "icons": [
+    { "src": "/owner/assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/owner/assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/owner/assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/owner/assets/logo-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

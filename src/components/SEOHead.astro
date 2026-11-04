@@ -1,0 +1,60 @@
+---
+/**
+ * Per-page <head> metadata: title, description, canonical, robots, Open Graph,
+ * Twitter cards, JSON-LD, favicons, and font preload.
+ */
+import { absoluteUrl } from '../lib/format.ts';
+import { integrations } from '../config/integrations.ts';
+import { business } from '../lib/data.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  robots: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  jsonLd?: string;
+}
+
+const { title, description, path, robots, ogTitle, ogDescription, ogImage, ogType = 'website', jsonLd } = Astro.props;
+const site = (Astro.site?.toString() ?? business.website).replace(/\/+$/, '');
+const canonical = absoluteUrl(site, path);
+const image = absoluteUrl(site, ogImage ?? '/brand/og-default.jpg');
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={robots} />
+<meta name="theme-color" content="#0e1a2b" />
+<meta name="format-detection" content="telephone=no" />
+
+<link rel="preload" href="/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+<meta property="og:site_name" content={business.name} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={ogTitle ?? title} />
+<meta property="og:description" content={ogDescription ?? description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={`${business.name} — junk removal and electronics pickup in Mobile, Alabama`} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={ogTitle ?? title} />
+<meta name="twitter:description" content={ogDescription ?? description} />
+<meta name="twitter:image" content={image} />
+
+{integrations.searchConsole.verification && <meta name="google-site-verification" content={integrations.searchConsole.verification} />}
+{jsonLd && <script type="application/ld+json" is:inline set:html={jsonLd} />}

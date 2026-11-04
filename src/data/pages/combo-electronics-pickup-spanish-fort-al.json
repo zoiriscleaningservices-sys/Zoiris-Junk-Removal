@@ -1,0 +1,42 @@
+{
+  "id": "combo-electronics-pickup-spanish-fort-al",
+  "type": "combo",
+  "path": "/areas/spanish-fort-al/electronics-pickup/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "electronics-pickup",
+    "locationId": "spanish-fort-al",
+    "countyId": "baldwin-county-al"
+  },
+  "seo": {
+    "title": "Electronics & E-Waste Pickup in Spanish Fort, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Electronics & E-Waste Pickup in Spanish Fort, AL",
+    "primaryKeyword": "electronics pickup Spanish Fort AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Electronics & E-Waste Pickup in Spanish Fort, AL",
+    "parentId": "loc-spanish-fort-al"
+  },
+  "purpose": "Eastern Shore residential and commercial electronics pickup candidate across the I-10 Bayway.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Eastern Shore residential and commercial electronics pickup candidate across the I-10 Bayway. Blocked from publishing until parent Baldwin County city coverage is activated by owner.",
+    "ownerVerification": [
+      "Activate coverage for this municipality in Zoiris Command Center.",
+      "Author page-specific local copy and FAQs before editorial approval."
+    ]
+  }
+}

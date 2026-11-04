@@ -1,0 +1,77 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import Icon from '../../components/Icon.astro';
+import { getPage, liveServicePages } from '../../lib/data.ts';
+
+const page = getPage('core-services');
+const flagship = getPage('svc-junk-removal-mobile-al');
+const junk = liveServicePages('junk').filter((x) => x.service.id !== 'junk-removal');
+const ewaste = liveServicePages('ewaste');
+const groups = [
+  { title: 'Junk removal', intro: 'Pickup of specific items and general household or business junk.', items: junk.filter((x) => ['core', 'removal'].includes(x.service.group)) },
+  { title: 'Cleanouts', intro: 'Clearing a space — a garage, a home, a unit, or an office.', items: junk.filter((x) => x.service.group === 'cleanout') },
+  { title: 'Debris hauling', intro: 'Non-hazardous materials left over from projects.', items: junk.filter((x) => x.service.group === 'debris') }
+];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Services" lead="Everything Zoiris picks up and hauls away in Mobile, Alabama — for homes, rentals, and businesses. Choose a service to see what's included, how pickup works, and how to prepare." illustration={null} />
+
+  <section class="section section--tight">
+    <div class="container">
+      <a class="card card--link" href={flagship.path} style="text-decoration:none;color:inherit;flex-direction:row;align-items:center;gap:1.25rem;flex-wrap:wrap">
+        <span class="card__icon card__icon--orange"><Icon name="truck" /></span>
+        <span style="flex:1 1 280px">
+          <strong style="font-size:1.2rem;display:block">Junk Removal in Mobile, AL</strong>
+          <span style="color:var(--ink-soft)">Not sure which service fits? Start with our main junk removal page.</span>
+        </span>
+        <span class="card__more">Start here <Icon name="arrow-right" /></span>
+      </a>
+    </div>
+  </section>
+
+  {
+    groups.map((g, i) => (
+      <section class:list={['section', 'section--tight', { 'section--sand': i % 2 === 0 }]} aria-labelledby={`grp-${i}`}>
+        <div class="container">
+          <div class="section-head">
+            <h2 id={`grp-${i}`}>{g.title}</h2>
+            <p>{g.intro}</p>
+          </div>
+          <div class="grid grid--3">
+            {g.items.map(({ service, page: p }) => (
+              <ServiceCard href={p.path} title={service.name} body={service.summary} icon={service.icon} />
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="section section--navy" aria-labelledby="grp-ew">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Electronics &amp; e-waste</p>
+        <h2 id="grp-ew">Electronics pickup</h2>
+        <p>Computers, screens, printers, phones, and IT equipment — handled separately from general junk.</p>
+      </div>
+      <div class="grid grid--3">
+        {ewaste.map(({ service, page: p }) => <ServiceCard href={p.path} title={service.name} body={service.summary} icon={service.icon} dark />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container--narrow">
+      <div class="notice">
+        <Icon name="info" />
+        <p>We only list services we can stand behind. Demolition, dumpster rental, and hazardous-waste handling are not offered. If you need something not listed here, call and ask — we will tell you honestly.</p>
+      </div>
+    </div>
+  </section>
+
+  <CTABand location="services-index" />
+</MainLayout>

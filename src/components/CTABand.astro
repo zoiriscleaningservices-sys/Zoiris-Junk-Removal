@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import { business } from '../lib/data.ts';
+interface Props {
+  title?: string;
+  body?: string;
+  location?: string;
+}
+const {
+  title = 'Ready to clear it out?',
+  body = 'Tell us what needs to go. We will confirm the details and an estimate before anything is scheduled.',
+  location = 'cta-band'
+} = Astro.props;
+---
+
+<section class="section section--tight" aria-labelledby={`cta-${location}`}>
+  <div class="container">
+    <div class="cta-band">
+      <div>
+        <h2 id={`cta-${location}`}>{title}</h2>
+        <p>{body}</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--primary btn--lg" href={business.phoneHref} data-track="call" data-track-location={location}><Icon name="call" /> Call {business.phoneDisplay}</a>
+        <a class="btn btn--ghost btn--lg" href="/request-pickup/" data-track="cta" data-track-location={location}>Request a Pickup</a>
+      </div>
+    </div>
+  </div>
+</section>

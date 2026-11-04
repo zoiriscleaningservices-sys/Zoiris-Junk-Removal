@@ -1,0 +1,40 @@
+{
+  "id": "svc-hot-tub-removal",
+  "type": "service",
+  "path": "/services/hot-tub-removal/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "hot-tub-removal",
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Hot Tub Removal in Mobile, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Hot Tub Removal in Mobile, AL",
+    "primaryKeyword": "hot tub removal Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Hot Tub Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Brief lists hot tub removal \"if offered\". Owner must confirm before any copy is written.",
+    "ownerVerification": [
+      "Confirm whether Zoiris offers hot tub removal."
+    ]
+  }
+}

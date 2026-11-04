@@ -1,0 +1,47 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { business, getPage } from '../lib/data.ts';
+
+const page = getPage('core-request-pickup');
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Request a pickup" lead="Four quick steps, about two minutes. Tell us what's going, snap a photo, pick your address — we'll call or text to confirm an estimate before anything is scheduled." illustration={null} ctas={false} />
+
+  <section class="section">
+    <div class="container content-layout">
+      <div>
+        <h2 class="sr-only">Pickup request form</h2>
+        <QuoteForm id="pickup-request" />
+      </div>
+      <aside class="content-aside" aria-label="What to expect">
+        <div class="cta-card">
+          <h2>Prefer to talk?</h2>
+          <p>Calling is often the fastest way to get an estimate.</p>
+          <a class="cta-card__phone" href={business.phoneHref} data-track="call" data-track-location="request-aside">{business.phoneDisplay}</a>
+          <a class="btn btn--primary" href={business.phoneHref} data-track="call" data-track-location="request-aside-btn"><Icon name="call" /> Call Now</a>
+        </div>
+        <div class="aside-links">
+          <h2>What happens next</h2>
+          <ol style="padding-left:1.2rem;margin:0">
+            <li>We review what you've described.</li>
+            <li>We contact you to ask any questions and confirm an estimate.</li>
+            <li>Once you agree, we confirm a pickup window together.</li>
+          </ol>
+        </div>
+        <div class="aside-links">
+          <h2>Helpful before you send</h2>
+          <ul>
+            <li><a href="/accepted-items/">Check accepted items</a></li>
+            <li><a href="/restricted-items/">Items we can't take</a></li>
+            <li><a href="/pricing/">How estimates work</a></li>
+            <li><a href="/guides/prepare-computer-for-recycling/">Wipe a computer first</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+</MainLayout>

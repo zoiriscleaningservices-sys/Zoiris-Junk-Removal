@@ -1,0 +1,42 @@
+{
+  "id": "combo-junk-removal-fairhope-al",
+  "type": "combo",
+  "path": "/areas/fairhope-al/junk-removal/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "junk-removal",
+    "locationId": "fairhope-al",
+    "countyId": "baldwin-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal in Fairhope, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Junk Removal in Fairhope, AL",
+    "primaryKeyword": "junk removal service Fairhope AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Junk Removal in Fairhope, AL",
+    "parentId": "loc-fairhope-al"
+  },
+  "purpose": "Eastern Shore hauling candidate addressing loads above Fairhope’s 2.5 cu yd curbside cap.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Eastern Shore hauling candidate addressing loads above Fairhope’s 2.5 cu yd curbside cap. Blocked from publishing until parent Baldwin County city coverage is activated by owner.",
+    "ownerVerification": [
+      "Activate coverage for this municipality in Zoiris Command Center.",
+      "Author page-specific local copy and FAQs before editorial approval."
+    ]
+  }
+}

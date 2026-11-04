@@ -1,0 +1,35 @@
+{
+  "id": "guide-office-electronics-removal",
+  "type": "article",
+  "path": "/guides/office-electronics-removal/",
+  "status": "idea",
+  "refs": {},
+  "seo": {
+    "title": "How Office Electronics Can Be Removed | Zoiris",
+    "description": "",
+    "h1": "How Office Electronics Can Be Removed",
+    "primaryKeyword": "how to dispose of office electronics",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Article",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "How Office Electronics Can Be Removed",
+    "parentId": "core-guides"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Overlaps with /e-waste/office-electronics-pickup/ (same intent). Recommendation: do not create; strengthen the e-waste page.",
+    "ownerVerification": []
+  }
+}

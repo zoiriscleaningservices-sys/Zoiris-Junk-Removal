@@ -1,0 +1,68 @@
+{
+  "id": "nb-west-mobile",
+  "type": "neighborhood",
+  "path": "/areas/mobile-al/west-mobile/",
+  "status": "research",
+  "refs": {
+    "neighborhoodId": "west-mobile",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste Pickup in West Mobile | Zoiris",
+    "description": "Planning for residential and commercial junk removal and electronics pickup across West Mobile (36608, 36609, 36695) inside Mobile corporate limits.",
+    "h1": "Junk Removal & Electronics Pickup in West Mobile",
+    "primaryKeyword": "junk removal West Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "West Mobile",
+    "parentId": "loc-mobile-al"
+  },
+  "purpose": "Neighborhood hub for West Mobile inside Mobile city limits: clarify corporate-limit vs. unincorporated 36695/36608 boundary nuances, apartment and garage cleanout access, and e-waste pickup options.",
+  "related": [
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Neighborhood page requires at least two pieces of first-party local evidence (completed jobs with permission, photos, access notes) before drafting. No invented local details.",
+    "ownerVerification": [
+      "Supply real completed jobs or photos from West Mobile (with customer permission)."
+    ]
+  },
+  "content": {
+    "eyebrow": "Mobile Neighborhood Research Draft",
+    "lead": "West Mobile spans single-family subdivisions, apartment communities, and retail corridors along Airport Blvd, Schillinger Rd, Hillcrest Rd, Cottage Hill Rd, and Grelot Rd. Because the western municipal boundary weaves around unincorporated Mobile County pockets that also carry 36608 and 36695 mailing addresses, street-level address confirmation is always step one.",
+    "quickAnswer": {
+      "question": "Is West Mobile inside Zoiris Junk Removal's service area?",
+      "answer": "Addresses inside City of Mobile corporate limits in West Mobile are served by Zoiris Junk Removal; this dedicated neighborhood page remains unindexed until first-party neighborhood project notes are finalized."
+    },
+    "faqs": [
+      {
+        "q": "How do I verify whether my West Mobile street address is inside Mobile city limits?",
+        "a": "Share your street address and ZIP code when requesting a pickup or calling 251-930-8621 and we will confirm coverage before scheduling."
+      },
+      {
+        "q": "Do City of Mobile trash rules apply in West Mobile?",
+        "a": "Inside corporate limits, City residential trash runs every other week up to 2 cubic yards and excludes electronics, TVs, Freon appliances, and commercial business materials."
+      },
+      {
+        "q": "What should I mention when requesting a pickup here?",
+        "a": "Let us know about narrow driveways, low oak limbs, stairs, alleys, or building loading rules so the crew plans truck staging accurately."
+      }
+    ],
+    "areaNote": "Research draft — excluded from search indexing until owner verification and 2+ first-party local evidence entries are recorded."
+  }
+}

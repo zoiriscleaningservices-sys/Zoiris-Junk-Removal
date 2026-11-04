@@ -1,0 +1,117 @@
+---
+/**
+ * Layout for educational guides.
+ */
+import MainLayout from './MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQ from '../components/FAQ.astro';
+import ContactAside from '../components/ContactAside.astro';
+import CTABand from '../components/CTABand.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { business, data } from '../lib/data.ts';
+import { relatedPages } from '../lib/internal-links.ts';
+import { articleNode } from '../lib/schema.ts';
+import { inlineToHtml, slugify } from '../lib/format.ts';
+
+interface Props {
+  page: PageRecord;
+}
+const { page } = Astro.props;
+const site = (Astro.site?.toString() ?? business.website).replace(/\/+$/, '');
+const c = page.content!;
+const related = relatedPages(page, data.pages);
+const reviewed = c.article?.lastReviewed;
+const reviewedLabel = reviewed ? new Date(`${reviewed}T12:00:00Z`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) : null;
+const html = inlineToHtml;
+---
+
+<MainLayout page={page} schema={[articleNode(page, site)]} ogType="article">
+  <PageHero page={page} ctas={false}>
+    <p class="meta-line">
+      {reviewedLabel && <>Last reviewed <time datetime={reviewed}>{reviewedLabel}</time></>}
+      {c.article?.readingMinutes && <> · {c.article.readingMinutes} min read</>}
+    </p>
+  </PageHero>
+
+  <section class="section">
+    <div class="container content-layout">
+      <article class="content-main prose">
+        {
+          c.sections && c.sections.length > 3 && (
+            <nav aria-labelledby="toc-title" class="aside-links" style="margin:0 0 2rem">
+              <h2 id="toc-title">In this guide</h2>
+              <ol>
+                {c.sections.map((s) => (
+                  <li>
+                    <a href={`#${slugify(s.heading).slice(0, 60)}`}>{s.heading}</a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )
+        }
+        {
+          c.sections?.map((s) => (
+            <section aria-labelledby={slugify(s.heading).slice(0, 60)}>
+              <h2 id={slugify(s.heading).slice(0, 60)}>{s.heading}</h2>
+              {s.body.map((p) => (
+                <p set:html={html(p)} />
+              ))}
+              {s.bullets && (
+                <ul class="checklist">
+                  {s.bullets.map((b) => (
+                    <li set:html={html(b)} />
+                  ))}
+                </ul>
+              )}
+              {s.subsections?.map((sub) => (
+                <>
+                  <h3>{sub.heading}</h3>
+                  {sub.body.map((p) => (
+                    <p set:html={html(p)} />
+                  ))}
+                  {sub.bullets && (
+                    <ul>
+                      {sub.bullets.map((b) => (
+                        <li set:html={html(b)} />
+                      ))}
+                    </ul>
+                  )}
+                </>
+              ))}
+            </section>
+          ))
+        }
+        {
+          c.faqs.length > 0 && (
+            <section aria-labelledby="faqs">
+              <h2 id="faqs">Common questions</h2>
+              <FAQ faqs={c.faqs} />
+            </section>
+          )
+        }
+        {
+          c.article?.sources?.length ? (
+            <section aria-labelledby="sources" class="sources">
+              <h2 id="sources">Sources</h2>
+              <p>Checked on {reviewedLabel}. Rules and programs change — confirm with the source before you go.</p>
+              <ul>
+                {c.article.sources.map((s) => (
+                  <li>
+                    <a href={s.url} rel="noopener" target="_blank">
+                      {s.label}
+                      <span class="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null
+        }
+      </article>
+      <ContactAside related={related} />
+    </div>
+  </section>
+
+  <CTABand title="Rather have someone else haul it?" body="Zoiris picks up household junk and qualifying electronics in Mobile, Alabama. Tell us what you have and we will confirm before scheduling." location={`cta-${page.id}`} />
+</MainLayout>

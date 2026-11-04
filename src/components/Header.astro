@@ -1,0 +1,251 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { business, data, getPage, liveServicePages } from '../lib/data.ts';
+import { isBuilt } from '../lib/page-quality.ts';
+
+interface Props {
+  currentPath: string;
+}
+const { currentPath } = Astro.props;
+
+const junk = liveServicePages('junk').filter((x) => x.service.showInNav);
+const ewaste = liveServicePages('ewaste').filter((x) => x.service.showInNav && x.service.id !== 'electronics-pickup');
+const opt = (id: string) => {
+  const p = data.pages.find((x) => x.id === id);
+  return p && isBuilt(p) ? p : null;
+};
+const ewasteHub = getPage('ew-electronics-pickup');
+const flagship = getPage('svc-junk-removal-mobile-al');
+
+const company = [
+  { id: 'core-about', label: 'About Zoiris', icon: 'info' },
+  { id: 'core-faq', label: 'FAQs', icon: 'clipboard' },
+  { id: 'core-accepted-items', label: 'Accepted Items', icon: 'check-circle' },
+  { id: 'core-restricted-items', label: 'Restricted Items', icon: 'warning' },
+  { id: 'core-responsible-disposal', label: 'Responsible Disposal', icon: 'recycle' },
+  { id: 'core-guides', label: 'Guides', icon: 'sparkle' },
+  { id: 'core-contact', label: 'Contact', icon: 'mail' }
+]
+  .map((c) => ({ ...c, page: opt(c.id) }))
+  .filter((c) => c.page);
+
+const isCurrent = (path: string) => (currentPath === path ? 'page' : undefined);
+---
+
+<div class="topbar">
+  <div class="container topbar__inner">
+    <p class="topbar__msg"><span class="topbar__dot" aria-hidden="true"></span> Junk removal &amp; electronics pickup in Mobile, AL</p>
+    <div class="topbar__links">
+      <a href={business.phoneHref} data-track="call" data-track-location="topbar">Call {business.phoneDisplay}</a>
+    </div>
+  </div>
+</div>
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <Logo />
+
+    <nav class="nav" aria-label="Main">
+      <ul class="nav__list">
+        <li class="nav__item" data-dropdown>
+          <button class="nav__trigger" type="button" aria-expanded="false" aria-controls="menu-junk">
+            Junk Removal <Icon name="chevron-down" />
+          </button>
+          <div class="nav__panel" id="menu-junk">
+            <ul class="nav__panel-grid">
+              <li><a href={flagship.path}><Icon name="truck" /> Junk Removal in Mobile</a></li>
+              {junk.map(({ service, page }) => <li><a href={page.path} aria-current={isCurrent(page.path)}><Icon name={service.icon} /> {service.name}</a></li>)}
+            </ul>
+            <div class="nav__panel-foot">
+              <span>Homes, rentals, and businesses</span>
+              <a href="/services/" class="text-link">All services <Icon name="arrow-right" /></a>
+            </div>
+          </div>
+        </li>
+        <li class="nav__item" data-dropdown>
+          <button class="nav__trigger" type="button" aria-expanded="false" aria-controls="menu-ewaste">
+            Electronics &amp; E-Waste <Icon name="chevron-down" />
+          </button>
+          <div class="nav__panel" id="menu-ewaste">
+            <ul class="nav__panel-grid">
+              <li><a href={ewasteHub.path}><Icon name="chip" /> Electronics Pickup</a></li>
+              {ewaste.map(({ service, page }) => <li><a href={page.path} aria-current={isCurrent(page.path)}><Icon name={service.icon} /> {service.name}</a></li>)}
+              <li><a href="/accepted-items/"><Icon name="check-circle" /> Accepted Items</a></li>
+            </ul>
+            <div class="nav__panel-foot">
+              <span>Batteries need special care</span>
+              <a href="/restricted-items/" class="text-link">What we can't take <Icon name="arrow-right" /></a>
+            </div>
+          </div>
+        </li>
+        <li><a class="nav__link" href="/areas/" aria-current={isCurrent('/areas/')}>Service Areas</a></li>
+        <li><a class="nav__link" href="/how-it-works/" aria-current={isCurrent('/how-it-works/')}>How It Works</a></li>
+        <li><a class="nav__link" href="/pricing/" aria-current={isCurrent('/pricing/')}>Pricing</a></li>
+        <li class="nav__item" data-dropdown>
+          <button class="nav__trigger" type="button" aria-expanded="false" aria-controls="menu-company">
+            Company <Icon name="chevron-down" />
+          </button>
+          <div class="nav__panel" id="menu-company" style="width:min(440px,90vw)">
+            <ul class="nav__panel-grid">
+              {company.map((c) => <li><a href={c.page!.path} aria-current={isCurrent(c.page!.path)}><Icon name={c.icon} /> {c.label}</a></li>)}
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-cta">
+      <a class="header-phone" href={business.phoneHref} data-track="call" data-track-location="header">
+        <small>Call or text</small>
+        <span>{business.phoneDisplay}</span>
+      </a>
+      <a class="btn btn--primary btn--sm header-request" href="/request-pickup/" data-track="cta" data-track-location="header">Request Pickup</a>
+      <a class="btn btn--teal btn--sm header-call-mobile" href={business.phoneHref} data-track="call" data-track-location="header-mobile" aria-label={`Call Zoiris at ${business.phoneDisplay}`}>
+        <Icon name="call" /><span>Call</span>
+      </a>
+    </div>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
+      <span class="sr-only" data-menu-label>Open menu</span>
+      <Icon name="menu" class="menu-icon-open" />
+      <Icon name="close" class="menu-icon-close" />
+    </button>
+  </div>
+
+  <div class="mobile-nav" id="mobile-nav" data-mobile-nav>
+    <nav aria-label="Mobile">
+      <div class="mobile-nav__group">
+        <h2>Junk Removal</h2>
+        <ul>
+          <li><a href={flagship.path}>Junk Removal in Mobile</a></li>
+          {junk.map(({ service, page }) => <li><a href={page.path}>{service.name}</a></li>)}
+          <li><a href="/services/">All services</a></li>
+        </ul>
+      </div>
+      <div class="mobile-nav__group">
+        <h2>Electronics &amp; E-Waste</h2>
+        <ul>
+          <li><a href={ewasteHub.path}>Electronics Pickup</a></li>
+          {ewaste.map(({ service, page }) => <li><a href={page.path}>{service.name}</a></li>)}
+          <li><a href="/accepted-items/">Accepted Items</a></li>
+        </ul>
+      </div>
+      <div class="mobile-nav__group">
+        <h2>Company</h2>
+        <ul>
+          <li><a href="/areas/">Service Areas</a></li>
+          <li><a href="/how-it-works/">How It Works</a></li>
+          <li><a href="/pricing/">Pricing &amp; Estimates</a></li>
+          {company.map((c) => <li><a href={c.page!.path}>{c.label}</a></li>)}
+        </ul>
+      </div>
+      <div class="mobile-nav__cta">
+        <a class="btn btn--primary btn--lg" href="/request-pickup/">Request a Pickup</a>
+        <a class="btn btn--outline btn--lg" href={business.phoneHref} data-track="call" data-track-location="mobile-menu"><Icon name="call" /> Call {business.phoneDisplay}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header-call-mobile {
+    display: none;
+  }
+  @media (max-width: 1199px) {
+    .header-call-mobile {
+      display: inline-flex;
+    }
+  }
+  @media (max-width: 767px) {
+    .header-request {
+      display: none !important;
+    }
+  }
+  @media (hover: hover) and (min-width: 1200px) {
+    .nav__item:hover > .nav__panel {
+      display: block;
+    }
+    .nav__panel::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -12px;
+      height: 12px;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-mobile-nav]');
+  const label = document.querySelector<HTMLElement>('[data-menu-label]');
+
+  // Header shadow once the page scrolls.
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      header?.toggleAttribute('data-scrolled', window.scrollY > 8);
+      ticking = false;
+    });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Desktop disclosure dropdowns.
+  const dropdowns = Array.from(document.querySelectorAll<HTMLElement>('[data-dropdown]'));
+  const closeAll = (except?: HTMLElement) => {
+    dropdowns.forEach((d) => {
+      if (d === except) return;
+      d.classList.remove('nav__item--open');
+      d.querySelector('button')?.setAttribute('aria-expanded', 'false');
+    });
+  };
+  dropdowns.forEach((d) => {
+    const btn = d.querySelector('button');
+    btn?.addEventListener('click', () => {
+      const open = !d.classList.contains('nav__item--open');
+      closeAll(d);
+      d.classList.toggle('nav__item--open', open);
+      btn.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('[data-dropdown]')) closeAll();
+  });
+
+  // Mobile menu.
+  const setMenu = (open: boolean) => {
+    if (!toggle || !panel) return;
+    const top = header ? header.getBoundingClientRect().bottom : 112;
+    panel.style.setProperty('--mobile-nav-top', `${Math.max(0, top)}px`);
+    panel.toggleAttribute('data-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    if (label) label.textContent = open ? 'Close menu' : 'Open menu';
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  };
+  toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  panel?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) setMenu(false);
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1200) setMenu(false);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const openDropdown = dropdowns.find((d) => d.classList.contains('nav__item--open'));
+    if (openDropdown) {
+      closeAll();
+      openDropdown.querySelector('button')?.focus();
+    }
+    if (toggle?.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+</script>

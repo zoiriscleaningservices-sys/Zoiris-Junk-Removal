@@ -1,0 +1,126 @@
+{
+  "id": "svc-commercial-junk-removal",
+  "type": "service",
+  "path": "/services/commercial-junk-removal/",
+  "status": "published",
+  "refs": { "serviceId": "commercial-junk-removal", "itemIds": ["office-furniture", "file-cabinets", "retail-fixtures", "boxes-clutter", "desktop-computers", "flat-monitors", "printers", "copiers"], "locationId": "mobile-al", "customerType": "commercial" },
+  "seo": {
+    "title": "Commercial Junk Removal in Mobile, AL | Zoiris",
+    "description": "Business junk removal in Mobile, AL for offices, shops, and property managers. We plan around your hours and building rules, then haul it all away.",
+    "h1": "Commercial Junk Removal in Mobile, AL",
+    "primaryKeyword": "commercial junk removal Mobile",
+    "secondaryKeywords": ["business junk removal Mobile AL", "business junk pickup Mobile", "office junk hauling Mobile", "property manager junk removal Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Commercial Junk Removal in Mobile, AL — Zoiris",
+    "ogDescription": "Junk hauling for offices, shops, and rental properties in Mobile, Alabama — planned around your operations.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Commercial Junk Removal", "parentId": "core-services" },
+  "purpose": "Serve Mobile business owners, office managers, and property managers who need unwanted furniture, fixtures, equipment, and clutter removed from a commercial space with minimal disruption.",
+  "content": {
+    "eyebrow": "For Businesses",
+    "lead": "Zoiris Junk Removal hauls unwanted furniture, equipment, and clutter away from businesses in Mobile, Alabama. Offices, shops, and property managers bring us in when a storeroom overflows, a suite is vacated, or old equipment has to go. We plan the pickup around how your business runs, then clear the space and take everything with us.",
+    "quickAnswer": {
+      "question": "Can you remove junk from our business without disrupting the workday?",
+      "answer": "We plan commercial pickups around your operations. When you book, tell us your business hours, any building rules, how we reach the space (elevator, loading door, back entrance), and who will meet the crew. We confirm an estimate and a pickup window that works for both sides before anything is scheduled."
+    },
+    "includes": {
+      "heading": "What commercial junk removal covers",
+      "intro": "One crew, one point of contact, and one haul-off for the whole job.",
+      "points": [
+        "Clearing back offices, storerooms, break rooms, and sales floors of unwanted items.",
+        "Taking apart desks, workstations, and freestanding shelving that won't fit through a door in one piece.",
+        "Hauling office electronics on the same load, with data responsibility staying with your business.",
+        "Coordinating with a single on-site contact so staff aren't pulled away from their work."
+      ]
+    },
+    "items": {
+      "heading": "What businesses ask us to remove",
+      "intro": "Typical commercial loads include:",
+      "list": [
+        "Desks, office chairs, conference tables, and cubicle panels",
+        "Emptied filing cabinets and storage cabinets",
+        "Shelving units and store displays — call to confirm quantity",
+        "Boxes of old marketing materials, packaging, and storeroom overflow",
+        "Computers, monitors, and printers — see [office electronics pickup](/e-waste/office-electronics-pickup/)",
+        "Floor-standing copiers — call to confirm, and check your lease first"
+      ],
+      "itemIds": ["office-furniture", "file-cabinets", "retail-fixtures", "boxes-clutter", "desktop-computers", "flat-monitors", "printers", "copiers"]
+    },
+    "audience": {
+      "heading": "Who uses commercial junk removal",
+      "body": [
+        "**Offices** replacing furniture, consolidating floors, or moving out of a suite. Larger office projects are covered on our [office cleanouts](/services/office-cleanouts/) page.",
+        "**Shops and service businesses** clearing a back room, swapping out displays, or getting rid of worn equipment and old stock packaging.",
+        "**Landlords and property managers** dealing with items a tenant left behind or prepping a unit between leases. See [property cleanouts](/services/property-cleanouts/) for turnover work."
+      ]
+    },
+    "process": {
+      "heading": "How a business pickup runs",
+      "steps": [
+        { "title": "Scope the job", "body": "Send a list of what's going, approximate quantities, and photos of the space through our [pickup request](/request-pickup/) form. Note any building rules or restricted hours." },
+        { "title": "Agree on access and timing", "body": "We confirm an estimate and a pickup window, plus who will meet the crew, where to park, and which entrance to use." },
+        { "title": "The crew clears the space", "body": "Items are carried out from desks, storerooms, and back offices to the truck, with walkways kept clear for your staff and customers." },
+        { "title": "Haul-off", "body": "Materials are separated for reuse or recycling where practical options exist, and the remainder is taken for disposal." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects commercial pricing",
+      "intro": "Business jobs vary widely in size, so each one is estimated individually. Main factors:",
+      "factors": [
+        "Total quantity and how much truck space it takes",
+        "Disassembly time for workstations, cubicles, or shelving",
+        "Building access — elevators, loading doors, and distance from parking to the space",
+        "Electronics or equipment that need separate handling",
+        "Whether the job needs more than one truckload"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare your workplace",
+      "tips": [
+        "Remove files and paperwork from cabinets and desks. We don't provide document shredding.",
+        "Wipe or pull drives from computers and multifunction printers before pickup, and return leased copiers or rented ISP equipment to their owners.",
+        "Tag what's leaving with colored tape or a printed list so nothing that stays gets loaded by mistake.",
+        "Reserve the freight elevator or loading area with building management if your property requires it.",
+        "Name one on-site contact who can answer questions and sign off when the space is clear."
+      ]
+    },
+    "restrictions": {
+      "heading": "Commercial items that need a conversation",
+      "body": "Some business materials can't go in a standard junk load, or need to be confirmed first:",
+      "list": [
+        "Cleaning concentrates, paints, solvents, and other chemicals",
+        "Medical waste and sharps from clinics or treatment rooms",
+        "UPS battery backups — special handling, so call first",
+        "Leased equipment, which normally goes back to the leasing company",
+        "Data destruction and document shredding are not services we offer"
+      ]
+    },
+    "faqs": [
+      { "q": "Can you take apart and remove cubicles?", "a": "Yes. Cubicle panels and workstations usually need disassembly time, so tell us how many there are and what system they're from. Large floor-wide jobs are covered on our [office cleanouts](/services/office-cleanouts/) page." },
+      { "q": "Do you remove shelving and displays from a shop?", "a": "Store shelving and displays are call to confirm. Let us know the type and quantity — for example, how many gondola runs — so we can confirm before scheduling." },
+      { "q": "Do you shred documents or destroy hard drives?", "a": "No. We don't provide document shredding or data destruction. Please remove files and clear or remove drives before pickup. Our guide on [preparing a computer for recycling](/guides/prepare-computer-for-recycling/) can help." },
+      { "q": "A tenant left furniture and junk behind. Can you clear it?", "a": "Yes. Property managers and landlords call us for exactly this. Tell us the unit size and roughly what's inside. Our [property cleanouts](/services/property-cleanouts/) page explains turnover jobs in more detail." },
+      { "q": "Can old office computers and printers go with the furniture?", "a": "Yes, on the same truck. See [office electronics pickup](/e-waste/office-electronics-pickup/) for servers, network gear, and larger quantities of IT equipment." }
+    ],
+    "areaNote": "Commercial pickups are available for businesses within the City of Mobile. If your location is outside city limits, call first so we can confirm.",
+    "illustration": "commercial"
+  },
+  "related": ["svc-office-cleanouts", "svc-property-cleanouts", "ew-office-electronics-pickup", "ew-printer-copier-removal", "svc-construction-debris-removal", "core-request-pickup"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Retail and warehouse pages are drafts, so they are not linked; shop/storeroom intent covered here generically. No insurance, after-hours, or recurring-service claims.",
+    "ownerVerification": [
+      "Confirm whether pickups outside normal business hours are available (copy only says 'planned around your operations').",
+      "Confirm capacity and policy for store shelving and display fixtures (currently 'call to confirm').",
+      "Confirm whether multi-truckload commercial jobs are accepted.",
+      "Confirm how to respond if a building requests a certificate of insurance (no insurance claim is made on the site).",
+      "Confirm whether recurring or scheduled commercial pickups are offered (not advertised)."
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "core-contact",
+  "type": "core",
+  "path": "/contact/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Contact Zoiris Junk Removal | Call 251-930-8621",
+    "description": "Call or text Zoiris Junk Removal at 251-930-8621, or send a pickup request online. Junk removal and electronics pickup in Mobile, Alabama.",
+    "h1": "Contact Zoiris",
+    "primaryKeyword": "contact Zoiris Junk Removal",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Contact",
+    "parentId": "core-home"
+  },
+  "purpose": "Single place for the phone number, request options, and service-area information.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

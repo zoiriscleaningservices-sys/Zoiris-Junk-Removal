@@ -1,0 +1,65 @@
+---
+/**
+ * Base layout for every public page.
+ */
+import '../styles/global.css';
+import SEOHead from '../components/SEOHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileCallBar from '../components/MobileCallBar.astro';
+import Analytics from '../components/Analytics.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { business, data, robotsFor, PREVIEW, verifiedLocations } from '../lib/data.ts';
+import { breadcrumbTrail } from '../lib/internal-links.ts';
+import { breadcrumbNode, graph, localBusinessNode, organizationNode, websiteNode } from '../lib/schema.ts';
+
+interface Props {
+  page: PageRecord;
+  /** Extra JSON-LD nodes for this page (Service, Article, …). */
+  schema?: Record<string, unknown>[];
+  ogType?: 'website' | 'article';
+  /** Override robots (e.g. 404 page). */
+  robots?: string;
+  /** Emit the LocalBusiness node (home, contact, about, area pages). */
+  localBusiness?: boolean;
+}
+
+const { page, schema = [], ogType = 'website', robots, localBusiness = false } = Astro.props;
+const site = (Astro.site?.toString() ?? business.website).replace(/\/+$/, '');
+const trail = breadcrumbTrail(page, data.pages);
+const nodes: Record<string, unknown>[] = [organizationNode(business, site), websiteNode(business, site)];
+if (localBusiness) nodes.push(localBusinessNode(business, site, verifiedLocations(), data.services));
+nodes.push(...schema);
+if (page.seo.schemaTypes.includes('BreadcrumbList') && trail.length > 1) nodes.push(breadcrumbNode(trail, site));
+const robotsValue = robots ?? robotsFor(page);
+const isDraftPreview = PREVIEW && !['published', 'noindex'].includes(page.status);
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <SEOHead
+      title={page.seo.title}
+      description={page.seo.description}
+      path={page.path}
+      robots={isDraftPreview ? 'noindex, nofollow' : robotsValue}
+      ogTitle={page.seo.ogTitle}
+      ogDescription={page.seo.ogDescription}
+      ogImage={page.seo.ogImage}
+      ogType={ogType}
+      jsonLd={graph(nodes)}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    {isDraftPreview && <div class="draft-banner" role="note">Draft preview — status "{page.status}". Not published and not indexable.</div>}
+    <Header currentPath={page.path} />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileCallBar />
+    <Analytics />
+  </body>
+</html>

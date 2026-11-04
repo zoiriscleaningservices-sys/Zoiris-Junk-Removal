@@ -1,0 +1,144 @@
+{
+  "id": "ew-tv-monitor-pickup",
+  "type": "ewaste",
+  "path": "/e-waste/tv-monitor-pickup/",
+  "status": "published",
+  "refs": { "serviceId": "tv-monitor-pickup", "itemIds": ["flat-tvs", "flat-monitors", "crt-tvs", "projection-tvs"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "TV Removal in Mobile, AL | TV & Monitor Pickup | Zoiris",
+    "description": "Getting rid of an old TV or monitor in Mobile, AL? Zoiris picks up flat screens and monitors once we confirm type and size. Tube TVs need a call first.",
+    "h1": "TV & Monitor Removal in Mobile, AL",
+    "primaryKeyword": "TV removal Mobile AL",
+    "secondaryKeywords": ["TV disposal Mobile AL", "old TV pickup Mobile", "flat screen TV removal Mobile", "computer monitor recycling Mobile AL", "how to get rid of an old TV in Mobile"],
+    "intent": "transactional",
+    "ogTitle": "TV & Monitor Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Flat-screen TVs and computer monitors carried out and hauled away in Mobile, Alabama. Tell us the type and size so we can confirm.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "TV & Monitor Pickup", "parentId": "ew-electronics-pickup" },
+  "purpose": "Serve people in Mobile trying to get rid of a TV or computer monitor, be honest about which screen types are confirmed first or need owner approval, and explain why TVs are harder to dispose of locally (excluded from City drop-off centers, not allowed on regular trash piles).",
+  "content": {
+    "eyebrow": "E-Waste Pickup",
+    "lead": "Zoiris Junk Removal picks up flat-screen TVs and computer monitors from homes and businesses in Mobile, Alabama. Flat-panel monitors are routine. For TVs, tell us the type and screen size when you call so we can confirm before scheduling. Older tube (CRT) sets and big projection or console TVs need owner approval first, so please call rather than booking those online.",
+    "quickAnswer": {
+      "question": "How do I get rid of an old TV in Mobile, AL?",
+      "answer": "Note the TV's screen size and type — flat panel, tube, or projection — and contact us. Flat screens can usually be picked up once confirmed; tube and projection TVs need owner approval. TVs cannot go to the City of Mobile's electronics drop-off bins, so a pickup is often the simplest route."
+    },
+    "includes": {
+      "heading": "What TV and monitor pickup includes",
+      "intro": "Screens are awkward to carry and easy to crack. We handle them so you do not have to.",
+      "points": [
+        "Carrying TVs and monitors out from living rooms, bedrooms, offices, and garages.",
+        "Keeping screens upright and separated from heavy items while loading, to avoid breaking them in transit.",
+        "Taking the TV stand, sound bar, cables, and remotes (with batteries removed) in the same trip.",
+        "Sorting after pickup so screens can go to appropriate recycling outlets where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Screens we pick up",
+      "intro": "Acceptance depends on the type of screen. Here is where each one stands:",
+      "list": [
+        "Flat-panel computer monitors (LCD and LED) — picked up; mention cracked screens in advance",
+        "Flat-screen TVs (LCD, LED, OLED, plasma) — call to confirm the type and screen size",
+        "Tube (CRT) TVs and monitors — call first; these need owner approval before pickup",
+        "Projection and console TVs — call first; they are large and heavy and need owner approval"
+      ],
+      "itemIds": ["flat-monitors", "flat-tvs", "crt-tvs", "projection-tvs"]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Most TV calls come after an upgrade, when the old set has been leaning against a wall in the garage, or during a move when nobody wants to pack a screen. Families clearing an older home often find a tube TV or two as well — call us about those.",
+        "Offices and conference rooms retiring monitors and wall displays use the same service. For a full workstation refresh, see [office and IT equipment pickup](/e-waste/office-electronics-pickup/)."
+      ]
+    },
+    "process": {
+      "heading": "How TV pickup works",
+      "steps": [
+        { "title": "Check the label", "body": "Look on the back of the TV for the model and screen size, and note whether it is a flat panel, a deep tube set, or a projection cabinet. A photo works too." },
+        { "title": "We confirm before scheduling", "body": "Flat screens are confirmed by type and size. Tube and projection TVs go to the owner for approval, and we tell you plainly whether we can take them." },
+        { "title": "Get it off the wall", "body": "Take a wall-mounted TV down before pickup day, or mention the mount when you call so we can talk through it." },
+        { "title": "Careful carry-out", "body": "Once we confirm an estimate and a pickup window, our crew carries the screen out upright and loads it so it is not crushed." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of TV removal",
+      "intro": "We quote each job individually. The main factors are:",
+      "factors": [
+        "The type of screen — a deep tube TV or projection cabinet takes far more effort than a slim flat panel",
+        "Screen size and weight",
+        "How many screens are going",
+        "Stairs, tight hallways, or long carries",
+        "Whether the TV is part of a larger pickup with furniture or other electronics"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare a TV for pickup",
+      "tips": [
+        "Unplug the TV and disconnect cable boxes, streaming sticks, and game consoles — keep anything you are not getting rid of.",
+        "Return rented cable or satellite boxes to your provider.",
+        "Sign out of streaming apps on a smart TV and use its factory reset option.",
+        "Remove batteries from remotes and set them aside.",
+        "If the screen is cracked, leave it as it is — do not tape over broken glass or try to break it down further — and tell us about it.",
+        "Clear a path from the TV to the door, especially for large or heavy sets."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few TV situations need a conversation first:",
+      "list": [
+        "Tube (CRT) TVs and monitors need owner approval before pickup. Older tube sets contain leaded glass and the downstream option must be confirmed.",
+        "Projection and console TVs need owner approval because of their size and weight.",
+        "Flat-screen TVs are accepted after we confirm the type and size — not as a flat yes over the phone without details.",
+        "Wall mounts attached to the house, and any wiring inside walls, are not part of TV pickup."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Why TVs are harder to get rid of in Mobile",
+        "body": [
+          "The City of Mobile accepts many household electronics at its recycling drop-off centers, but TVs of any kind are not accepted there, and the City asks residents not to leave TVs at those locations ([City of Mobile Recycling](https://www.cityofmobile.gov/public-works/recycling/)).",
+          "TVs also should not go on a regular curbside trash pile. The City's trash rules say electronics, appliances, and other prohibited items should not be placed on the regular pile — if they are, the entire pile will not be picked up. City residents can instead call 311 to place a work order for an electronics pickup ([City of Mobile Trash Collection Rules](https://www.cityofmobile.gov/public-works/trash-collection-rules/)).",
+          "A private pickup is useful when you would rather not move the TV yourself, have several screens, or are clearing other items at the same time. Our guide on [getting rid of an old TV in Mobile](/guides/get-rid-of-old-tv-mobile-al/) compares the options."
+        ]
+      },
+      {
+        "heading": "Flat panel, tube, or projection: how to tell",
+        "body": [
+          "Knowing the type speeds up confirmation. Here is a quick way to identify what you have:"
+        ],
+        "bullets": [
+          "**Flat panel** (LCD, LED, OLED, plasma): only a few inches deep, often on a thin stand or wall mount.",
+          "**Tube (CRT)**: deep and heavy, with a bulging back that is often as deep as the screen is wide. Common in sets from before the mid-2000s.",
+          "**Projection or console**: a large cabinet that sits on the floor, sometimes with built-in speakers or storage."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Do you take old tube TVs?", "a": "Tube (CRT) TVs need owner approval before we can schedule them, so please call first with the screen size and where it sits. We will tell you plainly whether we can take it." },
+      { "q": "Will you take my TV off the wall?", "a": "The simplest approach is to take a wall-mounted TV down yourself before pickup day. If that is not possible, mention it when you call. Removing the mount from the wall itself, or any in-wall wiring, is not part of TV pickup." },
+      { "q": "Can I put my old TV out with my City of Mobile trash?", "a": "No. The City's trash rules say electronics should not be placed on the regular trash pile, and a pile with prohibited items will not be picked up. City residents can call 311 for an electronics pickup work order, or have a private service like ours carry it out." },
+      { "q": "My flat-screen is cracked. Can you still take it?", "a": "Usually, yes — tell us about the crack when you call so we can confirm and plan how to carry it safely. Leave the broken screen as it is rather than trying to tape or break it down." },
+      { "q": "Do you pick up computer monitors?", "a": "Yes. Flat-panel computer monitors are picked up routinely, alone or with computers and printers. Older tube monitors need a call first, like tube TVs." },
+      { "q": "Is there a size limit for TVs?", "a": "Tell us the screen size and type when you call. Large flat screens are confirmed case by case, and big projection or console TVs need owner approval because of their weight." }
+    ],
+    "areaNote": "TV and monitor pickup is available throughout the City of Mobile. If your address is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "electronics"
+  },
+  "related": ["ew-electronics-pickup", "guide-get-rid-of-old-tv-mobile", "ew-computer-recycling", "guide-electronics-drop-off-mobile", "svc-moving-cleanouts", "core-restricted-items"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Flat TVs described as accepted after confirmation; CRT and projection as call first / owner approval, matching items.json. City facts verified 2026-11-04: no TVs at City recycling drop-off (https://www.cityofmobile.gov/public-works/recycling/); electronics not allowed on regular trash pile, 311 work order for electronics pickup (https://www.cityofmobile.gov/public-works/trash-collection-rules/).",
+    "ownerVerification": [
+      "Confirm which TV types are accepted (flat panel by size; plasma; CRT; projection/console) and any size or weight limits.",
+      "Confirm the downstream outlet for TVs, especially CRT sets containing leaded glass.",
+      "Confirm whether the crew will take a TV down from a wall mount.",
+      "Confirm handling of cracked flat-screen TVs and monitors."
+    ]
+  }
+}

@@ -1,0 +1,246 @@
+---
+/**
+ * Dedicated hierarchical layout for County, Municipality/Community, and
+ * Neighborhood/District pages across Mobile County and Baldwin County.
+ *
+ * Differentiates geographic levels cleanly, surfaces verified GIS/USPS/municipal
+ * facts from src/data/{counties,locations,neighborhoods}.json, and strictly
+ * enforces coverage truth (never claiming active service in unapproved areas).
+ */
+import MainLayout from './MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContentBody from '../components/ContentBody.astro';
+import ContactAside from '../components/ContactAside.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import type { CoverageStatus, PageRecord } from '../lib/types.ts';
+import { business, countyFor, data, locationFor, neighborhoodFor } from '../lib/data.ts';
+import { relatedPages } from '../lib/internal-links.ts';
+import { isBuilt } from '../lib/page-quality.ts';
+import { CLASSIFICATION_LABELS, COVERAGE_LABELS, COVERAGE_PUBLIC_NOTE } from '../lib/labels.ts';
+
+interface Props {
+  page: PageRecord;
+}
+
+const { page } = Astro.props;
+const county = countyFor(page);
+const location = locationFor(page);
+const neighborhood = neighborhoodFor(page);
+
+const coverageStatus: CoverageStatus =
+  neighborhood?.coverage ??
+  location?.coverage ??
+  county?.coverage ??
+  'research-only';
+
+const classificationLabel =
+  page.type === 'county'
+    ? 'County Service Overview'
+    : neighborhood
+      ? CLASSIFICATION_LABELS[neighborhood.classification]
+      : location
+        ? CLASSIFICATION_LABELS[location.classification]
+        : 'Service Area';
+
+const related = relatedPages(page, data.pages);
+const iconFor = (p: PageRecord) =>
+  data.services.find((s) => s.pageId === p.id)?.icon ??
+  (p.type === 'article' ? 'sparkle' : p.type === 'location' || p.type === 'county' || p.type === 'neighborhood' ? 'pin' : 'box');
+
+const livePageById = (id: string | null | undefined) => {
+  if (!id) return null;
+  const found = data.pages.find((p) => p.id === id);
+  return found && isBuilt(found) ? found : null;
+};
+
+// Child active areas to surface without ever leaking unapproved research-only pages
+const activeCountyCities =
+  page.type === 'county' && county
+    ? data.locations.filter((l) => l.countyId === county.id && (l.coverage === 'active' || l.coverage === 'available-on-confirmation' || l.coverage === 'limited'))
+    : [];
+
+const activeCityNeighborhoods =
+  page.type === 'location' && location
+    ? data.neighborhoods.filter((n) => n.cityId === location.id && n.coverage === 'active')
+    : [];
+
+const parentCityPage = neighborhood ? livePageById(location?.pageId) : null;
+const parentCountyPage = !neighborhood && location ? livePageById(county?.pageId) : null;
+---
+
+<MainLayout page={page} localBusiness={coverageStatus === 'active'}>
+  <PageHero page={page}>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:1rem">
+      <span class={`badge ${coverageStatus === 'active' ? 'badge--accepted' : 'badge--accepted-after-confirmation'}`}>
+        {COVERAGE_LABELS[coverageStatus]}
+      </span>
+      <span class="badge" style="background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.22)">
+        {classificationLabel}
+      </span>
+      {location && !neighborhood && (
+        <span class="meta-line" style="color:rgba(255,255,255,.84)">
+          {location.officialName} &middot; {location.county}
+        </span>
+      )}
+      {neighborhood && location && (
+        <span class="meta-line" style="color:rgba(255,255,255,.84)">
+          {location.name}, {location.state} &middot; {location.county}
+        </span>
+      )}
+    </div>
+  </PageHero>
+
+  <section class="section" style="padding-bottom:0">
+    <div class="container">
+      {coverageStatus !== 'active' && (
+        <div class="notice notice--amber" style="margin-bottom:1.5rem" role="status">
+          <Icon name="info" />
+          <div>
+            <strong>Coverage status: {COVERAGE_LABELS[coverageStatus]}.</strong>{' '}
+            {COVERAGE_PUBLIC_NOTE[coverageStatus]} Call{' '}
+            <a href={business.phoneHref} data-track="call" data-track-location={`coverage-${page.id}`}>
+              {business.phoneDisplay}
+            </a>{' '}
+            to check an address directly.
+          </div>
+        </div>
+      )}
+
+      <div class="card" style="background:var(--sand-50, #f7f5f0);border:1px solid var(--border, #dfd9ce)">
+        <div class="split" style="gap:1.5rem;align-items:start">
+          <div>
+            <p class="eyebrow" style="margin-bottom:.35rem">Verified local profile</p>
+            <h2 style="margin-top:0;font-size:1.35rem">
+              {page.type === 'county' && county
+                ? `${county.name}, ${county.state} Geographic Summary`
+                : neighborhood
+                  ? `${neighborhood.name} (${location?.name ?? 'Mobile'}, AL)`
+                  : location
+                    ? `${location.officialName}, ${location.state}`
+                    : page.seo.h1}
+            </h2>
+            {page.type === 'county' && county && (
+              <p style="margin-bottom:.75rem">{county.geoReference}</p>
+            )}
+            {page.type === 'location' && location && (
+              <p style="margin-bottom:.75rem">{location.geoReference}</p>
+            )}
+            {page.type === 'neighborhood' && neighborhood && (
+              <p style="margin-bottom:.75rem">{neighborhood.description} {neighborhood.geoReference}</p>
+            )}
+
+            <div style="display:flex;flex-wrap:wrap;gap:.65rem 1.5rem;font-size:.92rem">
+              {county && (
+                <span>
+                  <strong>County:</strong>{' '}
+                  {parentCountyPage ? <a href={parentCountyPage.path}>{county.name}</a> : county.name}
+                </span>
+              )}
+              {page.type === 'county' && county && (
+                <span><strong>County seat:</strong> {county.seat}</span>
+              )}
+              {neighborhood && location && (
+                <span>
+                  <strong>Municipality:</strong>{' '}
+                  {parentCityPage ? <a href={parentCityPage.path}>{location.officialName}</a> : location.officialName}
+                </span>
+              )}
+              {(neighborhood?.zipCodes?.length || location?.zipCodes?.length) ? (
+                <span>
+                  <strong>Verified USPS ZIPs:</strong>{' '}
+                  {(neighborhood?.zipCodes?.length ? neighborhood.zipCodes : location?.zipCodes ?? []).join(', ')}
+                </span>
+              ) : null}
+            </div>
+          </div>
+
+          <div>
+            <h3 style="margin-top:0;font-size:1.05rem">Local pickup &amp; municipal rules note</h3>
+            <p style="margin-bottom:.75rem">
+              {page.type === 'county' && county
+                ? county.solidWasteNotes
+                : neighborhood
+                  ? neighborhood.pickupNotes
+                  : location
+                    ? location.pickupNotes
+                    : COVERAGE_PUBLIC_NOTE[coverageStatus]}
+            </p>
+            {activeCountyCities.length > 0 && (
+              <p style="margin:0;font-size:.92rem">
+                <strong>Confirmed areas in {county?.name}:</strong>{' '}
+                {activeCountyCities.map((c, idx) => {
+                  const lp = livePageById(c.pageId);
+                  return (
+                    <>
+                      {idx > 0 ? ', ' : ''}
+                      {lp ? <a href={lp.path}>{c.name}</a> : c.name}
+                    </>
+                  );
+                })}
+              </p>
+            )}
+            {activeCityNeighborhoods.length > 0 && (
+              <p style="margin:0;font-size:.92rem">
+                <strong>Active neighborhoods:</strong>{' '}
+                {activeCityNeighborhoods.map((n, idx) => {
+                  const np = livePageById(n.pageId);
+                  return (
+                    <>
+                      {idx > 0 ? ', ' : ''}
+                      {np ? <a href={np.path}>{n.name}</a> : n.name}
+                    </>
+                  );
+                })}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container content-layout">
+      <ContentBody page={page}>
+        <slot />
+      </ContentBody>
+      <ContactAside related={related.slice(0, 6)} />
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section section--sand" aria-labelledby="related-heading">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Local services &amp; guides</p>
+            <h2 id="related-heading">Explore pickup services and local resources</h2>
+          </div>
+          <div class="grid grid--3">
+            {related.map((r) => (
+              <ServiceCard
+                href={r.path}
+                title={r.breadcrumb.label}
+                body={r.seo.description}
+                icon={iconFor(r)}
+                more={r.type === 'article' ? 'Read guide' : 'View details'}
+              />
+            ))}
+          </div>
+          <p style="margin-top:2rem">
+            <a class="text-link" href="/areas/">
+              View service area overview <Icon name="arrow-right" />
+            </a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <CTABand
+    title={coverageStatus === 'active' ? `Need a pickup in ${neighborhood?.name ?? location?.name ?? 'Mobile'}?` : 'Have an address to check for pickup?'}
+    location={`cta-${page.id}`}
+  />
+</MainLayout>

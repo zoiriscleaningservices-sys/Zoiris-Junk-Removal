@@ -1,0 +1,36 @@
+{
+  "id": "core-terms",
+  "type": "core",
+  "path": "/terms/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Terms & Conditions | Zoiris Junk Removal",
+    "description": "Terms and conditions for using the Zoiris Junk Removal website and requesting junk removal or electronics pickup services in Mobile, Alabama.",
+    "h1": "Terms & Conditions",
+    "primaryKeyword": "Zoiris terms and conditions",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Terms",
+    "parentId": "core-home"
+  },
+  "purpose": "Required legal terms for website use and service requests.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "id": "svc-house-cleanouts",
+  "type": "service",
+  "path": "/services/house-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "house-cleanouts",
+    "itemIds": [
+      "couch",
+      "recliner",
+      "dressers",
+      "mattress",
+      "boxes-clutter",
+      "toys-decor",
+      "carpet",
+      "washer-dryer",
+      "stoves",
+      "refrigerators"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "residential"
+  },
+  "seo": {
+    "title": "House Cleanouts in Mobile, AL | Whole-Home | Zoiris",
+    "description": "Clearing several rooms or a whole house in Mobile, AL? Zoiris removes furniture, attic boxes, appliances, and clutter, room by room, from top to bottom.",
+    "h1": "House Cleanouts in Mobile, AL",
+    "primaryKeyword": "house cleanout Mobile AL",
+    "secondaryKeywords": [
+      "whole house cleanout Mobile",
+      "home cleanout service Mobile AL",
+      "attic cleanout Mobile",
+      "clean out house before selling Mobile",
+      "hoarder house cleanout Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "House Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Room-by-room or whole-home clearing in Mobile, Alabama: attics, closets, spare rooms, furniture, and appliances.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "House Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve Mobile homeowners who need several rooms or a whole house cleared at once, such as before listing a home, after years of accumulation, ahead of a remodel, or when the home is cluttered past the point of a single pickup. Unlike estate cleanouts, the person booking usually lives in the home or owns it outright.",
+  "content": {
+    "eyebrow": "Cleanouts",
+    "lead": "A house cleanout is for when the problem is bigger than one couch or one closet. Zoiris Junk Removal clears multiple rooms, or an entire house, in Mobile, Alabama. That can mean attic boxes, spare-room furniture, old appliances, and years of accumulated clutter. You choose the rooms and the items, and we plan the job so it moves through the house in a sensible order.",
+    "quickAnswer": {
+      "question": "Can you clear out a whole house in one visit?",
+      "answer": "Often, yes, but it depends on how much is in the house. Send photos of each room, the attic, and the garage, and we will tell you up front whether the job fits in one visit or needs more than one. Nothing goes on the calendar until you have agreed to the estimate and the pickup window."
+    },
+    "includes": {
+      "heading": "What a house cleanout includes",
+      "intro": "A house cleanout is planned around the whole home, not a single item. That typically means:",
+      "points": [
+        "Clearing rooms in an order that keeps hallways open, usually starting with upper floors and the rooms farthest from the door.",
+        "Bringing down attic contents that you can reach from a pull-down ladder or stairs, such as boxes, old luggage, and stored furniture.",
+        "Emptying closets, spare bedrooms, sunrooms, and porches of unwanted items.",
+        "Removing large household appliances that are already disconnected.",
+        "Taking out rolled carpet and rugs if you have pulled them up, so floors are ready for the next step."
+      ]
+    },
+    "items": {
+      "heading": "What a typical house cleanout removes",
+      "intro": "Most household contents qualify. Items marked \"call to confirm\" need a quick check before scheduling.",
+      "list": [
+        "Living room and bedroom furniture: sofas, recliners, dressers, and nightstands",
+        "Mattresses and box springs from every bedroom",
+        "Boxes, bags, and bins of stored household goods",
+        "Toys, décor, holiday decorations, and housewares",
+        "Rolled carpet, padding, and area rugs",
+        "Washers, dryers, and disconnected stoves",
+        "Kitchen and garage refrigerators or freezers — call to confirm"
+      ],
+      "itemIds": [
+        "couch",
+        "recliner",
+        "dressers",
+        "mattress",
+        "boxes-clutter",
+        "toys-decor",
+        "carpet",
+        "washer-dryer",
+        "stoves",
+        "refrigerators"
+      ]
+    },
+    "audience": {
+      "heading": "When people book a house cleanout",
+      "body": [
+        "The most common reasons are getting a house ready to sell or rent, clearing space before a renovation, and tackling a home that has filled up over decades. Some people are downsizing and need to empty the bigger house before they move into the smaller one.",
+        "If you are clearing a loved one's home after a death or a move into care, our [estate cleanouts](/services/estate-cleanouts/) page covers how we work with families. Landlords and realtors handling a vacant rental should see [property cleanouts](/services/property-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "How we plan a house cleanout",
+      "steps": [
+        {
+          "title": "Room-by-room photos",
+          "body": "Send a [pickup request](/request-pickup/) with photos of each room you want cleared, plus the attic and garage if they are included. Note any rooms that should be left untouched."
+        },
+        {
+          "title": "Scope and schedule",
+          "body": "We size the job, tell you whether it is one visit or several, and confirm an estimate and a pickup window. For big homes, we may suggest starting with the fullest rooms."
+        },
+        {
+          "title": "Top to bottom",
+          "body": "The crew works from the top floor and back rooms toward the front door, so the carry path stays clear and finished rooms stay finished."
+        },
+        {
+          "title": "Walk the house",
+          "body": "When the truck is loaded, walk through with us. Anything we missed, or anything you decided to add at the last minute, gets sorted out then."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a house cleanout",
+      "intro": "There is no flat rate for a whole house, so we quote each one based on what is actually there:",
+      "factors": [
+        "Total volume across all rooms, attic, and garage",
+        "Number of floors and how many items must come down stairs",
+        "Attic access — a walk-up attic is simpler than a narrow pull-down hatch",
+        "Heavy appliances and furniture compared with light boxed items",
+        "Whether the job is done in one visit or split into phases"
+      ]
+    },
+    "prepare": {
+      "heading": "Getting the house ready",
+      "tips": [
+        "Pick a tape color for things that stay, and mark them before we arrive. One color for the whole house keeps it simple.",
+        "Close the doors to rooms we should skip, and tell us which ones they are.",
+        "Pull anything you want from the attic first, or tell us which boxes to bring down for you to check.",
+        "Unplug appliances and empty the refrigerator. Gas stoves and dryers must be disconnected by a qualified person before pickup.",
+        "Check closets, under beds, and the backs of cabinets for keepsakes, cash, and paperwork.",
+        "If you have pets, plan to keep them in a closed room or out of the house during the cleanout."
+      ]
+    },
+    "restrictions": {
+      "heading": "Before you book",
+      "body": "A few situations need to be discussed before we schedule a house cleanout:",
+      "list": [
+        "Homes with heavy accumulation are fine to call about. Telling us honestly how full the house is helps us plan the right size of job.",
+        "Pest problems, mold, or water damage should be mentioned up front so we can plan handling.",
+        "Built-in cabinets, fixtures, or flooring that still has to be torn out falls under [construction debris removal](/services/construction-debris-removal/), and we do not do demolition.",
+        "Chemicals, paint, propane, and fuel are not accepted. Neither are medications or sharps."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Do I need to be home during the cleanout?",
+        "a": "It helps to be there at the start to walk the crew through what stays and what goes. After that, many homeowners leave us to work and come back for the final walk-through."
+      },
+      {
+        "q": "Can you leave some rooms completely alone?",
+        "a": "Yes. Tell us which rooms are off-limits when you book, and keep those doors closed on the day. We will only work in the rooms you have included."
+      },
+      {
+        "q": "The house is very cluttered. Is that a problem?",
+        "a": "No. Heavily filled homes are exactly what house cleanouts are for. Photos and an honest description help us decide whether to plan a single visit or a series of visits, and we will never judge the state of a home."
+      },
+      {
+        "q": "We are listing the house soon. Can you clear it before photos?",
+        "a": "Tell us your listing or photo date when you call, and we will confirm a pickup window that fits around it if one is available. Booking early gives you the most options."
+      },
+      {
+        "q": "Should I rent a dumpster instead?",
+        "a": "A dumpster means you do the lifting and it sits in your driveway. A cleanout means our crew carries everything out. Our [junk removal vs. dumpster rental](/guides/junk-removal-vs-dumpster-rental/) guide compares the two."
+      }
+    ],
+    "areaNote": "House cleanouts are available for homes in the City of Mobile. If you are not sure whether your address qualifies, ask when you call.",
+    "illustration": "residential"
+  },
+  "related": [
+    "svc-residential-junk-removal",
+    "svc-estate-cleanouts",
+    "svc-garage-cleanouts",
+    "svc-appliance-removal",
+    "guide-junk-removal-vs-dumpster",
+    "core-pricing"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Focused on multi-room and whole-home scope (attics, room order, phased jobs, pre-listing). Estate and property scenarios are routed to their own pages. Hoarding phrased neutrally, with no capacity claims.",
+    "ownerVerification": [
+      "Confirm the crew retrieves items from attics (pull-down ladder and walk-up).",
+      "Confirm policy for heavily accumulated (hoarding) homes and pest, mold, or water-damaged contents.",
+      "Confirm whether multi-visit (phased) house cleanouts are offered.",
+      "Confirm refrigerator and freezer handling (refrigerant outlet)."
+    ]
+  }
+}

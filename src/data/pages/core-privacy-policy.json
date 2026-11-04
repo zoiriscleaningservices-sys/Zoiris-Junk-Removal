@@ -1,0 +1,36 @@
+{
+  "id": "core-privacy-policy",
+  "type": "core",
+  "path": "/privacy-policy/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Privacy Policy | Zoiris Junk Removal",
+    "description": "How Zoiris Junk Removal collects, uses, and protects the information you share through our website, phone, and pickup request form.",
+    "h1": "Privacy Policy",
+    "primaryKeyword": "Zoiris privacy policy",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Privacy Policy",
+    "parentId": "core-home"
+  },
+  "purpose": "Required legal information about data collected through the website.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

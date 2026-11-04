@@ -1,0 +1,192 @@
+{
+  "id": "svc-construction-debris-removal",
+  "type": "service",
+  "path": "/services/construction-debris-removal/",
+  "status": "published",
+  "refs": {
+    "serviceId": "construction-debris-removal",
+    "itemIds": [
+      "drywall-lumber",
+      "cabinets-fixtures",
+      "carpet",
+      "tile-concrete",
+      "roofing"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Construction & Remodel Debris Removal, Mobile AL | Zoiris",
+    "description": "Remodel leftovers piling up in Mobile, AL? Zoiris hauls away non-hazardous construction and renovation debris: drywall, lumber, cabinets, fixtures, and carpet.",
+    "h1": "Construction & Renovation Debris Removal in Mobile, AL",
+    "primaryKeyword": "construction debris removal Mobile AL",
+    "secondaryKeywords": [
+      "renovation debris removal Mobile",
+      "remodel debris hauling Mobile AL",
+      "drywall removal Mobile",
+      "construction junk hauling Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Construction & Renovation Debris Removal in Mobile, AL — Zoiris",
+    "ogDescription": "Non-hazardous remodel and construction debris hauled away for homeowners and contractors in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Construction & Renovation Debris Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve DIY renovators, contractors, and property owners in Mobile who need non-hazardous construction and remodel debris hauled away after tear-out. Renovation debris searches are consolidated here.",
+  "content": {
+    "eyebrow": "Debris Removal",
+    "lead": "Zoiris Junk Removal hauls away non-hazardous debris from remodels, repairs, and small construction projects in Mobile, Alabama. Homeowners doing their own renovation and contractors who'd rather not spend an afternoon on dump runs both call us to clear torn-out drywall, old cabinets, lumber, and fixtures once the demo is done.",
+    "quickAnswer": {
+      "question": "Can you haul away the debris from my kitchen or bathroom remodel?",
+      "answer": "Yes, if it's non-hazardous. Torn-out cabinets, vanities, toilets, drywall, lumber, trim, doors, and carpet are typical. Tile, brick, and concrete are accepted in limited amounts because of their weight, and roofing shingles are call to check. We don't take asbestos or waste from lead-paint abatement."
+    },
+    "includes": {
+      "heading": "What debris removal includes",
+      "intro": "We haul what's already been torn out — the demolition itself stays with you or your contractor.",
+      "points": [
+        "Loading piles of removed material from rooms, garages, driveways, or the side of the house.",
+        "Hauling bulky fixtures like cabinets, vanities, countertops, toilets, and interior doors.",
+        "Pickups partway through a project to clear working space, as well as at the end.",
+        "Sorting at the end of the job: clean lumber and metal are separated where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Debris we accept",
+      "intro": "Non-hazardous building materials from interior and small exterior projects:",
+      "list": [
+        "Drywall, lumber, trim, and molding — pull nails where practical",
+        "Kitchen cabinets, bathroom vanities, toilets, sinks, and interior doors",
+        "Carpet, carpet padding, and rolled vinyl",
+        "Tile, brick, and concrete — limited quantities; describe the volume so we can confirm",
+        "Roofing shingles — call to check before scheduling"
+      ],
+      "itemIds": [
+        "drywall-lumber",
+        "cabinets-fixtures",
+        "carpet",
+        "tile-concrete",
+        "roofing"
+      ]
+    },
+    "audience": {
+      "heading": "Who uses debris removal",
+      "body": [
+        "**DIY homeowners** who've gutted a bathroom, replaced flooring, or swapped out kitchen cabinets and now have a pile with nowhere to go.",
+        "**Contractors and handymen** on smaller jobs who'd rather keep working than load a trailer and drive to a disposal site. See [commercial junk removal](/services/commercial-junk-removal/) for broader business hauling.",
+        "**Landlords and investors** renovating a rental between tenants. If the unit also has contents to clear, our [property cleanouts](/services/property-cleanouts/) page covers both."
+      ]
+    },
+    "process": {
+      "heading": "How debris pickup works",
+      "steps": [
+        {
+          "title": "Size up the pile",
+          "body": "Tell us what materials are in it and roughly how much — 'about a pickup bed of drywall plus two vanities' is a useful description. Photos help most."
+        },
+        {
+          "title": "Confirm the materials",
+          "body": "We check anything that needs confirming, like tile, concrete, or shingles, then confirm an estimate and a pickup window."
+        },
+        {
+          "title": "Load it out",
+          "body": "The crew loads the debris from wherever it's staged, including inside the house if it hasn't been carried out yet."
+        },
+        {
+          "title": "Hauled off",
+          "body": "Debris goes to proper disposal, with reusable or recyclable material pulled out where practical options exist."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects debris removal pricing",
+      "intro": "Debris is estimated on volume and weight more than on item count:",
+      "factors": [
+        "How much space the debris fills on the truck",
+        "Weight — tile, brick, concrete, and plaster are far heavier than drywall or carpet of the same size",
+        "Where it is: a driveway pile loads faster than debris still inside a second-floor bathroom",
+        "Loose small pieces versus bagged or bundled material",
+        "Mixed loads that include materials needing confirmation"
+      ]
+    },
+    "prepare": {
+      "heading": "Preparing debris for pickup",
+      "tips": [
+        "Pile debris in one accessible spot, ideally near the driveway, rather than scattered around the job.",
+        "Bag or bucket small pieces like broken tile, drywall scraps, and grout chunks.",
+        "Pull or bend over exposed nails and screws where practical.",
+        "Keep paint, adhesives, sealants, and solvents out of the pile — they can't be included.",
+        "If the home was built before 1978, or you suspect asbestos in old flooring, ceilings, or pipe wrap, have materials tested before tearing them out. The EPA has guidance on [lead](https://www.epa.gov/lead) and [asbestos](https://www.epa.gov/asbestos)."
+      ]
+    },
+    "restrictions": {
+      "heading": "Debris we can't take",
+      "body": "We haul non-hazardous debris only. These need a qualified specialist or a different disposal route:",
+      "list": [
+        "Asbestos or suspected asbestos materials — these require professional abatement",
+        "Waste from lead-paint abatement",
+        "Paint, solvents, adhesives, and other chemicals",
+        "Large quantities of tile, brick, or concrete beyond what we confirm in advance",
+        "Demolition or tear-out work — we haul debris, we don't demolish structures"
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Do you do the demolition or tear-out too?",
+        "a": "No. We remove debris once it's been torn out. The demolition itself needs to be done by you or your contractor before pickup."
+      },
+      {
+        "q": "How much tile or concrete can you take?",
+        "a": "Small amounts are usually fine, but these materials are very heavy, so we confirm quantity in advance. Tell us roughly how many square feet of tile or how many bags or chunks of concrete you have."
+      },
+      {
+        "q": "Do you take roofing shingles?",
+        "a": "Shingles need to be checked before scheduling. Call us with the approximate number of squares or bundles and we'll let you know."
+      },
+      {
+        "q": "Can you pick up debris from a contractor's job site?",
+        "a": "Yes, as long as the debris is non-hazardous and within the City of Mobile. Contractors can book the same way homeowners do and tell us who'll be on site."
+      },
+      {
+        "q": "Can I put remodel debris out for city collection?",
+        "a": "The City of Mobile's residential trash collection has limits on what and how much can go to the curb, and debris from work done by a hired contractor is generally the contractor's responsibility to remove. Check current rules with [City of Mobile Public Works](https://www.cityofmobile.gov)."
+      },
+      {
+        "q": "Should I rent a dumpster instead?",
+        "a": "A dumpster can suit a long project where debris builds up over weeks and you're willing to load it yourself. For a finished pile, a crew pickup is often simpler. Our guide to [junk removal vs. dumpster rental](/guides/junk-removal-vs-dumpster-rental/) compares the two."
+      }
+    ],
+    "areaNote": "Construction and renovation debris removal is available at homes and job sites within the City of Mobile. Call before booking if the project is outside city limits.",
+    "illustration": "commercial"
+  },
+  "related": [
+    "svc-commercial-junk-removal",
+    "svc-property-cleanouts",
+    "svc-appliance-removal",
+    "guide-junk-removal-vs-dumpster",
+    "core-restricted-items",
+    "svc-garage-cleanouts"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Renovation debris consolidated here. Tile/brick/concrete shown as quantity-limited, roofing shingles as call to check, per items.json. No demolition, asbestos, lead abatement, or dumpster claims. City of Mobile contractor-debris note verified via search of cityofmobile.gov on 2026-11-04 and phrased as 'generally'.",
+    "ownerVerification": [
+      "Confirm weight/quantity limits for tile, brick, and concrete.",
+      "Confirm roofing shingle policy (currently call to check).",
+      "Confirm mid-project (partial) debris pickups are offered.",
+      "Confirm whether countertops (stone, laminate) and rolled vinyl flooring are accepted.",
+      "Confirm whether crews will load debris still inside the home vs. only staged piles.",
+      "Confirm whether clean lumber or metal currently goes to a reuse/recycling outlet (copy says 'where practical options exist')."
+    ]
+  }
+}

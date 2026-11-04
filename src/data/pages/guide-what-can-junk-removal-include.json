@@ -1,0 +1,35 @@
+{
+  "id": "guide-what-can-junk-removal-include",
+  "type": "article",
+  "path": "/guides/what-can-junk-removal-include/",
+  "status": "draft",
+  "refs": {},
+  "seo": {
+    "title": "What Can Be Included in a Junk Removal Pickup? | Zoiris",
+    "description": "",
+    "h1": "What Can Be Included in a Junk Removal Pickup?",
+    "primaryKeyword": "what can be included in junk removal",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Article",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "What Can Be Included in a Junk Removal Pickup?",
+    "parentId": "core-guides"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Overlaps heavily with /accepted-items/ and /junk-removal-mobile-al/. Recommendation: consolidate into the accepted-items directory unless a distinct angle emerges.",
+    "ownerVerification": []
+  }
+}

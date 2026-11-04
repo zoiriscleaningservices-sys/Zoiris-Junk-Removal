@@ -1,0 +1,73 @@
+{
+  "id": "loc-gulf-shores-al",
+  "type": "location",
+  "path": "/areas/gulf-shores-al/",
+  "status": "research",
+  "refs": {
+    "locationId": "gulf-shores-al",
+    "countyId": "baldwin-county-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste in Gulf Shores, AL | Zoiris Research",
+    "description": "Local pickup logistics, USPS ZIP (36542, 36547) boundaries, and municipal bulk-trash notes for Gulf Shores, Baldwin County, AL.",
+    "h1": "Junk Removal & Electronics Pickup in Gulf Shores, AL",
+    "primaryKeyword": "junk removal Gulf Shores AL",
+    "secondaryKeywords": [
+      "Gulf Shores AL bulk trash pickup",
+      "electronics pickup Gulf Shores AL",
+      "furniture removal Gulf Shores Alabama"
+    ],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Gulf Shores, AL",
+    "parentId": "loc-baldwin-county-al"
+  },
+  "purpose": "Municipality service-area draft for Gulf Shores, AL (36542, 36547), held in research status (robotsIndex: false) until owner activates coverage in Command Center.",
+  "content": {
+    "eyebrow": "Baldwin County Municipality Draft",
+    "lead": "Gulf Shores (36542, 36547) sits along AL-59, AL-182 (Perdido Beach Blvd), and AL-180 (Fort Morgan Rd) along the Gulf Intracoastal Waterway in Baldwin County. Gulf Shores properties feature high-rise condominiums, HOA elevator rules, vacation-rental turnovers, and elevated pilings where interior carry-down and tight turnover windows matter most.",
+    "quickAnswer": {
+      "question": "Is Zoiris Junk Removal currently active in Gulf Shores, AL?",
+      "answer": "Gulf Shores is currently in research-only status and is not advertised as an active service area yet. Call 251-930-8621 to ask about availability for a specific project."
+    },
+    "faqs": [
+      {
+        "q": "Can I submit a pickup inquiry from Gulf Shores, AL?",
+        "a": "You can call 251-930-8621 or submit your address and item photos online so our team can confirm whether we can accommodate a Gulf Shores pickup."
+      },
+      {
+        "q": "What local rules affect bulky items in Gulf Shores?",
+        "a": "Gulf Shores properties feature high-rise condominiums, HOA elevator rules, vacation-rental turnovers, and elevated pilings where interior carry-down and tight turnover windows matter most."
+      },
+      {
+        "q": "Do postal ZIP codes (36542, 36547) match Gulf Shores corporate limits?",
+        "a": "Not always — adjacent unincorporated Baldwin County areas often share 36542, 36547 mailing addresses while operating under SWDA county rules rather than municipal public works."
+      }
+    ],
+    "areaNote": "Research-only draft for Gulf Shores, AL — excluded from public build and XML sitemap until owner coverage activation."
+  },
+  "related": [
+    "core-areas",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Verified Baldwin County municipality (Gulf Shores) via baldwincountyal.gov/municipalities. Non-indexable until owner sets coverage to active and supplies first-party local job details.",
+    "ownerVerification": [
+      "Confirm whether Zoiris dispatches crews to Gulf Shores, AL (36542, 36547).",
+      "Add real local job/access evidence before transitioning from research/draft to published."
+    ]
+  }
+}

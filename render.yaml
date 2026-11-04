@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: zoiris-junk-removal
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/auth/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ZOIRIS_HOST
+        value: 0.0.0.0
+      - key: ZOIRIS_PORT
+        value: 4500
+      - key: ZOIRIS_DATA_DIR
+        value: /var/data/zoiris-private
+      - key: OWNER_SETUP_SECRET
+        generateValue: true
+    disk:
+      name: zoiris-private-vault
+      mountPath: /var/data/zoiris-private
+      sizeGB: 10

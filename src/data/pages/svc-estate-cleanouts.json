@@ -1,0 +1,203 @@
+{
+  "id": "svc-estate-cleanouts",
+  "type": "service",
+  "path": "/services/estate-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "estate-cleanouts",
+    "itemIds": [
+      "couch",
+      "dressers",
+      "mattress",
+      "bed-frames",
+      "clothing-linens",
+      "boxes-clutter",
+      "washer-dryer",
+      "refrigerators",
+      "pianos"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "residential"
+  },
+  "seo": {
+    "title": "Estate Cleanouts in Mobile, AL | Home Clearing | Zoiris",
+    "description": "Clearing a loved one's home in Mobile, AL? Zoiris removes the furniture and belongings your family has decided not to keep, at a pace that works for you.",
+    "h1": "Estate Cleanouts in Mobile, AL",
+    "primaryKeyword": "estate cleanout Mobile AL",
+    "secondaryKeywords": [
+      "estate cleanout services Mobile",
+      "clearing a parent's house Mobile AL",
+      "executor home cleanout Mobile",
+      "downsizing cleanout Mobile",
+      "estate junk removal near me"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Estate Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Your family decides what stays. We carefully remove the rest from a loved one's home in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Estate Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Help families, executors, and realtors in Mobile who need a home cleared after a death, a move to assisted living, or downsizing. The page stresses that the family decides what is kept, donated, or discarded, and that Zoiris removes only what has been released.",
+  "content": {
+    "eyebrow": "Cleanouts",
+    "lead": "When a parent or relative passes away, moves into care, or downsizes, someone has to clear the home. Zoiris Junk Removal helps families and executors in Mobile, Alabama remove the furniture and belongings that are not being kept. Your family makes every decision about what stays, what is given away, and what goes. We take only what you have released, and we work at a pace that respects what this process involves.",
+    "quickAnswer": {
+      "question": "Can our family keep some things and have you take the rest?",
+      "answer": "Yes, and that is how most estate cleanouts work. Family members take or set aside what they want first. Then we remove only the items you have released, room by room. If something unexpected turns up while we work, we stop and ask before it goes on the truck."
+    },
+    "includes": {
+      "heading": "What we handle during an estate cleanout",
+      "intro": "An estate cleanout is usually the last step after the family has had time with the home. Our part covers:",
+      "points": [
+        "Removing furniture, beds, and large pieces from every room, including upstairs bedrooms and back porches.",
+        "Bagging and carrying out closets, cabinets, linens, and the everyday contents of a lived-in home.",
+        "Working in stages if the family is still going through some rooms — one area now, another later.",
+        "Leaving alone any rooms, shelves, or items you have marked as off-limits.",
+        "Keeping usable and recyclable items apart from disposal items where practical options exist. Decisions about donating specific belongings stay with the family."
+      ]
+    },
+    "items": {
+      "heading": "Belongings commonly removed from an estate",
+      "intro": "Most of what is left in a home after the family's choices are made can come with us. A few items need a call first.",
+      "list": [
+        "Sofas, recliners, dining sets, dressers, and china cabinets",
+        "Mattresses, box springs, bed frames, and headboards",
+        "Clothing, shoes, linens, and towels",
+        "Kitchenware, books, décor, and boxed household items",
+        "Washers and dryers",
+        "Refrigerators and freezers — call to confirm",
+        "Pianos — call to discuss before scheduling"
+      ],
+      "itemIds": [
+        "couch",
+        "dressers",
+        "mattress",
+        "bed-frames",
+        "clothing-linens",
+        "boxes-clutter",
+        "washer-dryer",
+        "refrigerators",
+        "pianos"
+      ]
+    },
+    "audience": {
+      "heading": "Who we work with on estate cleanouts",
+      "body": [
+        "Most calls come from adult children clearing a parent's home, often while juggling work, grief, and family members in other cities. Executors and personal representatives call when an estate needs the house emptied before it can be sold or returned to a landlord.",
+        "Realtors sometimes coordinate the cleanout for a family that lives out of town. In that case, tell us who has authority over the contents and who will meet us or provide access, so we have a clear point of contact for decisions."
+      ]
+    },
+    "process": {
+      "heading": "How an estate cleanout works",
+      "steps": [
+        {
+          "title": "A conversation first",
+          "body": "Call or send a [pickup request](/request-pickup/). Tell us about the home, who is making decisions, and any date you are working toward, such as a listing or lease end. There is no rush to have every answer on the first call."
+        },
+        {
+          "title": "The family chooses",
+          "body": "Before we arrive, family members remove or clearly mark what they are keeping or giving to someone. Painter's tape or sticky notes work well. We confirm an estimate and a pickup window once the scope is clear."
+        },
+        {
+          "title": "We clear what was released",
+          "body": "The crew works through the home one room at a time, checking with the family contact whenever something looks personal or out of place."
+        },
+        {
+          "title": "A final look together",
+          "body": "Before we leave, walk through the rooms with us, or have us send an update if you are away, so nothing is left that you expected to be gone."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of an estate cleanout",
+      "intro": "Homes differ so much that we quote every estate cleanout individually. The main factors are:",
+      "factors": [
+        "How full the home is once the family has taken what it wants",
+        "The number of rooms and floors, plus attics, sheds, or garages included in the job",
+        "Whether the work happens in one visit or in stages over several visits",
+        "Very heavy pieces, such as large armoires or items that need a call to confirm",
+        "Access, including steps at the entry, long walkways, or tight hallways"
+      ]
+    },
+    "prepare": {
+      "heading": "Before the cleanout",
+      "tips": [
+        "Search for important papers, wills, deeds, titles, and keys before anything is removed. Check books, coat pockets, freezers, and the backs of drawers too.",
+        "Take out jewelry, photographs, letters, and heirlooms, even ones nobody has claimed yet.",
+        "If you think an item may be valuable, have it looked at before the cleanout. We do not appraise, buy, or sell belongings.",
+        "If the estate is going through probate, check with the executor or the estate's attorney that the contents can be removed now.",
+        "Set aside prescription medications and anything under the sinks or in the garage, like cleaners or chemicals. These need separate disposal.",
+        "If relatives want specific items donated to a cause that matters to them, set those aside and arrange the donation yourselves."
+      ]
+    },
+    "restrictions": {
+      "heading": "Things we will talk through with you",
+      "body": "Estate homes sometimes hold items that need different handling:",
+      "list": [
+        "Prescription medications, needles, and medical supplies are not accepted. Ask a pharmacy or local health resources about disposal options.",
+        "Paint, chemicals, propane, and fuel stored in garages or sheds are not accepted.",
+        "Homes with heavy accumulation, pests, or unsanitary conditions need a conversation before scheduling so we can plan honestly.",
+        "Medical equipment such as hospital beds or lift chairs should be mentioned when you call. Rented equipment usually needs to go back to the supplier."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Does someone from the family need to be there?",
+        "a": "Not necessarily, but someone with authority over the contents needs to tell us what goes. Many families meet us at the start, walk through the rooms, and then leave us to work. If you live out of town, tell us who will provide access and who we should call with questions."
+      },
+      {
+        "q": "What if we find something we want to keep during the cleanout?",
+        "a": "Just tell the crew. Until an item is on the truck, it can come back out. If we come across photos, documents, or anything that looks personal, we set it aside and check with you."
+      },
+      {
+        "q": "Can you hold items while relatives decide?",
+        "a": "We do not store belongings. If a relative still needs to make a decision, leave those items in a room we have marked off-limits and we can come back for them on a later visit."
+      },
+      {
+        "q": "Do you donate the items you take?",
+        "a": "Usable items are separated from disposal items where practical options exist, but we do not promise that any particular piece will be donated. If the family wants certain belongings to go to a specific charity or person, set them aside and handle that directly."
+      },
+      {
+        "q": "The house has a full refrigerator. What should we do?",
+        "a": "Empty the food out if you can. Refrigerators and freezers contain refrigerant, so call to confirm before including one. If cleaning out the kitchen is too much right now, tell us when you call and we can talk about options."
+      },
+      {
+        "q": "Can we start with part of the house?",
+        "a": "Yes. Many families start with a garage or spare room, take a break, and finish later. Our guide on [what happens during an estate cleanout](/guides/what-happens-during-estate-cleanout/) explains how a staged cleanout usually goes."
+      }
+    ],
+    "areaNote": "We handle estate cleanouts at homes within the City of Mobile. If the property is elsewhere in Mobile County, please call before scheduling so we can confirm.",
+    "illustration": "residential"
+  },
+  "related": [
+    "guide-estate-cleanout-what-happens",
+    "svc-house-cleanouts",
+    "svc-property-cleanouts",
+    "svc-furniture-removal",
+    "core-how-it-works",
+    "core-restricted-items"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Respectful tone; the family decides what is kept, donated, or discarded. No appraisal, buy-out, estate-sale, or donation-partner claims. Probate note only tells readers to check with the executor or attorney, with no legal advice.",
+    "ownerVerification": [
+      "Confirm the crew can work without a family member on site once scope is agreed (lockbox or key handoff).",
+      "Confirm that Zoiris does not appraise, buy, sell, or consign estate items, and does not run estate sales.",
+      "Confirm that Zoiris does not offer storage of belongings.",
+      "Confirm whether a remote update (photos or a call) after the cleanout is offered to out-of-town families.",
+      "Confirm policy for homes with heavy accumulation, pests, or unsanitary conditions.",
+      "Confirm whether hospital beds and lift chairs are accepted."
+    ]
+  }
+}

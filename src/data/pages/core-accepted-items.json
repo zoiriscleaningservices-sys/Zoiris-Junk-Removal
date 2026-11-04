@@ -1,0 +1,36 @@
+{
+  "id": "core-accepted-items",
+  "type": "core",
+  "path": "/accepted-items/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "What We Pick Up: Accepted Items List | Zoiris Junk Removal",
+    "description": "Check whether Zoiris picks up your item: furniture, appliances, mattresses, computers, TVs, phones, and more, with clear status for each item.",
+    "h1": "Accepted Items Directory",
+    "primaryKeyword": "what items does junk removal take",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Accepted Items",
+    "parentId": "core-home"
+  },
+  "purpose": "Searchable directory built from confirmed item records so customers can check acceptance before calling.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "id": "svc-furniture-removal",
+  "type": "service",
+  "path": "/services/furniture-removal/",
+  "status": "published",
+  "refs": {
+    "serviceId": "furniture-removal",
+    "itemIds": [
+      "couch",
+      "recliner",
+      "tables-chairs",
+      "dressers",
+      "entertainment-centers",
+      "office-furniture"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Furniture, Couch & Sofa Removal in Mobile, AL | Zoiris",
+    "description": "Need an old couch, recliner, dresser, or desk gone? Zoiris Junk Removal carries out and hauls away unwanted furniture from homes and offices in Mobile, AL.",
+    "h1": "Furniture Removal in Mobile, AL",
+    "primaryKeyword": "furniture removal Mobile AL",
+    "secondaryKeywords": [
+      "couch removal Mobile AL",
+      "sofa removal Mobile",
+      "old furniture pickup Mobile",
+      "recliner removal Mobile AL",
+      "how to get rid of an old couch"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Furniture Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "We carry out and haul away couches, recliners, dressers, tables, and office furniture in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Furniture Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve people in Mobile who want a specific piece (or a roomful) of furniture carried out and hauled away, including couch and sofa searches, which are consolidated here instead of on a separate page.",
+  "content": {
+    "eyebrow": "Junk Removal",
+    "lead": "Zoiris Junk Removal picks up unwanted furniture from homes and businesses in Mobile, Alabama. Our crew does the lifting and carrying — from the living room, bedroom, upstairs, or garage — and hauls it away, so you do not need a truck, a helper, or a trip to the landfill.",
+    "quickAnswer": {
+      "question": "How do I get rid of an old couch in Mobile, AL?",
+      "answer": "Call Zoiris at 251-930-8621 or send a pickup request with a photo or description of the couch. We confirm the details and an estimate, then our crew carries it out of your home and hauls it away. You do not need to move it to the curb."
+    },
+    "includes": {
+      "heading": "What furniture removal includes",
+      "intro": "A furniture pickup is a full-service job. You point to what goes; we handle the rest.",
+      "points": [
+        "Carrying furniture out from wherever it sits, including upstairs rooms, back bedrooms, porches, and garages.",
+        "Basic disassembly when a piece will not fit through a doorway, such as removing legs from a table or taking a bed frame apart.",
+        "Loading, hauling, and handling the drop-off so the item does not come back to your curb.",
+        "A quick sweep of the area where the furniture stood once it is out."
+      ]
+    },
+    "items": {
+      "heading": "Furniture we commonly pick up",
+      "intro": "If you do not see your piece here, describe it when you call — most household and office furniture qualifies.",
+      "list": [
+        "Couches, sofas, loveseats, sectionals, and sleeper sofas",
+        "Recliners, armchairs, and ottomans",
+        "Dining tables, kitchen chairs, and coffee tables",
+        "Dressers, chests, nightstands, and armoires",
+        "Bookcases, cabinets, and entertainment centers",
+        "Desks, office chairs, and conference tables",
+        "Patio and outdoor furniture"
+      ],
+      "itemIds": [
+        "couch",
+        "recliner",
+        "tables-chairs",
+        "dressers",
+        "entertainment-centers",
+        "office-furniture",
+        "grills-patio"
+      ]
+    },
+    "audience": {
+      "heading": "Who furniture removal is for",
+      "body": [
+        "Most furniture calls come from homeowners and renters replacing a couch or clearing a room, people moving in or out who do not want to haul pieces themselves, and families clearing a relative's home.",
+        "Businesses use the same service when they replace office chairs and desks, refresh a waiting room, or vacate a suite. For larger business projects, see [office cleanouts](/services/office-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "How furniture pickup works",
+      "steps": [
+        {
+          "title": "Tell us what is going",
+          "body": "Call or send a [pickup request](/request-pickup/) with the pieces, the number of items, and where they are in the building. Photos help us give a more accurate estimate."
+        },
+        {
+          "title": "Confirm the estimate and time",
+          "body": "We review size, access, and any stairs, then confirm an estimate and a pickup window with you. Nothing is scheduled until you agree to it."
+        },
+        {
+          "title": "We carry it out",
+          "body": "Our crew protects doorways where needed, disassembles pieces that will not fit, and loads everything onto the truck."
+        },
+        {
+          "title": "It is hauled away",
+          "body": "Usable and recyclable furniture is separated where practical options exist; the rest goes to proper disposal."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of furniture removal",
+      "intro": "We quote each job individually instead of publishing flat rates. The main factors are:",
+      "factors": [
+        "How many pieces there are and how much truck space they take up",
+        "Size and weight — a sleeper sofa or solid-wood armoire takes more effort than a side table",
+        "Access: stairs, narrow halls, long carries, or elevators",
+        "Whether pieces need to be disassembled to get them out",
+        "Any special disposal requirements for materials like large glass tops"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare for a furniture pickup",
+      "tips": [
+        "Empty drawers, cabinets, and cushions — check for keys, remotes, and paperwork.",
+        "Clear a path from the furniture to the door, including rugs and small items on the floor.",
+        "Remove any glass tops or shelves if you can do it safely, or point them out so we handle them carefully.",
+        "Let us know about pets so they can be kept away from open doors during the carry-out.",
+        "If a piece is a power recliner or lift chair, unplug it and mention it when you book."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few situations need a conversation before we schedule:",
+      "list": [
+        "Furniture with known bed bugs or other pest problems — tell us in advance so we can plan handling.",
+        "Pieces built into the home, like fixed shelving or cabinetry, which may count as [renovation debris](/services/construction-debris-removal/).",
+        "Upholstered furniture that has been soaked by flooding or water damage, which may need extra handling."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Do I need to bring the furniture outside before you arrive?",
+        "a": "No. Our crew picks furniture up from where it is — inside rooms, upstairs, or in the garage — and carries it out. If it is easier for you to leave something in the garage or driveway, that is fine too."
+      },
+      {
+        "q": "Can you take just one couch?",
+        "a": "Yes. Single-item pickups are common. Tell us about the couch and its location and we will confirm an estimate. If you have several large items, our [bulk item pickup](/services/bulk-item-pickup/) page explains how multi-item jobs are handled."
+      },
+      {
+        "q": "Will you take apart a sectional or bed frame?",
+        "a": "Basic disassembly, such as separating sectional pieces, removing legs, or taking apart a bed frame, is part of getting furniture out safely. Let us know about very large or built-in pieces when you call."
+      },
+      {
+        "q": "What happens to the furniture after pickup?",
+        "a": "We separate usable and recyclable pieces where practical outlets exist, and the rest is taken for proper disposal. If you want to know where a specific piece is likely to go, ask us."
+      },
+      {
+        "q": "Do you remove office furniture too?",
+        "a": "Yes. Desks, chairs, filing cabinets, and conference tables are picked up the same way. Larger business moves are covered on our [commercial junk removal](/services/commercial-junk-removal/) page."
+      }
+    ],
+    "areaNote": "Furniture removal is available throughout the City of Mobile. If your address is outside Mobile, call us to confirm before booking.",
+    "illustration": "residential"
+  },
+  "related": [
+    "svc-mattress-removal",
+    "svc-bulk-item-pickup",
+    "svc-moving-cleanouts",
+    "svc-office-cleanouts",
+    "guide-old-furniture-mobile",
+    "core-accepted-items"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "Initial build — pending owner review",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Couch/sofa intent consolidated here. Copy avoids pricing, timing, and certification claims.",
+    "ownerVerification": [
+      "Confirm policy for furniture with bed bugs or other pests.",
+      "Confirm that basic disassembly is included in standard pickup.",
+      "Confirm whether a sweep of the cleared area is standard."
+    ]
+  }
+}

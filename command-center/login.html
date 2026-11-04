@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#0b1522" />
+    <meta name="color-scheme" content="light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Zoiris" />
+    <title>Sign in · Zoiris Command Center</title>
+    <link rel="manifest" href="/owner/assets/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/owner/assets/logo-mark.svg" />
+    <link rel="apple-touch-icon" href="/owner/assets/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/owner/assets/styles.css" />
+  </head>
+  <body class="login-page">
+    <div class="login-art" aria-hidden="true"></div>
+
+    <header class="login-head">
+      <img src="/owner/assets/logo-mark.svg" alt="" width="76" height="76" />
+      <p class="login-word">ZOIRIS</p>
+      <p class="login-tag">Command Center</p>
+    </header>
+
+    <main class="login-card" aria-labelledby="cc-login-title">
+      <h1 id="cc-login-title">Welcome back</h1>
+      <p class="login-sub">Sign in to see today’s requests, photos and pickups.</p>
+
+      <div id="auth-notice" class="cc-alert" hidden role="alert"></div>
+
+      <!-- SIGN IN FORM -->
+      <form id="login-form" class="cc-form">
+        <div id="credentials-fields">
+          <div class="cc-field">
+            <label for="login-email">Email</label>
+            <input id="login-email" class="cc-input" name="email" type="email" inputmode="email" autocomplete="username" autocapitalize="off" spellcheck="false" required />
+          </div>
+          <div class="cc-field">
+            <label for="login-password">Password</label>
+            <div class="login-pw">
+              <input id="login-password" class="cc-input" name="password" type="password" autocomplete="current-password" required />
+              <button type="button" id="login-pw-toggle" aria-controls="login-password" aria-pressed="false">Show</button>
+            </div>
+          </div>
+          <label class="cc-check">
+            <input id="login-remember" name="rememberDevice" type="checkbox" checked />
+            <span>Keep me signed in on this device (30 days)</span>
+          </label>
+        </div>
+
+        <div id="mfa-fields" hidden>
+          <div class="cc-alert cc-alert--ok">2-step sign-in is on. Enter the 6-digit code from your authenticator app, or a one-time recovery code.</div>
+          <div class="cc-field">
+            <label for="login-totp">6-digit code</label>
+            <input id="login-totp" class="cc-input" name="totp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="8" />
+          </div>
+          <div class="cc-field">
+            <label for="login-recovery">Or recovery code (optional)</label>
+            <input id="login-recovery" class="cc-input" name="recoveryCode" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" />
+          </div>
+        </div>
+
+        <button id="login-submit" class="cc-btn cc-btn--primary cc-btn--lg cc-btn--block" type="submit">Sign in</button>
+      </form>
+
+      <!-- INITIAL PROTECTED SETUP (only shown if 0 owners exist & OWNER_SETUP_SECRET is configured) -->
+      <form id="setup-form" class="cc-form login-section" hidden>
+        <h2>Create the owner account</h2>
+        <p class="cc-fine" style="margin:0 0 .8rem">No owner account exists yet. Enter your server <code>OWNER_SETUP_SECRET</code> to create the primary owner.</p>
+        <div class="cc-field">
+          <label for="setup-secret">Setup secret</label>
+          <input id="setup-secret" class="cc-input" type="password" required />
+        </div>
+        <div class="cc-field">
+          <label for="setup-name">Your name</label>
+          <input id="setup-name" class="cc-input" type="text" value="Zoiris Owner" required />
+        </div>
+        <div class="cc-field">
+          <label for="setup-email">Owner email</label>
+          <input id="setup-email" class="cc-input" type="email" required />
+        </div>
+        <div class="cc-field">
+          <label for="setup-password">Strong password (12+ characters)</label>
+          <input id="setup-password" class="cc-input" type="password" minlength="12" autocomplete="new-password" required />
+        </div>
+        <button class="cc-btn cc-btn--navy cc-btn--block" type="submit">Create owner account</button>
+      </form>
+
+      <!-- ACCOUNT RECOVERY -->
+      <div class="login-links">
+        <button id="toggle-recovery" type="button" class="cc-btn cc-btn--ghost cc-btn--sm" aria-controls="recovery-panel">Forgot password?</button>
+        <a href="/">Public website →</a>
+      </div>
+
+      <div id="recovery-panel" class="login-section" hidden>
+        <h2>Reset your password</h2>
+        <p class="cc-fine" style="margin:0 0 .75rem">
+          Request a 15-minute recovery token (sent by your email provider, or generated with <code>npm run owner:provision -- --recover &lt;email&gt;</code>).
+        </p>
+        <div class="login-recovery-row">
+          <input id="rec-email" class="cc-input" type="email" placeholder="Owner email" aria-label="Owner email for recovery" />
+          <button id="rec-request-btn" type="button" class="cc-btn cc-btn--navy">Send token</button>
+        </div>
+        <form id="rec-complete-form" class="cc-form">
+          <div class="cc-field">
+            <label for="rec-token">Recovery token</label>
+            <input id="rec-token" class="cc-input" type="text" autocomplete="off" required />
+          </div>
+          <div class="cc-field">
+            <label for="rec-new-pw">New password (12+ characters)</label>
+            <input id="rec-new-pw" class="cc-input" type="password" minlength="12" autocomplete="new-password" required />
+          </div>
+          <button class="cc-btn cc-btn--primary cc-btn--block" type="submit">Set new password</button>
+        </form>
+      </div>
+    </main>
+
+    <p class="login-foot">Private owner area · Zoiris Junk Removal · <a href="tel:+12519308621">251-930-8621</a></p>
+
+    <script src="/owner/assets/login.js" defer></script>
+  </body>
+</html>

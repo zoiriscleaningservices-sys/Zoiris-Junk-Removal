@@ -1,0 +1,123 @@
+{
+  "id": "svc-bulk-item-pickup",
+  "type": "service",
+  "path": "/services/bulk-item-pickup/",
+  "status": "published",
+  "refs": { "serviceId": "bulk-item-pickup", "itemIds": ["exercise-equipment", "lawn-mowers", "grills-patio", "carpet", "bicycles-tools", "toys-decor"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Bulk Item Pickup in Mobile, AL | Heavy Item Removal | Zoiris",
+    "description": "One heavy or awkward item to get rid of in Mobile, AL? Zoiris picks up single bulky items, from workbenches to rolled carpet, so you don't have to lift them.",
+    "h1": "Bulk Item Pickup in Mobile, AL",
+    "primaryKeyword": "bulk item pickup Mobile AL",
+    "secondaryKeywords": ["heavy item removal Mobile", "large item pickup Mobile AL", "single item junk removal Mobile", "oversized item disposal Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Bulk Item Pickup in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Single heavy, bulky, or awkward items picked up and hauled away in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Bulk Item Pickup", "parentId": "core-services" },
+  "purpose": "Serve people in Mobile with one (or a few) heavy, oversized, or awkward items that are too big for regular trash or a car — distinct from furniture removal, which covers household furniture specifically.",
+  "content": {
+    "eyebrow": "Junk Removal",
+    "lead": "Zoiris Junk Removal picks up single heavy or oversized items in Mobile, Alabama — the things too big for the trash can, too awkward for your car, and too heavy to move alone. A workbench the last owner left behind, a long roll of old carpet, a rusted grill, a piece of home gym equipment: tell us what it is and where it sits, and our crew takes it from there.",
+    "quickAnswer": {
+      "question": "Will you come out for just one big item?",
+      "answer": "Yes — that's exactly what bulk item pickup is for. Describe the item, its rough size, and where it is (garage, backyard, upstairs). We confirm an estimate and a pickup window, then the crew handles the heavy lifting. Some very heavy items, like treadmills and weight machines, are call to confirm."
+    },
+    "includes": {
+      "heading": "What bulk item pickup includes",
+      "intro": "Built for the one-off item, not a full load.",
+      "points": [
+        "Removing a single heavy, bulky, or awkwardly shaped item without needing a truckload of other stuff to make it worthwhile.",
+        "Carrying it from backyards, side yards, garages, and upper floors to the truck.",
+        "Basic breakdown when an item is designed to come apart, such as removing weight stacks or folding a frame.",
+        "Adding a few smaller things to the same trip if you mention them when you book."
+      ]
+    },
+    "items": {
+      "heading": "Bulky items people ask us to pick up",
+      "intro": "If it's big, heavy, and non-hazardous, describe it and we'll let you know.",
+      "list": [
+        "Treadmills, ellipticals, exercise bikes, and weight machines — call to confirm",
+        "Push mowers and gas-powered yard equipment, with fuel and oil drained — call to confirm",
+        "Grills (propane tank removed) and heavy patio sets",
+        "Large area rugs and rolled carpet with padding",
+        "Workbenches, heavy-duty shelving, and bikes",
+        "Children's play sets and playhouses that are already taken apart"
+      ],
+      "itemIds": ["exercise-equipment", "lawn-mowers", "grills-patio", "carpet", "bicycles-tools", "toys-decor"]
+    },
+    "audience": {
+      "heading": "When bulk item pickup makes sense",
+      "body": [
+        "It's for the single problem item: the treadmill replaced by a gym membership, the workbench that came with the house, the play set the kids outgrew, or the grill that finally rusted through. It also suits anyone who doesn't have a truck, a helper, or a back that's up for the job.",
+        "For one specific type of item, our dedicated pages may answer more: [furniture removal](/services/furniture-removal/) for couches and dressers, [mattress removal](/services/mattress-removal/) for beds, and [appliance removal](/services/appliance-removal/) for stoves and washers."
+      ]
+    },
+    "process": {
+      "heading": "How a single-item pickup works",
+      "steps": [
+        { "title": "Send a photo", "body": "A photo plus rough dimensions or a model name tells us most of what we need. Note where it sits and whether there are steps, a gate, or soft ground between it and the street." },
+        { "title": "We confirm it's a fit", "body": "For heavy items like exercise machines, we first confirm we can handle the piece. Then we confirm an estimate and a pickup window." },
+        { "title": "Lift and load", "body": "The crew does the lifting and carrying, maneuvers the item out, and loads it onto the truck. You just open the door or the gate." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the price of a bulk pickup",
+      "intro": "A single item is still priced on the effort and handling it takes:",
+      "factors": [
+        "Weight — a commercial-style treadmill or multi-station gym is far heavier than it looks",
+        "Whether the item has to be broken down to get it out",
+        "The route to the truck: stairs, backyard gates, narrow side yards, or soft ground",
+        "The material and how it has to be disposed of",
+        "Any extra items you add to the same trip"
+      ]
+    },
+    "prepare": {
+      "heading": "Getting a heavy item ready",
+      "tips": [
+        "Unplug a treadmill, set the incline to its lowest position, and fold it if it's designed to fold.",
+        "Take weight plates off bars and machines and stack them nearby — they're easier to carry separately.",
+        "Drain gas and oil from mowers and other gas-powered equipment before pickup.",
+        "Measure the item and the narrowest doorway or gate on the way out, and send both.",
+        "Unlock backyard gates and keep pets inside while the crew works."
+      ]
+    },
+    "restrictions": {
+      "heading": "Large items we need to discuss first",
+      "body": "Some big items are not confirmed yet or have conditions:",
+      "list": [
+        "Pianos — not yet confirmed; call to discuss the type and location",
+        "Hot tubs and spas — not yet confirmed; call to discuss",
+        "Anything that must be cut apart, torn out, or demolished to remove — we haul items, we don't do demolition",
+        "Propane tanks and fuel cans must be removed first; we don't take them"
+      ]
+    },
+    "faqs": [
+      { "q": "What counts as a bulk item?", "a": "Generally, anything too big or heavy for your regular trash and too awkward to fit in your car — a workbench, a large rug, a play set, a piece of gym equipment. If you're not sure, send a photo." },
+      { "q": "Do you take treadmills and home gym equipment?", "a": "Exercise equipment is call to confirm. Tell us the make or model and where it sits — a treadmill in a second-floor bedroom is a different job from one in the garage." },
+      { "q": "Can you move a piano?", "a": "Piano removal isn't confirmed yet. Call us with the type (upright, spinet, or grand) and its location, and we'll let you know whether we can help." },
+      { "q": "Can I add a few smaller things to a single-item pickup?", "a": "Yes. Mention them when you book so the estimate includes them. If the list grows into a room's worth, our [residential junk removal](/services/residential-junk-removal/) page covers larger loads." },
+      { "q": "How is this different from city bulk trash collection?", "a": "City of Mobile residential trash collection runs on a set schedule, has limits on how much you can put out, and requires you to bring items to the curb. With us, the crew picks the item up from where it sits. Check current city rules with [City of Mobile Public Works](https://www.cityofmobile.gov)." }
+    ],
+    "areaNote": "Bulk item pickup is available throughout the City of Mobile. If the item is outside city limits, call to confirm before booking.",
+    "illustration": "residential"
+  },
+  "related": ["svc-furniture-removal", "svc-appliance-removal", "svc-garage-cleanouts", "svc-residential-junk-removal", "core-accepted-items", "core-request-pickup"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Kept distinct from furniture removal: focuses on one-off heavy/awkward non-furniture items. Exercise equipment and gas-powered equipment are call to confirm; pianos and hot tubs listed only as 'not yet confirmed' in restrictions and FAQ. City of Mobile collection comparison verified via search of cityofmobile.gov on 2026-11-04.",
+    "ownerVerification": [
+      "Confirm exercise equipment acceptance and any weight limits (currently call to confirm).",
+      "Confirm lawn mower and gas-powered equipment acceptance once drained (currently call to confirm).",
+      "Confirm piano removal capability (currently 'not yet confirmed').",
+      "Confirm hot tub removal (currently 'not yet confirmed'; service is unverified and has no page).",
+      "Confirm basic breakdown of items designed to come apart (weight stacks, folding frames) is included."
+    ]
+  }
+}

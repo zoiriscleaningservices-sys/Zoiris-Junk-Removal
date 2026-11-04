@@ -1,0 +1,14 @@
+node_modules
+dist
+.astro
+.git
+.zoiris-private
+.zoiris-test-*
+backups
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.env
+.env.*
+!.env.example
+tests/lighthouse/.tmp

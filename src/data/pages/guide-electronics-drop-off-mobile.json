@@ -1,0 +1,140 @@
+{
+  "id": "guide-electronics-drop-off-mobile",
+  "type": "article",
+  "path": "/guides/electronics-drop-off-mobile-al/",
+  "status": "published",
+  "refs": { "serviceId": "electronics-pickup", "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Where to Drop Off Electronics in Mobile, AL | Zoiris Guide",
+    "description": "City of Mobile residents can drop off certain household electronics at three City recycling centers. What is accepted, who qualifies, and when pickup is easier.",
+    "h1": "Where Mobile Residents Can Drop Off Certain Electronics",
+    "primaryKeyword": "where can I drop off electronics in Mobile AL",
+    "secondaryKeywords": ["City of Mobile electronics recycling", "Mobile AL recycling drop-off locations", "electronics recycling drop-off Mobile Alabama", "what electronics does Mobile recycling accept"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Electronics Drop-Off in Mobile", "parentId": "core-guides" },
+  "purpose": "Accurately summarize the City of Mobile's residential electronics drop-off program (locations, hours, eligibility, accepted and excluded items) as published by the City, and help readers recognize when a pickup service is the more practical choice.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "City of Mobile residents can drop off many household electronics — computers, phones, game consoles, DVD players, surge protectors, and other small electronics — in the blue electronics bins at the City's **three single-stream recycling drop-off centers**. The service is for City residents only, it is not open to businesses, and it does **not** accept TVs of any kind.",
+    "sections": [
+      {
+        "heading": "How the City program works",
+        "body": [
+          "According to the City of Mobile's recycling page, residents can drop off old, unwanted, broken, and outdated household electronics at any of the City's three recycling centers during regular operating hours. Accepted items go in the blue bins marked for electronic recycling. The City works with an electronics recycling partner that collects and processes what is dropped off.",
+          "The City describes this as a free drop-off service for residential electronics. Because programs can change, check the [City's recycling page](https://www.cityofmobile.gov/public-works/recycling/) or call 311 before you go."
+        ]
+      },
+      {
+        "heading": "Drop-off locations and hours, as published by the City",
+        "body": [
+          "At the time of our review, the City listed these three recycling drop-off locations:"
+        ],
+        "bullets": [
+          "**4851 Museum Drive** — the City's Western Administrative Complex in Langan Park, across from the Mobile Museum of Art.",
+          "**308 Pinehill Drive** — behind (to the north of) the Police Headquarters, between Government Street and Airport Boulevard.",
+          "**1750 Dauphin Island Parkway** — between Faye Street and Magnolia Lane."
+        ],
+        "subsections": [
+          {
+            "heading": "Normal hours of operation",
+            "body": [
+              "The City lists normal hours as Monday through Friday, 7 a.m. to 5 p.m., and Saturday and Sunday, 7 a.m. to 4 p.m. The City also publishes a holiday schedule, so check it before a holiday trip. For questions, the City directs residents to call 311."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Who can use the drop-off centers",
+        "body": [
+          "The City states that recycling at these locations is a service for **City of Mobile residents only**. It does not accept recyclables from businesses or from people living outside Mobile, and residents may be asked to show proof of residence.",
+          "Businesses are handled differently. The City's page says local businesses can schedule a commercial pickup for larger quantities directly through its electronics recycling partner, with contact details listed on the City page. If you are clearing out an office, our [office electronics pickup](/e-waste/office-electronics-pickup/) page explains how a business pickup with Zoiris works."
+        ]
+      },
+      {
+        "heading": "What you can and cannot bring",
+        "body": [
+          "The City lists these as some of the items accepted at the recycling centers:"
+        ],
+        "bullets": [
+          "Telephones and cell phones",
+          "Computers, including components and accessories",
+          "Game consoles",
+          "CD and DVD players",
+          "Surge protectors and other small electronics"
+        ],
+        "subsections": [
+          {
+            "heading": "Not accepted: TVs of any kind",
+            "body": [
+              "The City is explicit that TVs of any kind cannot be accepted and asks residents not to leave TVs at the drop-off locations. If you have a TV, see our guide on [how to get rid of an old TV in Mobile](/guides/get-rid-of-old-tv-mobile-al/)."
+            ]
+          },
+          {
+            "heading": "Not sure about an item?",
+            "body": [
+              "The City's list says these are some of the accepted items, not all of them. For larger pieces such as monitors or printers, call 311 to confirm before you make the trip."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Before you drop anything off",
+        "body": [
+          "Electronics in a public bin are out of your control once you leave them, so prepare them first. Back up and erase computers and phones — our guide to [preparing a computer for recycling](/guides/prepare-computer-for-recycling/) covers the steps. Remove SIM and memory cards from phones.",
+          "The EPA recommends removing batteries from electronics when you can, because they may need to be recycled separately, and warns that lithium-ion batteries should not go in household garbage or recycling bins. Never put a device with a swollen or damaged battery in any bin; see [how to handle old batteries safely](/guides/old-batteries-safety/)."
+        ]
+      },
+      {
+        "heading": "Other City options and their limits",
+        "body": [
+          "The City's Trash Collection Rules say electronics must not go on your regular roadside trash pile — if they do, the entire pile will not be picked up. City residents can instead call 311 to place a work order for an electronics pickup.",
+          "The City's periodic Household Hazardous Waste collection events do not accept electronics, so keep those for paint, chemicals, and batteries."
+        ]
+      },
+      {
+        "heading": "When a pickup is more practical",
+        "body": [
+          "The drop-off centers are a good choice for a residential bag or box of small electronics you can carry yourself. A pickup tends to make more sense when:"
+        ],
+        "bullets": [
+          "You have a TV, which the drop-off centers do not accept.",
+          "The equipment belongs to a business, which the drop-off program does not serve.",
+          "Items are heavy or bulky — desktop towers, printers, stacks of monitors — or you do not have a vehicle.",
+          "Electronics are mixed in with furniture or boxes from a larger cleanout.",
+          "You would rather have someone else do the lifting and carrying."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Is the City of Mobile electronics drop-off free?", "a": "The City describes it as a free drop-off service for residential electronics from City of Mobile residents. Check the City's recycling page or call 311 for the latest details." },
+      { "q": "Can a business use the City's electronics drop-off centers?", "a": "No. The City says the drop-off centers do not accept recyclables from businesses. Its page explains that businesses can arrange a commercial pickup for larger quantities directly with its electronics recycling partner." },
+      { "q": "Can I drop off a TV at a City recycling center?", "a": "No. The City states that TVs of any kind are not accepted and asks residents not to leave them at the drop-off locations." },
+      { "q": "Do I need proof that I live in Mobile?", "a": "You may be asked for it. The City says the drop-off centers serve City of Mobile residents only and that residents may be asked to provide proof of residence." },
+      { "q": "Can Zoiris pick up electronics instead?", "a": "Yes. Zoiris picks up computers, monitors, printers, phones, and other electronics in Mobile. See our [electronics pickup](/e-waste/) page for what we take and how to prepare. TVs are confirmed by size and type before scheduling." }
+    ],
+    "illustration": "electronics",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 5,
+      "sources": [
+        { "label": "City of Mobile — Recycling (drop-off locations, hours, electronics)", "url": "https://www.cityofmobile.gov/public-works/recycling/" },
+        { "label": "City of Mobile — Trash Collection Rules", "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/" },
+        { "label": "City of Mobile — Household Hazardous Waste Collection", "url": "https://www.cityofmobile.gov/hhw/" },
+        { "label": "EPA — Electronics Donation and Recycling", "url": "https://www.epa.gov/recycle/electronics-donation-and-recycling" }
+      ]
+    }
+  },
+  "related": ["ew-electronics-pickup", "guide-get-rid-of-old-tv-mobile", "guide-prepare-computer-for-recycling", "ew-office-electronics-pickup", "ew-computer-recycling"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Locations, hours, eligibility, accepted items, and TV exclusion copied from the City recycling page as fetched on 2026-11-04. City partner deliberately not named per content guide; readers are pointed to the City page. Re-check the City page whenever this article is reviewed — hours and items can change.",
+    "ownerVerification": []
+  }
+}

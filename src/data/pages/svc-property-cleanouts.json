@@ -1,0 +1,198 @@
+{
+  "id": "svc-property-cleanouts",
+  "type": "service",
+  "path": "/services/property-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "property-cleanouts",
+    "itemIds": [
+      "couch",
+      "mattress",
+      "boxes-clutter",
+      "clothing-linens",
+      "carpet",
+      "tables-chairs",
+      "washer-dryer",
+      "refrigerators",
+      "tires"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Property & Rental Cleanouts in Mobile, AL | Zoiris",
+    "description": "Landlords, property managers, and realtors in Mobile, AL: Zoiris clears rental turnovers, vacant homes, and left-behind contents so you can repair or list.",
+    "h1": "Property Cleanouts in Mobile, AL",
+    "primaryKeyword": "property cleanout Mobile AL",
+    "secondaryKeywords": [
+      "rental property cleanout Mobile",
+      "tenant move-out cleanout Mobile AL",
+      "foreclosure cleanout Mobile",
+      "landlord junk removal Mobile",
+      "vacant property cleanout Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Property Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Rental turnovers, vacant homes, and left-behind contents cleared for landlords, property managers, and realtors in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Property Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve landlords, property managers, investors, and realtors in Mobile who need a vacant rental, foreclosure, or listing cleared of left-behind contents. The page explains how access and scope work when the owner is not on site, and reminds owners to follow applicable legal procedures for a former tenant's belongings, without giving legal advice.",
+  "content": {
+    "eyebrow": "Cleanouts",
+    "lead": "When a tenant moves out and leaves a mess behind, or a vacant house is full of someone else's things, the property cannot be repaired, cleaned, or listed until it is empty. Zoiris Junk Removal clears rental units, vacant homes, and foreclosure properties in Mobile, Alabama for landlords, property managers, and realtors. You tell us what goes and how to get in, and we haul it out so your next contractor can get started.",
+    "quickAnswer": {
+      "question": "Can you clear out belongings a tenant left behind?",
+      "answer": "Yes, once you have confirmed that you are allowed to dispose of them. Former tenants' belongings may be covered by legal requirements, such as notice or holding periods. Follow the procedures that apply to your situation, and check with an attorney if you are unsure, before you schedule. After that, we remove whatever the owner or authorized manager releases."
+    },
+    "includes": {
+      "heading": "What a property cleanout covers",
+      "intro": "Property jobs range from a few leftover pieces to a house full of contents. We handle:",
+      "points": [
+        "Removing furniture, mattresses, bagged trash, and household contents left behind in a vacated unit.",
+        "Clearing vacant and bank-owned homes, including closets, garages, and carports.",
+        "Taking out stained carpet or rugs that have already been pulled up, so flooring work can begin.",
+        "Removing disconnected appliances when the owner wants them gone. Refrigerators need a call to confirm.",
+        "Clearing rental turnovers one at a time, or across several units for a manager with a vacancy list."
+      ]
+    },
+    "items": {
+      "heading": "What gets left behind most often",
+      "intro": "Left-behind contents are rarely tidy. Here is what typically comes out of a vacated property:",
+      "list": [
+        "Abandoned sofas, beds, mattresses, and dining sets",
+        "Bags of trash, boxes, and loose household items",
+        "Clothing, bedding, and personal clutter",
+        "Pulled-up carpet, padding, and rugs",
+        "Washers and dryers that are not staying with the property",
+        "Left-behind refrigerators and freezers — call to confirm",
+        "Tires found on the property — call to check"
+      ],
+      "itemIds": [
+        "couch",
+        "tables-chairs",
+        "mattress",
+        "boxes-clutter",
+        "clothing-linens",
+        "carpet",
+        "washer-dryer",
+        "refrigerators",
+        "tires"
+      ]
+    },
+    "audience": {
+      "heading": "Who uses property cleanouts",
+      "body": [
+        "Independent landlords call after a tenant moves out and leaves furniture and trash behind. Property managers call to clear vacated units between residents, so cleaning and make-ready work can start. Investors call when they buy a property that still holds a previous owner's contents.",
+        "Realtors call when a listing needs to be emptied before photos or showings, often for a seller who has already moved away. For a family clearing a relative's home, our [estate cleanouts](/services/estate-cleanouts/) page is a better fit."
+      ]
+    },
+    "process": {
+      "heading": "How a property cleanout works",
+      "steps": [
+        {
+          "title": "Authorization and access",
+          "body": "Tell us who owns or manages the property, who can approve what goes, and how we get in: a lockbox code, a key handoff, or meeting someone on site."
+        },
+        {
+          "title": "Scope from your walk-through",
+          "body": "Send photos from your own inspection and note anything that stays, like landlord-owned appliances or blinds. We confirm an estimate and a pickup window based on what you send."
+        },
+        {
+          "title": "Clear and report back",
+          "body": "The crew removes the released contents and secures the property the way we found it. Then we let you know the job is done, so you can send in cleaners or contractors."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a property cleanout",
+      "intro": "Vacated properties vary widely, so each one is quoted individually. Key factors:",
+      "factors": [
+        "Total volume of contents and trash left behind",
+        "Condition of the contents, including spoiled food, pests, or water damage",
+        "Size of the property and number of floors",
+        "Whether this is a single unit or several units scheduled together",
+        "Access, including lockbox arrangements, gated communities, or long carries"
+      ]
+    },
+    "prepare": {
+      "heading": "Before you schedule a property cleanout",
+      "tips": [
+        "Make sure any notice or holding steps that apply to a former tenant's property are complete before contents are removed.",
+        "Photograph the contents for your records before the cleanout.",
+        "Mark or list fixtures and appliances that belong to the property, so they stay put.",
+        "Leave the power on if you can. Working in a dark house slows everything down and makes it harder to spot hazards.",
+        "Tell us about anything you saw during your inspection that could be unsafe, like needles, chemicals, animal waste, or structural damage.",
+        "Share the lockbox code or key handoff plan, plus the gate code if the property is in a gated community."
+      ]
+    },
+    "restrictions": {
+      "heading": "What property cleanouts do not include",
+      "body": "We are a pickup and hauling service. A few things fall outside that:",
+      "list": [
+        "We are not part of the eviction process. We do not serve notices, change locks, or decide what counts as abandoned.",
+        "Needles, medical waste, and biohazards are not accepted, and properties where they are present need a conversation first.",
+        "Paint, chemicals, fuel, and propane left at a property are not accepted.",
+        "Cleaning, repairs, and demolition are not included. Debris from repair work already done is covered under [construction debris removal](/services/construction-debris-removal/)."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Do I need to be at the property?",
+        "a": "Not if access and scope are clear. Many property managers give us a lockbox code and a list or photos of what goes. Someone with authority over the property should be reachable by phone while we work, in case questions come up."
+      },
+      {
+        "q": "Who decides what counts as abandoned property?",
+        "a": "You do, as the owner or manager, following whatever legal procedures apply. We cannot give legal advice or make that call. We remove only what you tell us to."
+      },
+      {
+        "q": "Can you handle several units on a turnover list?",
+        "a": "Tell us how many units there are, where they are, and your target dates. We will confirm what can be scheduled together and what needs separate visits."
+      },
+      {
+        "q": "The unit has spoiled food and bagged trash. Will you take it?",
+        "a": "Bagged household trash and contents can usually be included. Spoiled food, heavy odors, or pest problems should be described up front so we can plan. Mention them when you book."
+      },
+      {
+        "q": "Will you remove the refrigerator and stove?",
+        "a": "Only if you tell us they are going. Landlord-owned appliances stay by default. Stoves must already be disconnected, and gas units need a qualified person to cap the line. Refrigerators need a call to confirm."
+      },
+      {
+        "q": "I'm a realtor with a listing full of the seller's things. Can you help?",
+        "a": "Yes, as long as the seller or their authorized representative has released the contents. Tell us your listing or photo date when you book, and we will confirm a pickup window if one fits."
+      }
+    ],
+    "areaNote": "Property cleanouts are available at rentals and vacant homes inside the City of Mobile. For properties outside the city, contact us before booking.",
+    "illustration": "commercial"
+  },
+  "related": [
+    "svc-apartment-cleanouts",
+    "svc-house-cleanouts",
+    "svc-commercial-junk-removal",
+    "svc-appliance-removal",
+    "svc-construction-debris-removal",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Abandoned tenant property: owners are told to follow applicable legal procedures and consult an attorney if unsure. No statutes cited and no legal advice given. Zoiris is explicitly not part of the eviction process.",
+    "ownerVerification": [
+      "Confirm the crew will work at vacant properties via lockbox or key handoff without an owner on site.",
+      "Confirm policy for bagged household trash, spoiled food, and unsanitary or pest-affected units.",
+      "Confirm whether a completion notice (and optional photos) is sent to the property manager after the job.",
+      "Confirm whether multi-unit turnover scheduling is offered.",
+      "Confirm tire policy and any disposal fees."
+    ]
+  }
+}

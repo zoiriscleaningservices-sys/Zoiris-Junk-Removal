@@ -1,0 +1,201 @@
+{
+  "id": "svc-appliance-removal",
+  "type": "service",
+  "path": "/services/appliance-removal/",
+  "status": "published",
+  "refs": {
+    "serviceId": "appliance-removal",
+    "itemIds": [
+      "washer-dryer",
+      "stoves",
+      "dishwashers",
+      "microwaves",
+      "water-heaters",
+      "refrigerators",
+      "ac-units"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Appliance Removal & Pickup in Mobile, AL | Zoiris",
+    "description": "Old washer, dryer, stove, or dishwasher in the way? Zoiris hauls away disconnected appliances from homes and businesses in Mobile, AL. Fridges: call first.",
+    "h1": "Appliance Removal in Mobile, AL",
+    "primaryKeyword": "appliance removal Mobile AL",
+    "secondaryKeywords": [
+      "appliance pickup Mobile",
+      "old appliance disposal Mobile AL",
+      "stove removal Mobile",
+      "dishwasher removal Mobile",
+      "water heater removal Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Appliance Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Washers, dryers, stoves, dishwashers, and small appliances hauled away in Mobile, Alabama. Refrigerant appliances confirmed case by case.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Appliance Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve Mobile residents and businesses replacing or discarding household appliances, with clear guidance on disconnection, gas safety, and which refrigerant-containing appliances must be confirmed before pickup.",
+  "content": {
+    "eyebrow": "Junk Removal",
+    "lead": "Zoiris Junk Removal hauls away old washers, dryers, stoves, dishwashers, and small kitchen appliances from homes and businesses in Mobile, Alabama. Once an appliance is disconnected, our crew moves it out of the kitchen, laundry room, or garage and takes it away — useful when your new appliance delivery doesn't include taking the old one, or when a spare unit has been sitting in the carport for years.",
+    "quickAnswer": {
+      "question": "Do I have to disconnect my appliance before you pick it up?",
+      "answer": "Yes, for most appliances. Unplug electric units and shut off and disconnect any water lines. **Gas stoves, ranges, and dryers must be disconnected and capped by a qualified person before pickup** — our crew does not disconnect gas lines. Water heaters must be drained and disconnected. If a dishwasher is still plumbed in, ask us when you book."
+    },
+    "includes": {
+      "heading": "What appliance removal includes",
+      "intro": "You handle the disconnection; we handle the heavy part.",
+      "points": [
+        "Moving disconnected appliances out of kitchens, laundry rooms, utility closets, and garages.",
+        "Getting heavy units down steps and through tight doorways without you lifting a thing.",
+        "Picking up old spares stored in a garage, shed, or carport.",
+        "Taking metal appliances for recycling where practical options exist, with the rest going to proper disposal."
+      ]
+    },
+    "items": {
+      "heading": "Appliances we pick up",
+      "intro": "Some appliances are routine; others need a quick confirmation first.",
+      "list": [
+        "Washing machines and dryers, including stacked units — see [washer and dryer removal](/items/washer-dryer-removal/)",
+        "Electric and gas stoves, ovens, ranges, and cooktops (gas lines capped by a qualified person first)",
+        "Dishwashers — uninstalled units are simplest",
+        "Microwaves, toaster ovens, mixers, and other small kitchen appliances",
+        "Water heaters — call to confirm; must be drained and disconnected",
+        "Refrigerators and freezers — call to confirm; see [refrigerator removal](/items/refrigerator-removal/)",
+        "Window AC units and dehumidifiers — call to confirm"
+      ],
+      "itemIds": [
+        "washer-dryer",
+        "stoves",
+        "dishwashers",
+        "microwaves",
+        "water-heaters",
+        "refrigerators",
+        "ac-units"
+      ]
+    },
+    "audience": {
+      "heading": "Who needs appliance removal",
+      "body": [
+        "Homeowners upgrading a kitchen or laundry room are the most common callers, along with people whose old appliance quit and who bought a replacement without haul-away. Landlords swap out ranges and washers between tenants, and DIY remodelers end up with a dishwasher and cooktop sitting in the driveway.",
+        "Small businesses call when a break room microwave or the range in a rental unit needs to go. For appliances plus a lot of other items, our [residential junk removal](/services/residential-junk-removal/) page covers mixed loads."
+      ]
+    },
+    "process": {
+      "heading": "How appliance pickup works",
+      "steps": [
+        {
+          "title": "Tell us the type and setup",
+          "body": "Let us know what the appliance is, whether it's gas or electric, whether it's still connected, and where it sits. A photo of the space around it helps."
+        },
+        {
+          "title": "Disconnect ahead of time",
+          "body": "Unplug it and shut off the water. Gas connections must be capped by a qualified person before we arrive. Our [appliance pickup prep guide](/guides/prepare-for-appliance-pickup/) has a checklist."
+        },
+        {
+          "title": "Confirm and schedule",
+          "body": "We confirm an estimate and a pickup window. For refrigerators, freezers, AC units, and water heaters, we confirm handling first."
+        },
+        {
+          "title": "Out and away",
+          "body": "The crew moves the appliance out, loads it, and hauls it off."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects appliance removal pricing",
+      "intro": "Appliance jobs are estimated individually based on:",
+      "factors": [
+        "How many appliances and what types",
+        "Size and weight — a stacked laundry unit or commercial-size range takes more effort than a microwave",
+        "Basements, stairs, and tight laundry closets",
+        "Appliances that contain refrigerant and need extra handling downstream",
+        "Whether the unit is disconnected and ready to move when the crew arrives"
+      ]
+    },
+    "prepare": {
+      "heading": "Preparing an appliance for pickup",
+      "tips": [
+        "Clean out the inside — leftover detergent, lint, oven racks you want to keep, and any food.",
+        "Drain the washer and disconnect the hoses. Leave the hoses with the machine if they're not needed for the new one.",
+        "Give a water heater time to cool, then drain it fully and disconnect it.",
+        "Measure doorways if the appliance went in before a remodel; some units were installed before cabinets or trim were added.",
+        "For a refrigerator or freezer, empty it and let it defrost before pickup day — after we've confirmed it."
+      ]
+    },
+    "restrictions": {
+      "heading": "Appliance rules to know",
+      "body": "For safety and proper disposal, a few conditions apply:",
+      "list": [
+        "Gas appliances must be disconnected and capped by a qualified person. Our crew does not disconnect gas lines or hardwired electrical connections.",
+        "Refrigerators, freezers, window AC units, and dehumidifiers contain refrigerant and are accepted only after we confirm handling. Our crew does not remove or handle refrigerant.",
+        "We don't take apart or scrap appliances on site.",
+        "Water heaters must be drained, and appliances must be emptied of food, standing water, and fuel."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Why refrigerators and AC units need a call first",
+        "body": [
+          "Refrigerators, freezers, window air conditioners, and dehumidifiers contain refrigerant. Federal rules require that refrigerant be properly recovered before these appliances are disposed of — the EPA explains the requirements on its [Section 608 page](https://www.epa.gov/section608).",
+          "Because of that, we confirm each refrigerant-containing appliance before scheduling rather than accepting it automatically. When we do take one, it is transported intact. More detail is on our [refrigerator removal](/items/refrigerator-removal/) page."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Will you take my old refrigerator?",
+        "a": "Refrigerators and freezers are call to confirm because they contain refrigerant. Tell us the size, location, and whether it still runs, and we'll let you know before anything is scheduled. See [refrigerator removal](/items/refrigerator-removal/) for prep steps."
+      },
+      {
+        "q": "Can your crew disconnect my gas dryer or gas stove?",
+        "a": "No. Gas appliances must be disconnected and the line capped by a qualified person before pickup. Once that's done, we handle moving and hauling it."
+      },
+      {
+        "q": "Do you take water heaters?",
+        "a": "Water heaters are call to confirm. They need to be fully drained and disconnected before pickup, and it helps to tell us whether the unit is gas or electric and where it's located."
+      },
+      {
+        "q": "My dishwasher is still installed. Can you remove it?",
+        "a": "An uninstalled dishwasher is simplest. If yours is still plumbed in, mention it when you book so we can talk through what's needed before pickup day."
+      },
+      {
+        "q": "What happens to old appliances after pickup?",
+        "a": "Metal appliances are separated for recycling where practical options exist, and anything else goes to proper disposal. Our [responsible disposal](/responsible-disposal/) page explains how we approach it."
+      }
+    ],
+    "areaNote": "Appliance removal is available to homes and businesses throughout the City of Mobile. Call first if you're outside city limits.",
+    "illustration": "residential"
+  },
+  "related": [
+    "item-refrigerator-removal",
+    "item-washer-dryer-removal",
+    "guide-appliance-pickup-prep",
+    "svc-residential-junk-removal",
+    "svc-construction-debris-removal",
+    "core-restricted-items"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Refrigerators, freezers, AC units, dehumidifiers, and water heaters presented as call to confirm per items.json. Copy states the crew does not handle refrigerant and never claims recovery. Fridge and washer/dryer keywords left to their item pages.",
+    "ownerVerification": [
+      "Confirm the downstream refrigerant-recovery outlet before refrigerators, freezers, and AC units can be moved from 'call to confirm' to accepted.",
+      "Confirm whether the crew will disconnect an installed dishwasher (copy currently asks customers to mention it).",
+      "Confirm water heater acceptance (currently call to confirm).",
+      "Confirm stacked washer/dryer units are accepted.",
+      "Confirm whether metal appliances currently go to a scrap or recycling outlet (copy says 'where practical options exist')."
+    ]
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "id": "svc-junk-removal-mobile-al",
+  "type": "service",
+  "path": "/junk-removal-mobile-al/",
+  "status": "published",
+  "refs": {
+    "serviceId": "junk-removal",
+    "itemIds": ["couch", "recliner", "tables-chairs", "dressers", "mattress", "bed-frames", "washer-dryer", "stoves", "dishwashers", "refrigerators", "desktop-computers", "flat-monitors", "printers", "boxes-clutter", "clothing-linens", "toys-decor", "drywall-lumber", "cabinets-fixtures", "carpet", "office-furniture", "file-cabinets", "grills-patio", "bicycles-tools"],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Junk Removal in Mobile, AL | Junk Hauling & Pickup | Zoiris",
+    "description": "Zoiris Junk Removal hauls away furniture, appliances, electronics, and clutter from homes and businesses in Mobile, AL. Our crew does all the lifting.",
+    "h1": "Junk Removal in Mobile, AL",
+    "primaryKeyword": "junk removal Mobile AL",
+    "secondaryKeywords": ["junk hauling Mobile AL", "junk pickup Mobile", "junk removal company Mobile Alabama", "junk removal near me", "haul away junk Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Junk Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Full-service junk pickup and hauling for homes and businesses in the City of Mobile, Alabama. You point, our crew lifts and hauls.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Junk Removal in Mobile, AL", "parentId": "core-home" },
+  "purpose": "The flagship page for anyone in Mobile searching for a junk removal or junk hauling company. It explains the full service in one place, routes visitors to the specific sub-service pages, and absorbs junk hauling, junk pickup, and 'near me' searches so those intents do not compete with each other.",
+  "content": {
+    "eyebrow": "Mobile, Alabama",
+    "lead": "Zoiris Junk Removal is a local pickup service that hauls unwanted stuff away from homes and businesses in the City of Mobile. Show us what needs to go — one recliner or a garage full of boxes — and our crew loads it, hauls it off, and handles the drop-off. No truck rental, no borrowed trailer, no weekend spent loading a pickup.",
+    "quickAnswer": {
+      "question": "How does junk removal work in Mobile, AL?",
+      "answer": "Tell us what you want gone and where it is — call 251-930-8621 or send a [pickup request](/request-pickup/). We confirm an estimate and a pickup window with you, then our crew carries everything out and hauls it away. Nothing has to be dragged to the curb first."
+    },
+    "includes": {
+      "heading": "What our junk removal service covers",
+      "intro": "Every job is full-service hauling. In practice that means:",
+      "points": [
+        "Picking items up from wherever they are — back bedrooms, attics, garages, sheds, offices, or a pile already sitting in the driveway.",
+        "Loading the truck ourselves. You never have to lift, stage, or stack anything.",
+        "Jobs of every size, from a single bulky piece to several rooms of household clutter or a vacated business suite.",
+        "Residential and commercial pickups on the same terms, with electronics allowed on the same load.",
+        "Sorting at the end of the job: where practical options exist, usable and recyclable items are separated from items going to disposal."
+      ]
+    },
+    "items": {
+      "heading": "What we haul away",
+      "intro": "Most non-hazardous household and business junk qualifies. Follow the links for item-specific details and preparation tips:",
+      "list": [
+        "Couches, recliners, dressers, dining sets, and other [furniture](/services/furniture-removal/)",
+        "Mattresses, box springs, and bed frames — see [mattress removal](/services/mattress-removal/)",
+        "Washers, dryers, stoves, and dishwashers — see [appliance removal](/services/appliance-removal/). Refrigerators, freezers, and window AC units are call to confirm.",
+        "Computers, monitors, printers, and other [electronics](/e-waste/)",
+        "One heavy or oversized piece on its own — see [bulk item pickup](/services/bulk-item-pickup/)",
+        "Boxes, bags, clothing, toys, décor, and general household clutter",
+        "Torn-out cabinets, drywall, lumber, and carpet — see [construction debris removal](/services/construction-debris-removal/)",
+        "Office desks, chairs, and emptied file cabinets",
+        "Grills (with the propane tank removed), patio furniture, bikes, and garage shelving"
+      ],
+      "itemIds": ["couch", "recliner", "tables-chairs", "dressers", "mattress", "bed-frames", "washer-dryer", "stoves", "dishwashers", "refrigerators", "desktop-computers", "flat-monitors", "printers", "boxes-clutter", "clothing-linens", "toys-decor", "drywall-lumber", "cabinets-fixtures", "carpet", "office-furniture", "file-cabinets", "grills-patio", "bicycles-tools"]
+    },
+    "audience": {
+      "heading": "Residential, commercial, and electronics pickups",
+      "body": [
+        "**At home:** homeowners and renters call us to clear a spare room, get rid of the old couch once the new one arrives, empty a garage, or deal with whatever is left after a move. Families also call when a relative's house needs clearing. Our [residential junk removal](/services/residential-junk-removal/) page covers everyday household jobs, and whole-property work is explained under [house cleanouts](/services/house-cleanouts/) and [garage cleanouts](/services/garage-cleanouts/).",
+        "**For businesses:** offices, shops, and property managers use the same crew for retired desks, storeroom overflow, and tenant leftovers. See [commercial junk removal](/services/commercial-junk-removal/) for how we plan around business hours and building rules.",
+        "**Electronics:** old computers, monitors, printers, and phones can ride on the same truck as everything else. Our [electronics pickup](/e-waste/) page explains how to get devices ready — including clearing your own data first, because we do not offer data destruction."
+      ]
+    },
+    "process": {
+      "heading": "How it works, start to finish",
+      "steps": [
+        { "title": "Describe the load", "body": "Call or use the [pickup request form](/request-pickup/). A rough list and a few photos — plus a note about stairs or a long walk to the truck — is plenty to start." },
+        { "title": "Get an estimate and a window", "body": "We confirm an estimate and a pickup window with you before anything is scheduled. If something on your list needs confirming, we settle it now rather than on pickup day." },
+        { "title": "We load and haul", "body": "On the day, show the crew what goes. They carry everything from where it sits and load the truck." },
+        { "title": "Sorted on the way out", "body": "Usable and recyclable items are set apart where practical options exist, and the rest goes to proper disposal. Our [responsible disposal](/responsible-disposal/) page explains the approach." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What determines the price",
+      "intro": "We don't publish flat rates, because two junk removal jobs rarely look alike. Your estimate depends mainly on the points below — our [pricing](/pricing/) page explains how estimates work.",
+      "factors": [
+        "Volume — how much of the truck your items fill",
+        "Weight — dense material like tile or concrete takes more to haul than the same space of boxes",
+        "Labor and access — stairs, tight hallways, long carries, or pieces that must come apart to fit through a door",
+        "Items with extra disposal handling, such as appliances that contain refrigerant",
+        "Whether the job is one item, a handful of pieces, or a full cleanout"
+      ]
+    },
+    "prepare": {
+      "heading": "Before your pickup",
+      "tips": [
+        "Decide what stays. If keepers are mixed in with junk, mark the junk with painter's tape or move the keepers to another room.",
+        "Pull out paperwork, photos, and valuables — check pockets, drawers, and boxes you haven't opened in years.",
+        "Clear personal data from computers and phones. Our [computer prep guide](/guides/prepare-computer-for-recycling/) walks through it.",
+        "Take propane tanks, gas cans, paint, and chemicals out of the pile. They can't go on the truck.",
+        "Note gate codes, parking limits, or HOA rules so the crew can get close to the door."
+      ]
+    },
+    "restrictions": {
+      "heading": "What we can't take",
+      "body": "Zoiris is a junk pickup service, not a hazardous waste hauler. These stay off the truck:",
+      "list": [
+        "Paint, solvents, pesticides, pool chemicals, and automotive fluids",
+        "Propane tanks, gas cans, and other fuel containers",
+        "Asbestos or materials suspected of containing it",
+        "Medical waste, sharps, and prescription medications",
+        "Swollen, damaged, or leaking batteries",
+        "Tires, pianos, hot tubs, and car batteries are call to confirm. The full list is on our [restricted items](/restricted-items/) page."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Your options for getting rid of junk in Mobile",
+        "body": [
+          "There's more than one way to clear out unwanted stuff. The right choice depends on how much you have, how heavy it is, and how much of your own time you want to spend on it."
+        ],
+        "subsections": [
+          {
+            "heading": "City of Mobile curbside trash collection",
+            "body": [
+              "The City of Mobile runs a residential trash collection, separate from household garbage, that covers bulky items such as discarded furniture, appliances, and yard debris. It runs on a set schedule, with limits on how much you can put out and how early it can go to the curb, and oversized piles may carry a fee. Check the current rules and your collection day with [City of Mobile Public Works](https://www.cityofmobile.gov) before you set anything out.",
+              "This works well when you can carry items to the curb yourself and your pile fits within the city's limits."
+            ]
+          },
+          {
+            "heading": "Hauling it yourself",
+            "body": [
+              "With a truck or trailer and someone to help lift, you can take items to a disposal or drop-off site on your own. Budget for loading time, tie-downs, and any gate fees."
+            ]
+          },
+          {
+            "heading": "Renting a dumpster",
+            "body": [
+              "A dumpster suits long projects where debris builds up over weeks, but you still do all the loading — and Zoiris does not rent dumpsters. Our guide to [junk removal vs. dumpster rental](/guides/junk-removal-vs-dumpster-rental/) compares the two."
+            ]
+          },
+          {
+            "heading": "Hiring a junk removal crew",
+            "body": [
+              "A crew makes sense when items are heavy, are still inside the house, add up to more than curbside collection takes, or you simply want everything gone in one visit. Because we pick up from inside, nothing has to sit at the curb waiting for collection day."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "One item, a few rooms, or a whole property",
+        "body": [
+          "Jobs come in all sizes, and the routine is the same for each: you point, we lift. These pages go deeper on specific situations:"
+        ],
+        "bullets": [
+          "**One piece:** an armoire, a heavy desk, or a worn-out recliner. See [bulk item pickup](/services/bulk-item-pickup/).",
+          "**A few rooms:** a spare bedroom and its closet, or what's left after a kitchen remodel.",
+          "**Whole spaces:** [estate cleanouts](/services/estate-cleanouts/), [apartment cleanouts](/services/apartment-cleanouts/), [storage unit cleanouts](/services/storage-unit-cleanouts/), and [moving cleanouts](/services/moving-cleanouts/).",
+          "**Rental and business properties:** [property cleanouts](/services/property-cleanouts/) for turnovers and [office cleanouts](/services/office-cleanouts/) for vacated suites."
+        ]
+      },
+      {
+        "heading": "Questions worth asking any junk removal company",
+        "body": [
+          "Whoever you hire, a few questions up front prevent surprises on pickup day. Here is how we answer them:"
+        ],
+        "bullets": [
+          "**Do you carry items out, or do I stage them?** We pick up from where items are. Staging is optional.",
+          "**How is the estimate set?** By volume, weight, access, and item type. We confirm it with you before scheduling.",
+          "**Which of my items need a closer look?** Anything marked call to confirm on our [accepted items](/accepted-items/) list — we check those before booking.",
+          "**What happens to my things?** Usable and recyclable items are separated where practical options exist; the rest goes to proper disposal.",
+          "**What if there's more than I described?** Tell the crew before loading starts so the estimate can be reviewed with you first."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Do you take junk from inside the house, or does it need to be at the curb?", "a": "We take it from wherever it is — upstairs bedrooms, the attic, a back porch, or the garage. If you've already piled things in the driveway, that works too." },
+      { "q": "Will you come out for just one item?", "a": "Yes. Single-item pickups are a normal part of our work. Describe the item and where it sits and we'll confirm an estimate. Our [bulk item pickup](/services/bulk-item-pickup/) page has tips for heavy pieces." },
+      { "q": "Do you haul junk for businesses as well as homes?", "a": "Yes. Offices, shops, and rental property owners use the same service. Our [commercial junk removal](/services/commercial-junk-removal/) page covers access, building rules, and on-site contacts." },
+      { "q": "Can old electronics go in the same load?", "a": "Most can — computers, monitors, printers, phones, and cables. TVs are confirmed by type before pickup. Clear your own data first, since we don't provide data destruction. See [electronics pickup](/e-waste/) for details." },
+      { "q": "How soon can you pick up?", "a": "It depends on the schedule at the time you call. Tell us your preferred dates when you book, and we'll confirm a pickup window that works for both of us." },
+      { "q": "Do I need to be home during the pickup?", "a": "It's easiest if someone can show the crew what goes. If you can't be there, mention it when you book so we can agree on access and how the items will be marked." },
+      { "q": "Which parts of Mobile do you serve?", "a": "We serve addresses within the City of Mobile. Our [Mobile service area](/areas/mobile-al/) page has details. If you're just outside city limits, call before booking so we can confirm." }
+    ],
+    "areaNote": "Junk removal is available to homes and businesses throughout the City of Mobile. See our [service area](/areas/mobile-al/) page, and call before booking if your address is outside city limits.",
+    "illustration": "hero"
+  },
+  "related": ["svc-residential-junk-removal", "svc-commercial-junk-removal", "ew-electronics-pickup", "core-how-it-works", "core-pricing", "loc-mobile-al"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Flagship page. Absorbs junk hauling, junk pickup, junk removal company, and near-me intent. City of Mobile curbside collection description verified via search of cityofmobile.gov on 2026-11-04 (separate every-other-week residential trash collection for furniture, appliances, bedding, and yard debris; volume limits; 48-hour curb rule; fee for oversized piles). Specific limits deliberately omitted so the copy does not go stale. No pricing, timing, or certification claims.",
+    "ownerVerification": [
+      "Confirm single-item pickups are offered without a minimum that would contradict the 'one item is fine' messaging.",
+      "Confirm policy when the customer cannot be present at pickup (access, marking items).",
+      "Approve referencing City of Mobile curbside trash collection as an alternative option for residents.",
+      "Confirm the process when the load on site is larger than described (estimate reviewed before loading).",
+      "Confirm acceptance of refrigerators, freezers, window AC units, tires, pianos, hot tubs, and car batteries (currently 'call to confirm')."
+    ]
+  }
+}

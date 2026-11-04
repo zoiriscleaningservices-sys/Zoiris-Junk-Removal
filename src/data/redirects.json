@@ -1,0 +1,50 @@
+[
+  {
+    "from": "/services/couch-removal/",
+    "to": "/services/furniture-removal/",
+    "status": 301,
+    "note": "Consolidated couch/sofa removal intent into Furniture Removal"
+  },
+  {
+    "from": "/services/sofa-removal/",
+    "to": "/services/furniture-removal/",
+    "status": 301,
+    "note": "Consolidated couch/sofa removal intent into Furniture Removal"
+  },
+  {
+    "from": "/e-waste/laptop-recycling/",
+    "to": "/e-waste/computer-recycling/",
+    "status": 301,
+    "note": "Consolidated laptop and desktop pickup into Computer & Laptop Recycling"
+  },
+  {
+    "from": "/e-waste/crt-tv-removal/",
+    "to": "/e-waste/tv-monitor-pickup/",
+    "status": 301,
+    "note": "Consolidated CRT and flat-screen TV removal into TV & Monitor Pickup"
+  },
+  {
+    "from": "/e-waste/tv-removal/",
+    "to": "/e-waste/tv-monitor-pickup/",
+    "status": 301,
+    "note": "Consolidated TV removal into TV & Monitor Pickup"
+  },
+  {
+    "from": "/e-waste/smartphone-pickup/",
+    "to": "/e-waste/phone-tablet-pickup/",
+    "status": 301,
+    "note": "Consolidated smartphone and cell phone pickup into Phone & Tablet Pickup"
+  },
+  {
+    "from": "/blog/",
+    "to": "/guides/",
+    "status": 301,
+    "note": "Direct common /blog/ path to educational Guides hub"
+  },
+  {
+    "from": "/quote/",
+    "to": "/request-pickup/",
+    "status": 301,
+    "note": "Direct common /quote/ path to Request Pickup form"
+  }
+]

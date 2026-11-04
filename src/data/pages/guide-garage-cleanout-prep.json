@@ -1,0 +1,138 @@
+{
+  "id": "guide-garage-cleanout-prep",
+  "type": "article",
+  "path": "/guides/garage-cleanout-checklist/",
+  "status": "published",
+  "refs": { "serviceId": "garage-cleanouts", "itemIds": ["bicycles-tools", "lawn-mowers", "grills-patio", "chemicals-paint", "propane", "fuel-oil"], "locationId": "mobile-al", "customerType": "residential" },
+  "seo": {
+    "title": "Garage Cleanout Checklist: How to Prepare | Zoiris Guide",
+    "description": "A practical garage cleanout checklist: set up sorting zones, pull out paint and chemicals first, drain gas equipment, and get ready for pickup day in Mobile.",
+    "h1": "Garage Cleanout Checklist: How to Prepare",
+    "primaryKeyword": "how to prepare for a garage cleanout",
+    "secondaryKeywords": ["garage cleanout checklist", "how to clean out a garage fast", "what to do with old paint cans Mobile AL", "getting rid of garage junk"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Garage Cleanout Checklist", "parentId": "core-guides" },
+  "purpose": "Give homeowners a step-by-step checklist for clearing a garage — sorting, dealing with hazardous leftovers through official Mobile channels, prepping gas equipment and batteries — whether they haul it themselves or book a pickup.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "A garage cleanout goes faster when you **sort into clear zones, pull out paint, chemicals, fuel, and propane before anything else, and drain gas-powered equipment** ahead of time. Those hazardous leftovers cannot go in a junk load or your roadside trash pile, but City of Mobile residents can take many of them to the City's Household Hazardous Waste collection events.",
+    "sections": [
+      {
+        "heading": "Step 1: Set a goal and make room to sort",
+        "body": [
+          "Decide what done looks like before you start. Parking two cars again is a different job from clearing one wall for a workbench, and the goal helps you make faster decisions.",
+          "Then create sorting zones in the driveway or on tarps: **keep, sell or give away, donate, hazardous, and haul away**. Label each zone with a piece of tape or cardboard. Moving everything out of the garage once, instead of shuffling it around inside, saves time and shows you how much you really have."
+        ]
+      },
+      {
+        "heading": "Step 2: Sort in two passes",
+        "body": [
+          "On the first pass, move the obvious things fast — broken chairs, empty boxes, dried-out hoses, rusted shelving. Save the harder decisions for a second pass so you do not stall on one box of keepsakes.",
+          "Typical garage finds that end up in the haul-away pile include old patio furniture, broken bikes, outgrown sports gear, worn-out tools, holiday decorations, carpet remnants, and exercise equipment nobody uses."
+        ],
+        "bullets": [
+          "Wear work gloves and closed-toe shoes — garages hide nails, glass, and sharp metal.",
+          "Open containers carefully; garages can collect pests and moisture.",
+          "Check boxes for papers, photos, keys, and titles before they go anywhere."
+        ]
+      },
+      {
+        "heading": "Step 3: Pull out the hazardous items first",
+        "body": [
+          "Paint, stains, solvents, pesticides, pool chemicals, automotive fluids, gasoline, and propane cylinders are common in garages and need a different route. Zoiris does not take them, and the City of Mobile's Trash Collection Rules prohibit household chemicals and paint from being mixed into roadside trash piles."
+        ],
+        "subsections": [
+          {
+            "heading": "City of Mobile Household Hazardous Waste events",
+            "body": [
+              "The City has hosted Household Hazardous Waste collection events since 2022 for Mobile residents and individuals (not businesses or contractors). The City's HHW page lists accepted items including automotive fluids and oil filters, aerosols, household and automotive batteries, fluorescent tubes, oil and latex paint (limit 15 gallons), cleaners, pesticides, herbicides, fertilizers, pool chemicals, solvents, fire extinguishers, flammables, and small camp-style and BBQ propane. Electronics, appliances, tires, and lawn equipment are not accepted. Check the [City's HHW page](https://www.cityofmobile.gov/hhw/) for the next event date."
+            ]
+          },
+          {
+            "heading": "Small amounts of leftover paint",
+            "body": [
+              "The City's Trash Collection Rules suggest drying out leftover paint by mixing it with equal parts fast-setting concrete mix, or with sand or cat litter, and letting it dry completely. Once it is solid, put the lid back on and place the can in your household garbage cart."
+            ]
+          },
+          {
+            "heading": "Old tires",
+            "body": [
+              "The City of Mobile does not pick up tires on residential trash days. Its [Scrap Tires page](https://www.cityofmobile.gov/public-works/sanitation/scrap-tires/) lists local places that accept them."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Step 4: Prepare gas equipment, grills, and batteries",
+        "bullets": [
+          "**Lawn mowers, trimmers, and blowers:** drain the fuel and oil before pickup. Gas-powered equipment is accepted after confirmation, so mention it when you book.",
+          "**Grills:** remove and set aside the propane tank — we do not take propane cylinders. The grill itself can go.",
+          "**Gas cans:** full or partly full fuel containers cannot go in a junk load.",
+          "**Cordless tool batteries:** keep them for a replacement tool or recycle them. Tape the terminals and store them apart; our [battery safety guide](/guides/old-batteries-safety/) explains where they can go.",
+          "**Old refrigerators or freezers in the garage:** these contain refrigerant and are confirmed before scheduling — see [how to prepare for an appliance pickup](/guides/prepare-for-appliance-pickup/)."
+        ],
+        "body": [
+          "Powered equipment is where most garage cleanout surprises happen. Handle these before pickup day:"
+        ]
+      },
+      {
+        "heading": "Step 5: Get ready for pickup day",
+        "body": [
+          "If you are using a service like our [garage cleanout](/services/garage-cleanouts/) crew, a little preparation helps the visit go smoothly and helps us give an accurate estimate."
+        ],
+        "bullets": [
+          "Take a few photos of the garage and the piles when you request an estimate.",
+          "Mark keep items clearly, or move them inside the house or into a car.",
+          "Mention heavy or awkward items up front: weight benches, treadmills, workbenches, or a spare refrigerator — some of these are confirmed before scheduling.",
+          "Move vehicles out of the garage and leave room in the driveway for the truck.",
+          "Keep pets and children away from the open garage while items are being carried."
+        ]
+      },
+      {
+        "heading": "Printable garage cleanout checklist",
+        "body": ["Work down this list from top to bottom:"],
+        "bullets": [
+          "Goal decided and sorting zones set up",
+          "First pass done: obvious junk moved to the haul-away zone",
+          "Second pass done: keep, sell, and donate decisions made",
+          "Paint, chemicals, fuel, and propane separated for the City HHW event or other proper disposal",
+          "Tires set aside for a tire drop-off location",
+          "Mower and gas tools drained; grill propane tank removed",
+          "Tool batteries taped and stored apart",
+          "Boxes checked for papers, photos, and keys",
+          "Photos taken and pickup requested, if you are booking a crew"
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Can old paint cans go out with my garage junk?", "a": "No. Zoiris does not take paint, and the City of Mobile prohibits paint in roadside trash piles. Take liquid paint to a City Household Hazardous Waste event, or dry small amounts with concrete mix, sand, or cat litter as the City suggests, then put the solid can in your garbage cart." },
+      { "q": "Will you take a lawn mower?", "a": "Usually, after confirmation. Drain the fuel and oil first and mention the mower when you book so we can confirm before scheduling." },
+      { "q": "What should I do with propane tanks from a garage cleanout?", "a": "Set them aside — they cannot go in a junk load. The City's Household Hazardous Waste events list small camp-style and BBQ propane among accepted items; check the City's HHW page for the next date." },
+      { "q": "Do I need to sort everything before a crew arrives?", "a": "No. You only need to separate what you are keeping and pull out hazardous items. Our crew handles the lifting, carrying, and loading of everything else." }
+    ],
+    "illustration": "residential",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        { "label": "City of Mobile — Household Hazardous Waste Collection", "url": "https://www.cityofmobile.gov/hhw/" },
+        { "label": "City of Mobile — Trash Collection Rules", "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/" },
+        { "label": "City of Mobile — Scrap Tires", "url": "https://www.cityofmobile.gov/public-works/sanitation/scrap-tires/" },
+        { "label": "EPA — Used Lithium-Ion Batteries", "url": "https://www.epa.gov/recycle/used-lithium-ion-batteries" }
+      ]
+    }
+  },
+  "related": ["svc-garage-cleanouts", "svc-residential-junk-removal", "core-restricted-items", "guide-old-batteries-safety", "guide-appliance-pickup-prep"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "HHW accepted/excluded items, paint-drying tip, tire rule verified on City pages 2026-11-04. Tire drop-off names and fees deliberately not reproduced. Zoiris acceptance mirrors items.json (mowers after confirmation; paint, propane, fuel not accepted; tires unknown).",
+    "ownerVerification": []
+  }
+}

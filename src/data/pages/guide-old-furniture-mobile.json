@@ -1,0 +1,135 @@
+{
+  "id": "guide-old-furniture-mobile",
+  "type": "article",
+  "path": "/guides/get-rid-of-old-furniture-mobile-al/",
+  "status": "published",
+  "refs": { "serviceId": "furniture-removal", "itemIds": ["couch", "recliner", "tables-chairs", "dressers", "mattress"], "locationId": "mobile-al", "customerType": "residential" },
+  "seo": {
+    "title": "How to Get Rid of Old Furniture in Mobile, AL | Zoiris Guide",
+    "description": "Sell, give away, donate, use City of Mobile roadside trash pickup, or book a haul-away: the rules and trade-offs for old furniture in Mobile, Alabama.",
+    "h1": "How to Get Rid of Old Furniture in Mobile, Alabama",
+    "primaryKeyword": "how to get rid of old furniture in Mobile Alabama",
+    "secondaryKeywords": ["City of Mobile furniture pickup", "Mobile AL bulk trash pickup rules", "where to donate furniture in Mobile", "put old couch on curb Mobile AL"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Get Rid of Old Furniture in Mobile", "parentId": "core-guides" },
+  "purpose": "Lay out every realistic way for Mobile residents to get rid of old furniture — reuse, donation, the City's every-other-week roadside trash collection and its published rules, and private pickup — so readers can pick the right one for their situation.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "In Mobile you have four main options for old furniture: **sell or give it away, donate it, set it out for the City's every-other-week roadside trash collection, or have it hauled away.** City collection works for modest piles you can carry to the curb and set out within the City's rules; a pickup service makes more sense for heavy pieces, upstairs rooms, large loads, or when you cannot wait for your collection date.",
+    "sections": [
+      {
+        "heading": "Start with the condition of the piece",
+        "body": [
+          "Be honest about what you have. A solid wood dresser with a few scratches has real reuse value. A sagging couch with torn cushions probably does not. Furniture that has been soaked by flooding, has mold, or has had bed bugs should not be passed on to anyone — those pieces go straight to disposal, and you should tell anyone hauling them about the problem in advance.",
+          "Condition decides your route: usable pieces can be sold, given away, or donated; worn-out pieces go to City collection or a hauler."
+        ]
+      },
+      {
+        "heading": "Sell it or give it away",
+        "body": [
+          "Good-condition furniture often finds a new home quickly through online marketplaces, community groups, friends, or neighbors. A few habits help it go smoothly:"
+        ],
+        "bullets": [
+          "Take clear photos in daylight and list honest measurements, including height and depth.",
+          "Mention flaws, pets, and smoking in the home upfront to avoid wasted trips.",
+          "Say clearly that the buyer must bring help and a vehicle, and note any stairs.",
+          "Meet in a visible spot or have someone with you when strangers come to pick up.",
+          "For free giveaways, set a deadline so the piece does not sit for weeks."
+        ]
+      },
+      {
+        "heading": "Donate it",
+        "body": [
+          "Charities and resale shops in the Mobile area accept furniture, but each sets its own rules. Call before you load anything: many decline upholstered pieces with stains or tears, mattresses, particleboard furniture, or items missing parts. Ask whether they offer pickup or require drop-off, and request a donation receipt if you plan to claim a tax deduction."
+        ]
+      },
+      {
+        "heading": "Use City of Mobile roadside trash collection",
+        "body": [
+          "The City of Mobile collects residential roadside trash every other week, separate from weekly household garbage carts. The City's Trash Collection Rules define trash as tree limbs, yard debris, **discarded furniture, and bedding**, so ordinary household furniture can go out on your scheduled date. Look up your North or South collection dates on the City's [Residential Trash Pickup page](https://www.cityofmobile.gov/public-works/residential-trash-pickup/)."
+        ],
+        "subsections": [
+          {
+            "heading": "Size limit",
+            "body": [
+              "Each pickup is limited to 2 cubic yards — about 3 feet by 3 feet by 6 feet, or the equivalent of 15 bags. The City will remove residential piles over that limit for a charge based on the size of the pile; call 311 to place a work order and request an estimate."
+            ]
+          },
+          {
+            "heading": "Timing and placement",
+            "body": [
+              "City ordinance prohibits setting a trash pile at the curb more than 48 hours before your scheduled pickup day. Place the pile on the property where it came from, as close to the street as possible without blocking pedestrians. Do not put it on the sidewalk, in a gutter or ditch, around fire hydrants or power poles, over water meters, against fences, or under low power lines or tree limbs. Piles skipped because they were blocked — by a parked car, for example — do not get a return trip."
+            ]
+          },
+          {
+            "heading": "What must stay off the pile",
+            "body": [
+              "Do not mix electronics, appliances, paint, tires, or glass into a furniture pile — the City says the entire pile will not be picked up. Glass is specifically listed, so remove glass tabletops and cabinet doors and dispose of them separately. Debris from work done by a paid contractor is the contractor's responsibility to haul away, and materials from evictions or commercial businesses are not collected."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "When a furniture pickup makes more sense",
+        "body": [
+          "City collection is a good fit if you can carry the pieces to the curb and your pile fits the rules. A pickup service is often the more practical choice when:"
+        ],
+        "bullets": [
+          "The furniture is heavy or awkward — sleeper sofas, solid wood armoires, sectionals — and nobody can safely carry it.",
+          "It is upstairs, in a back bedroom, or in a tight space.",
+          "You cannot wait for your next collection date or do not want a pile sitting at the curb.",
+          "The load is bigger than the City's 2-cubic-yard limit.",
+          "Furniture is mixed with appliances, electronics, or boxes that cannot go on a City pile."
+        ],
+        "subsections": [
+          {
+            "heading": "How Zoiris furniture pickup works",
+            "body": [
+              "With our [furniture removal](/services/furniture-removal/) service, our crew does the lifting and carrying from wherever the furniture sits and hauls it away. We confirm an estimate and a pickup window with you before anything is scheduled. Several large items at once are covered on our [bulk item pickup](/services/bulk-item-pickup/) page, and beds are covered under [mattress removal](/services/mattress-removal/)."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Prep tips whichever route you choose",
+        "bullets": [
+          "Empty every drawer, shelf, and cushion — look for keys, remotes, cash, and papers.",
+          "Remove glass tops and shelves, or point them out so they are handled carefully.",
+          "Take off legs and separate sectional pieces if it makes carrying easier.",
+          "Unplug power recliners and lift chairs, and mention them if anyone else is hauling.",
+          "Clear a path to the door and protect floors and door frames."
+        ],
+        "body": ["Whether the furniture is going to a new owner, the curb, or a truck, a few minutes of preparation prevents lost valuables and damaged walls:"]
+      }
+    ],
+    "faqs": [
+      { "q": "Will the City of Mobile pick up an old couch?", "a": "Yes, as part of roadside trash collection. The City's rules define trash to include discarded furniture and bedding. Set it out on your every-other-week collection date, within the 2-cubic-yard limit, and no more than 48 hours before pickup." },
+      { "q": "How early can I put furniture on the curb in Mobile?", "a": "No more than 48 hours before your scheduled pickup day. City ordinance prohibits earlier placement, and violations can be fined." },
+      { "q": "What if my furniture pile is bigger than the City limit?", "a": "The City removes residential piles over 2 cubic yards for a charge based on size. Call 311 to place a work order and request an estimate, or have a private hauler take the larger load." },
+      { "q": "Can I leave a glass-top table out with my trash pile?", "a": "Remove the glass first. The City lists glass among materials that cannot be mixed into trash piles, and a pile with prohibited items may not be picked up." },
+      { "q": "Do I need to bring furniture outside for Zoiris?", "a": "No. Our crew picks up furniture from inside the home, including upstairs rooms and garages, and carries it out." }
+    ],
+    "illustration": "residential",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        { "label": "City of Mobile — Trash Collection Rules", "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/" },
+        { "label": "City of Mobile — Residential Trash Pickup", "url": "https://www.cityofmobile.gov/public-works/residential-trash-pickup/" }
+      ]
+    }
+  },
+  "related": ["svc-furniture-removal", "svc-bulk-item-pickup", "svc-mattress-removal", "guide-junk-removal-vs-dumpster", "svc-moving-cleanouts"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "City roadside trash rules (definition, 2 cu yd limit, 48-hour rule, placement, prohibited items) verified on City pages 2026-11-04. Fine amount deliberately not quoted. No charities named.",
+    "ownerVerification": []
+  }
+}

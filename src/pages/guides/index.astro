@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import CTABand from '../../components/CTABand.astro';
+import { data, getPage } from '../../lib/data.ts';
+import { isBuilt } from '../../lib/page-quality.ts';
+
+const page = getPage('core-guides');
+const guides = data.pages.filter((p) => p.type === 'article' && isBuilt(p)).sort((a, b) => a.seo.h1.localeCompare(b.seo.h1));
+const iconFor = (id: string) =>
+  ({
+    'guide-prepare-computer-for-recycling': 'laptop',
+    'guide-get-rid-of-old-tv-mobile': 'tv',
+    'guide-electronics-drop-off-mobile': 'pin',
+    'guide-old-batteries-safety': 'battery',
+    'guide-junk-removal-vs-dumpster': 'truck',
+    'guide-garage-cleanout-prep': 'garage',
+    'guide-estate-cleanout-what-happens': 'key',
+    'guide-old-furniture-mobile': 'sofa',
+    'guide-appliance-pickup-prep': 'appliance'
+  })[id] ?? 'sparkle';
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Guides" lead="Straightforward answers about getting rid of furniture, electronics, batteries, and appliances in Mobile, Alabama — including options that don't involve hiring us." illustration={null} ctas={false} />
+  <section class="section" aria-label="All guides">
+    <div class="container grid grid--3">
+      {guides.map((g) => <ServiceCard href={g.path} title={g.seo.h1} body={g.seo.description} icon={iconFor(g.id)} more="Read guide" headingLevel="h2" />)}
+    </div>
+  </section>
+  <CTABand location="guides" />
+</MainLayout>

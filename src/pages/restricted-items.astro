@@ -1,0 +1,100 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQ from '../components/FAQ.astro';
+import Icon from '../components/Icon.astro';
+import { business, data, getPage } from '../lib/data.ts';
+import { ACCEPTANCE_LABELS } from '../lib/labels.ts';
+
+const page = getPage('core-restricted-items');
+const notAccepted = data.items.filter((i) => i.acceptance === 'not-accepted');
+const special = data.items.filter((i) => i.acceptance === 'special-handling');
+const unknown = data.items.filter((i) => i.acceptance === 'unknown');
+const faqs = [
+  { q: 'What if a restricted item is mixed into my junk?', a: 'Please set it aside before the crew arrives. If we find paint, fuel, chemicals, propane, or damaged batteries in a load, we will leave them with you so they can go to the right facility.' },
+  { q: 'Can I put an old lithium-ion battery in the trash?', a: 'No. The EPA advises keeping lithium-ion batteries out of household trash and curbside recycling because they can start fires. Tape the terminals, store it somewhere cool, and use a battery drop-off or household hazardous waste option. Our [battery safety guide](/guides/old-batteries-safety/) explains how.' },
+  { q: 'Do you take refrigerators and air conditioners?', a: 'Often, yes — but they contain refrigerant, so we confirm each one before scheduling. Our crew never cuts lines or releases refrigerant. See [refrigerator removal](/items/refrigerator-removal/).' },
+  { q: 'Where can Mobile residents take household hazardous waste?', a: 'The City of Mobile holds household hazardous waste collection events for residents; dates and accepted materials are posted on the City\'s HHW page. Check the City page before you go.' }
+];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Restricted items" lead="Some materials are unsafe to haul with household junk or legally require specialized handling. We don't pick them up — but we can point you toward safer options." illustration={null} />
+
+  <section class="section">
+    <div class="container content-layout">
+      <div class="content-main">
+        <section aria-labelledby="not-accepted">
+          <h2 id="not-accepted">Items we do not pick up</h2>
+          <div class="table-wrap">
+            <table class="directory-table">
+              <caption class="sr-only">Items not accepted</caption>
+              <thead><tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Why / what to do</th></tr></thead>
+              <tbody>
+                {notAccepted.map((i) => <tr><td>{i.name}</td><td><span class={`badge badge--${i.acceptance}`}>{ACCEPTANCE_LABELS[i.acceptance]}</span></td><td>{i.publicNote}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section aria-labelledby="special">
+          <h2 id="special">Call first: special handling</h2>
+          <p>These items are not mixed into a normal junk load. Call before including them so we can confirm handling or suggest a better route.</p>
+          <div class="table-wrap">
+            <table class="directory-table">
+              <caption class="sr-only">Items needing special handling</caption>
+              <thead><tr><th scope="col">Item</th><th scope="col">Status</th><th scope="col">Good to know</th></tr></thead>
+              <tbody>
+                {special.map((i) => <tr><td>{i.name}</td><td><span class={`badge badge--${i.acceptance}`}>{ACCEPTANCE_LABELS[i.acceptance]}</span></td><td>{i.publicNote}</td></tr>)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section aria-labelledby="unknown">
+          <h2 id="unknown">Ask us first</h2>
+          <p>We have not confirmed these items yet. Please call before including them in a pickup.</p>
+          <ul class="checklist infolist">
+            {unknown.map((i) => <li><strong>{i.name}.</strong> {i.publicNote}</li>)}
+          </ul>
+        </section>
+
+        <section aria-labelledby="batteries">
+          <h2 id="batteries">Batteries are not ordinary junk</h2>
+          <div class="notice notice--red">
+            <Icon name="warning" />
+            <p><strong>Never put swollen, damaged, or leaking batteries in household trash or recycling.</strong> Lithium-ion batteries can ignite when crushed. Keep a damaged battery away from flammable materials and contact the device manufacturer or a household hazardous waste program.</p>
+          </div>
+          <p style="margin-top:1rem">Devices with intact, built-in batteries — like laptops and phones — can usually be picked up as electronics. Loose batteries and power banks need special handling. The <a href="https://www.epa.gov/recycle/used-lithium-ion-batteries" rel="noopener" target="_blank">EPA's lithium-ion battery guidance<span class="sr-only"> (opens in a new tab)</span></a> explains safe storage and disposal, and our <a href="/guides/old-batteries-safety/">battery safety guide</a> covers local options.</p>
+        </section>
+
+        <section aria-labelledby="where">
+          <h2 id="where">Where to take restricted items in Mobile</h2>
+          <ul>
+            <li><strong>Household hazardous waste (paint, chemicals, household batteries):</strong> the City of Mobile runs collection events for residents. See the <a href="https://www.cityofmobile.gov/hhw/" rel="noopener" target="_blank">City HHW page<span class="sr-only"> (opens in a new tab)</span></a> for dates and accepted items.</li>
+            <li><strong>Tires:</strong> the City lists tire drop-off information on its <a href="https://www.cityofmobile.gov/public-works/sanitation/scrap-tires/" rel="noopener" target="_blank">scrap tires page<span class="sr-only"> (opens in a new tab)</span></a>.</li>
+            <li><strong>Asbestos:</strong> requires a licensed abatement contractor. Do not disturb suspected materials.</li>
+            <li><strong>Sharps and medications:</strong> ask your pharmacy or healthcare provider about take-back options.</li>
+          </ul>
+          <p class="form-note">Programs and rules change. Always confirm with the official source before you go.</p>
+        </section>
+
+        <section aria-labelledby="restricted-faq">
+          <h2 id="restricted-faq">Questions about restricted items</h2>
+          <FAQ faqs={faqs} />
+        </section>
+      </div>
+      <aside class="content-aside">
+        <div class="cta-card">
+          <h2>Not sure about an item?</h2>
+          <p>Describe it when you call. If it's something we can take, we'll confirm before scheduling.</p>
+          <a class="btn btn--primary" href={business.phoneHref} data-track="call" data-track-location="restricted-aside"><Icon name="call" /> Call {business.phoneDisplay}</a>
+          <a class="btn btn--ghost" href="/accepted-items/">Accepted items</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CTABand location="restricted" />
+</MainLayout>

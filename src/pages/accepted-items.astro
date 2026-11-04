@@ -1,0 +1,136 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import { data, getPage, itemsByCategory } from '../lib/data.ts';
+import { isBuilt } from '../lib/page-quality.ts';
+import { ACCEPTANCE_HELP, ACCEPTANCE_LABELS } from '../lib/labels.ts';
+import type { ItemAcceptance } from '../lib/types.ts';
+
+const page = getPage('core-accepted-items');
+const groups = itemsByCategory().filter((g) => g.category.id !== 'restricted');
+const pageFor = (id: string | null) => {
+  const p = id ? data.pages.find((x) => x.id === id) : undefined;
+  return p && isBuilt(p) ? p : null;
+};
+const statuses = Object.keys(ACCEPTANCE_LABELS) as ItemAcceptance[];
+---
+
+<MainLayout page={page}>
+  <PageHero
+    page={page}
+    eyebrow="Accepted items"
+    lead="Check an item before you call. Each item shows whether we pick it up, whether we need to confirm details first, or whether it needs a different disposal route."
+    illustration={null}
+  />
+
+  <section class="section">
+    <div class="container">
+      <h2 class="sr-only">How to read this list</h2>
+      <ul class="legend" aria-label="Status legend">
+        {
+          statuses.map((s) => (
+            <li>
+              <span class={`badge badge--${s}`}>{ACCEPTANCE_LABELS[s]}</span> <span class="form-note">{ACCEPTANCE_HELP[s]}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="directory-tools" data-directory-tools hidden>
+        <div class="field">
+          <label for="item-search">Search items</label>
+          <input id="item-search" type="search" placeholder="e.g. treadmill, monitor, sofa" autocomplete="off" data-item-search aria-describedby="item-search-count" />
+        </div>
+        <div class="field" style="flex:0 1 240px">
+          <label for="item-filter">Show</label>
+          <select id="item-filter" data-item-filter>
+            <option value="all">All items</option>
+            <option value="electronics">Electronics only</option>
+            <option value="household">Household &amp; junk only</option>
+          </select>
+        </div>
+        <p id="item-search-count" class="form-note" aria-live="polite" style="flex-basis:100%;margin:0" data-item-count></p>
+      </div>
+
+      {
+        groups.map((g) => (
+          <section class="directory-group" data-group data-ewaste={String(g.category.isEwaste)} aria-labelledby={`cat-${g.category.id}`}>
+            <h2 id={`cat-${g.category.id}`}>
+              <Icon name={g.category.icon} /> {g.category.name}
+            </h2>
+            <div class="table-wrap">
+              <table class="directory-table">
+                <caption class="sr-only">{g.category.name}: acceptance status</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Good to know</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {g.items.map((i) => {
+                    const p = pageFor(i.pageId);
+                    return (
+                      <tr data-item={`${i.name} ${i.publicNote}`.toLowerCase()}>
+                        <td>{p ? <a href={p.path}>{i.name}</a> : i.name}</td>
+                        <td>
+                          <span class={`badge badge--${i.acceptance}`}>{ACCEPTANCE_LABELS[i.acceptance]}</span>
+                        </td>
+                        <td>{i.publicNote || ACCEPTANCE_HELP[i.acceptance]}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ))
+      }
+
+      <p class="form-note" data-no-results hidden style="margin-top:1.5rem">No matching items. Call us to ask about anything not listed.</p>
+
+      <div class="notice" style="margin-top:2.5rem">
+        <Icon name="warning" />
+        <p>Paint, chemicals, fuel, propane tanks, asbestos, medical waste, and damaged batteries are not picked up. See <a href="/restricted-items/">restricted items</a> for safer options.</p>
+      </div>
+    </div>
+  </section>
+
+  <CTABand title="Don't see your item?" body="Describe it when you call or in a pickup request. If we can't take it, we will try to point you to an option that can." location="accepted-items" />
+</MainLayout>
+
+<script>
+  const tools = document.querySelector<HTMLElement>('[data-directory-tools]');
+  const search = document.querySelector<HTMLInputElement>('[data-item-search]');
+  const filter = document.querySelector<HTMLSelectElement>('[data-item-filter]');
+  const count = document.querySelector<HTMLElement>('[data-item-count]');
+  const empty = document.querySelector<HTMLElement>('[data-no-results]');
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-group]'));
+  if (tools && search && filter) {
+    tools.hidden = false;
+    const apply = () => {
+      const q = search.value.trim().toLowerCase();
+      const mode = filter.value;
+      let shown = 0;
+      groups.forEach((g) => {
+        const isE = g.dataset.ewaste === 'true';
+        const groupOk = mode === 'all' || (mode === 'electronics' ? isE : !isE);
+        let visible = 0;
+        g.querySelectorAll<HTMLElement>('tr[data-item]').forEach((row) => {
+          const ok = groupOk && (!q || (row.dataset.item ?? '').includes(q));
+          row.hidden = !ok;
+          if (ok) visible++;
+        });
+        g.hidden = visible === 0;
+        shown += visible;
+      });
+      if (count) count.textContent = q || mode !== 'all' ? `${shown} item${shown === 1 ? '' : 's'} shown` : '';
+      if (empty) empty.hidden = shown !== 0;
+    };
+    search.addEventListener('input', apply);
+    filter.addEventListener('change', apply);
+  }
+</script>

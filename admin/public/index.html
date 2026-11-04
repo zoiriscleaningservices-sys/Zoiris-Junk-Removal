@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Zoiris SEO Operations</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="/favicon.svg" alt="" width="34" height="34" />
+          <div><strong>Zoiris</strong><span>SEO Operations</span></div>
+        </div>
+        <nav aria-label="Dashboard">
+          <p class="nav-label">Overview</p>
+          <a href="#/overview" data-nav="overview">Dashboard</a>
+          <a href="#/quality" data-nav="quality">Quality control</a>
+          <p class="nav-label">Content</p>
+          <a href="#/pages" data-nav="pages">Pages</a>
+          <a href="#/matrix" data-nav="matrix">Page matrix</a>
+          <a href="#/keywords" data-nav="keywords">Keywords</a>
+          <p class="nav-label">Inventory</p>
+          <a href="#/services" data-nav="services">Services</a>
+          <a href="#/items" data-nav="items">Items</a>
+          <a href="#/locations" data-nav="locations">Locations</a>
+          <a href="#/neighborhoods" data-nav="neighborhoods">Neighborhoods</a>
+          <p class="nav-label">Publishing</p>
+          <a href="#/sitemap" data-nav="sitemap">Sitemap &amp; indexing</a>
+          <a href="#/verification" data-nav="verification">Owner verification</a>
+          <a href="#/business" data-nav="business">Business settings</a>
+          <a href="#/build" data-nav="build">Build &amp; audits</a>
+        </nav>
+        <p class="sidebar-foot">Local tool · never deployed</p>
+      </aside>
+      <main id="view" tabindex="-1" aria-live="polite">
+        <p class="muted">Loading…</p>
+      </main>
+    </div>
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="drawer" aria-label="Editor"></dialog>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

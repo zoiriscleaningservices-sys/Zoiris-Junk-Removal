@@ -1,0 +1,123 @@
+{
+  "id": "svc-retail-store-cleanouts",
+  "type": "service",
+  "path": "/services/retail-store-cleanouts/",
+  "status": "draft",
+  "refs": { "serviceId": "retail-store-cleanouts", "itemIds": ["retail-fixtures", "office-furniture", "tables-chairs", "boxes-clutter", "carpet", "cabinets-fixtures", "file-cabinets"], "locationId": "mobile-al", "customerType": "commercial" },
+  "seo": {
+    "title": "Retail Store Cleanout in Mobile, AL | Store Fixtures | Zoiris",
+    "description": "Closing, relocating, or remodeling a store in Mobile, AL? Zoiris removes shelving, displays, counters, and stockroom clutter so the space is ready to hand back.",
+    "h1": "Retail Store Cleanouts in Mobile, AL",
+    "primaryKeyword": "retail store cleanout Mobile AL",
+    "secondaryKeywords": ["store fixture removal Mobile", "retail shelving removal Mobile AL", "store closing cleanout Mobile", "gondola shelving removal Mobile", "commercial space cleanout Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Retail Store Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Shelving, displays, counters, and stockroom clutter removed from retail spaces in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Retail Store Cleanouts", "parentId": "core-services" },
+  "purpose": "Serve retail tenants, shop owners, and commercial landlords in Mobile who need a storefront cleared of fixtures, shelving, displays, and stockroom contents when closing, relocating, or remodeling. Kept in draft until the owner confirms commercial scope and capacity for fixture-heavy jobs.",
+  "content": {
+    "eyebrow": "Commercial Cleanouts",
+    "lead": "A store cannot be handed back to the landlord, or remodeled, until the shelving, displays, and stockroom are empty. Zoiris Junk Removal clears retail spaces in Mobile, Alabama. We remove gondola shelving, display tables, counters, and the back-room clutter that builds up over years of business. Because fixtures vary so much, we confirm quantities and types with you before scheduling.",
+    "quickAnswer": {
+      "question": "Can you remove gondola shelving and display fixtures from our store?",
+      "answer": "Call to confirm. Tell us how many runs of shelving there are, how long they are, and whether any fixtures are bolted to the floor or wall. Free-standing displays, tables, and racks are usually simple. Large shelving systems need a quick review so we can plan the breakdown and the truck space."
+    },
+    "includes": {
+      "heading": "What a retail cleanout covers",
+      "intro": "Retail spaces have a sales floor, a stockroom, and usually a small office. We work through all three:",
+      "points": [
+        "Breaking down and removing free-standing shelving, display tables, clothing racks, and mannequins, once quantities are confirmed.",
+        "Removing checkout counters and cash-wrap furniture that is not built into the space.",
+        "Clearing stockroom shelving, empty boxes, hangers, and packaging.",
+        "Removing back-office desks, chairs, and file cabinets.",
+        "Taking out signage stands and loose fixtures that are not part of the building."
+      ]
+    },
+    "items": {
+      "heading": "What we typically remove from stores",
+      "intro": "Store fixtures differ from one shop to the next. Anything marked \"call to confirm\" needs details first.",
+      "list": [
+        "Gondola shelving, wall-standard shelving, and display units — call to confirm",
+        "Display tables, clothing racks, and free-standing fixtures",
+        "Counters, cabinets, and cash-wrap furniture that has already been detached",
+        "Back-office desks, chairs, and emptied file cabinets",
+        "Empty boxes, hangers, packaging, and stockroom clutter",
+        "Rugs, entry mats, and loose carpet"
+      ],
+      "itemIds": ["retail-fixtures", "tables-chairs", "cabinets-fixtures", "office-furniture", "file-cabinets", "boxes-clutter", "carpet"]
+    },
+    "audience": {
+      "heading": "Who calls for a retail cleanout",
+      "body": [
+        "Shop owners closing a location, moving to a new storefront, or updating their layout and replacing old fixtures. Many need the space cleared by a lease-end date that is written into their agreement.",
+        "Commercial landlords and property managers call when a retail tenant leaves fixtures and stock behind. For general business hauling, see [commercial junk removal](/services/commercial-junk-removal/)."
+      ]
+    },
+    "process": {
+      "heading": "How a retail store cleanout works",
+      "steps": [
+        { "title": "Fixture count and photos", "body": "Send a [pickup request](/request-pickup/) with photos of the sales floor and stockroom, plus a rough count of shelving runs, racks, and counters. Point out anything attached to walls or floors." },
+        { "title": "Confirm scope and access", "body": "We review the fixtures, confirm what we can take, and agree on an estimate and a pickup window. Let us know about rear doors, loading areas, and any shopping-center rules on hours." },
+        { "title": "Floor, stockroom, office", "body": "The crew breaks down and loads fixtures, clears the stockroom, and empties the office. Items the landlord requires to stay are left in place." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a retail cleanout",
+      "intro": "Retail jobs are quoted individually. The biggest factors are:",
+      "factors": [
+        "The number and type of shelving runs, racks, and display fixtures",
+        "How much breakdown is needed before fixtures can be loaded",
+        "Stockroom volume, especially leftover packaging and boxes",
+        "Access through a rear door or loading area compared with the front entrance",
+        "Hours set by the shopping center or landlord for move-out work"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare your store",
+      "tips": [
+        "Check your lease for what must stay with the space, such as built-in counters, lighting, or slatwall, and tag those items.",
+        "Sell, return, or donate leftover merchandise you want to recover value from before the cleanout.",
+        "Remove point-of-sale terminals and computers, and see [office electronics pickup](/e-waste/office-electronics-pickup/) for how those are handled.",
+        "Ask the property manager about loading-door access, delivery hours, and where a truck can park.",
+        "Remove any aerosol stock, cleaning chemicals, or flammable products. These are not accepted."
+      ]
+    },
+    "restrictions": {
+      "heading": "Before you book",
+      "body": "A few items and tasks fall outside a retail cleanout:",
+      "list": [
+        "Fixtures bolted to walls or floors, built-in counters, and anything that needs demolition — tell us so we can confirm before scheduling.",
+        "Hazardous merchandise such as paint, aerosols, pool chemicals, fuel, and propane is not accepted.",
+        "Perishable food and refrigerated display cases need a separate conversation.",
+        "We do not buy, resell, or liquidate store inventory."
+      ]
+    },
+    "faqs": [
+      { "q": "Will you take leftover merchandise?", "a": "Non-hazardous leftover stock can usually be included, but tell us what it is and roughly how much. If the merchandise still has value, consider selling or donating it before the cleanout. We do not buy or liquidate inventory." },
+      { "q": "Do you remove slatwall or fixtures attached to the wall?", "a": "Tell us what is attached and how. Your lease may require some fixtures to stay, so check that first. Anything that needs demolition or wall repair is outside what we do." },
+      { "q": "Our shopping center only allows move-outs at certain times. Is that a problem?", "a": "Let us know the allowed hours when you call. We will confirm whether a pickup window fits within them before anything is scheduled." },
+      { "q": "Can you take the office furniture and stockroom shelving too?", "a": "Yes. Back-office desks, chairs, emptied file cabinets, and stockroom shelving are part of a full retail cleanout. Remove files and records first, because we do not provide document shredding." }
+    ],
+    "areaNote": "Retail cleanouts would be offered for storefronts within the City of Mobile. Commercial sites outside the city need to be confirmed first.",
+    "illustration": "commercial"
+  },
+  "related": ["svc-commercial-junk-removal", "svc-office-cleanouts", "ew-office-electronics-pickup", "svc-construction-debris-removal", "core-restricted-items", "core-contact"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Draft: full content written, but publication awaits owner confirmation of commercial scope and capacity. Shelving and fixtures phrased as call to confirm (retail-fixtures = accepted-after-confirmation). No inventory buy-back or liquidation claims.",
+    "ownerVerification": [
+      "Confirm commercial scope and capacity for retail store cleanouts before publishing.",
+      "Confirm whether the crew breaks down gondola and wall-standard shelving, and any volume limits.",
+      "Confirm whether non-hazardous leftover merchandise is accepted, and in what quantities.",
+      "Confirm policy for refrigerated display cases and coolers (refrigerant).",
+      "Confirm availability for work in shopping-center move-out windows (early morning or after hours)."
+    ]
+  }
+}

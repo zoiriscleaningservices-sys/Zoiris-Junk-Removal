@@ -1,0 +1,25 @@
+---
+import type { Crumb } from '../lib/internal-links.ts';
+interface Props {
+  trail: Crumb[];
+}
+const { trail } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      trail.map((c, i) =>
+        i === trail.length - 1 ? (
+          <li>
+            <span aria-current="page">{c.label}</span>
+          </li>
+        ) : (
+          <li>
+            <a href={c.path}>{c.label}</a>
+          </li>
+        )
+      )
+    }
+  </ol>
+</nav>

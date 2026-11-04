@@ -1,0 +1,129 @@
+{
+  "id": "guide-estate-cleanout-what-happens",
+  "type": "article",
+  "path": "/guides/what-happens-during-estate-cleanout/",
+  "status": "published",
+  "refs": { "serviceId": "estate-cleanouts", "locationId": "mobile-al", "customerType": "residential" },
+  "seo": {
+    "title": "What Happens During an Estate Cleanout? A Family Guide",
+    "description": "What to expect from an estate cleanout: who decides, papers to find before clearing a home, keep-sell-donate choices, special items, and cleanout day.",
+    "h1": "What Happens During an Estate Cleanout",
+    "primaryKeyword": "what happens during an estate cleanout",
+    "secondaryKeywords": ["estate cleanout checklist", "documents to look for when cleaning out a parent's house", "how to clear out a loved one's home", "estate cleanout process"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "What Happens During an Estate Cleanout", "parentId": "core-guides" },
+  "purpose": "Walk families through the estate cleanout process — authority and timing, the important papers to find before anything is removed, keep/sell/donate/dispose decisions, special items that need separate handling, and what a hauling crew actually does on the day.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "An estate cleanout usually happens in stages: the family confirms who can make decisions, **searches the home for important documents and valuables**, decides what to keep, sell, donate, or discard, and then a crew removes whatever is left. The search for papers matters most — once a home is cleared, a missing will, title, or insurance policy can be very hard to recover.",
+    "sections": [
+      {
+        "heading": "Before anything leaves: who decides, and when",
+        "body": [
+          "The first step is not physical. Confirm who has authority to make decisions about the property — usually the executor or personal representative named in a will, or the heirs together. If the estate is going through probate, talk with the estate's attorney before removing, selling, or giving away anything of value.",
+          "Then look at timing. A rented home or apartment may have a lease or move-out deadline. A house going up for sale may need to be cleared before photos or showings. Agreeing on a realistic schedule early takes pressure off everyone, especially family members traveling in from out of town."
+        ]
+      },
+      {
+        "heading": "Documents and items to find before clearing the home",
+        "body": [
+          "Go through the home deliberately before any hauling begins. These are the papers and items families most often need later:"
+        ],
+        "bullets": [
+          "Wills, trust documents, and any letters of instruction",
+          "Deeds, mortgage papers, and vehicle titles",
+          "Life insurance policies and annuity statements",
+          "Bank, brokerage, and retirement account statements",
+          "Recent tax returns and property tax records",
+          "Current bills, which show what accounts need to be closed or transferred",
+          "Social Security, Medicare, and health insurance cards",
+          "Military discharge papers",
+          "Safe deposit box keys and any lists of passwords or accounts",
+          "Jewelry, cash, coins, and family photographs and letters"
+        ],
+        "subsections": [
+          {
+            "heading": "Where things tend to hide",
+            "body": [
+              "Important items are not always in a desk. Check coat and jacket pockets, purses, books, envelopes taped under or behind drawers, freezer containers, closet shelves, between mattresses, and inside old shoe boxes. Keep collecting mail for a few weeks, too — statements that arrive after a death often point to accounts the family did not know about."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "The decisions families make",
+        "body": [
+          "Most belongings fall into one of five groups: **keep, divide among family, sell, donate, or dispose of**. A simple system keeps things moving — colored stickers or painter's tape for each person, and photos of larger pieces for relatives who cannot be there in person.",
+          "Selling can mean an estate sale, consignment, or online listings, and it takes time. Donation centers have their own rules about what they accept, so call ahead about upholstered furniture, mattresses, and electronics. Whatever remains after those decisions is what a cleanout crew removes."
+        ]
+      },
+      {
+        "heading": "Items that need separate handling",
+        "body": [
+          "A few categories should be pulled aside rather than mixed in with general household items:"
+        ],
+        "bullets": [
+          "**Computers, phones, and tablets:** back up anything the family wants, then erase the devices or remove the drives. The FTC warns that deleting files is not enough to remove personal information. Our guide to [preparing a computer for recycling](/guides/prepare-computer-for-recycling/) walks through the steps.",
+          "**Paint, chemicals, and fuel:** City of Mobile residents can take many of these to the City's [Household Hazardous Waste](https://www.cityofmobile.gov/hhw/) collection events.",
+          "**Prescription medications and medical supplies:** these are not accepted at the City's HHW events and cannot go in a junk load. Ask a pharmacist about disposal options.",
+          "**Firearms and ammunition:** set them aside and handle them separately and legally; they are never part of a cleanout load.",
+          "**Refrigerators, freezers, and window air conditioners:** these contain refrigerant and need to be confirmed before pickup.",
+          "**Paper records:** shred anything with account numbers or Social Security numbers. Zoiris does not provide document shredding."
+        ]
+      },
+      {
+        "heading": "What happens on cleanout day",
+        "body": [
+          "Once the family has removed what it is keeping, the hauling part is straightforward. With our [estate cleanout](/services/estate-cleanouts/) service, it usually goes like this:"
+        ],
+        "bullets": [
+          "You describe the home, the rooms involved, and anything heavy or unusual, and send photos if you can.",
+          "We confirm an estimate and a pickup window with you before anything is scheduled.",
+          "On the day, we walk through with you or your representative to confirm what stays and what goes.",
+          "Our crew does the lifting and carrying, room by room, including furniture, boxes, appliances, and electronics.",
+          "Where practical options exist, usable and recyclable items are separated from items going to disposal.",
+          "Larger homes may take more than one visit; we will tell you upfront if that is likely."
+        ]
+      },
+      {
+        "heading": "Give yourself time",
+        "body": [
+          "Clearing a loved one's home is emotional work, and it rarely goes as fast as people expect. It is fine to do it in stages — documents first, then family items, then everything else. Taking a break after the search for papers, before the hauling starts, gives everyone a chance to remember something they meant to look for.",
+          "If the home also has a full garage or a backlog of furniture, our [garage cleanout checklist](/guides/garage-cleanout-checklist/) and [house cleanout](/services/house-cleanouts/) page may help you plan the rest."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "How long does an estate cleanout take?", "a": "It depends mostly on the family's sorting time, not the hauling. Searching for documents and dividing belongings can take days or weeks. The removal itself is often done in one visit for a typical home, though larger or very full homes may need more than one." },
+      { "q": "What documents should we look for before clearing a parent's house?", "a": "Wills and trust papers, deeds and vehicle titles, insurance policies, bank and retirement statements, recent tax returns, current bills, Social Security and Medicare cards, military discharge papers, and safe deposit box keys. Check pockets, books, drawers, and freezers as well as desks." },
+      { "q": "Does someone from the family need to be there on cleanout day?", "a": "It helps to have someone on site, at least at the start, to confirm what stays and what goes. If that is not possible, tell us when you book so we can talk through how to confirm the details beforehand." },
+      { "q": "Will you take everything in the house?", "a": "We take most household contents, including furniture, boxes, clothing, appliances, and electronics. Hazardous materials, medications, propane, and a few other items are excluded — see our restricted items page — and refrigerators are confirmed before scheduling." }
+    ],
+    "illustration": "residential",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        { "label": "FTC — How To Remove Your Personal Information Before You Get Rid of Your Computer", "url": "https://consumer.ftc.gov/articles/how-remove-your-personal-information-you-get-rid-your-computer" },
+        { "label": "City of Mobile — Household Hazardous Waste Collection", "url": "https://www.cityofmobile.gov/hhw/" }
+      ]
+    }
+  },
+  "related": ["svc-estate-cleanouts", "svc-house-cleanouts", "guide-prepare-computer-for-recycling", "core-restricted-items", "core-how-it-works"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "General family guidance; no legal advice beyond 'talk with the estate attorney'. HHW exclusion of pharmaceuticals verified on City HHW page 2026-11-04. Walkthrough, multi-visit, and remote-coordination statements need owner confirmation.",
+    "ownerVerification": [
+      "Confirm that an on-site walkthrough at the start of an estate cleanout is standard.",
+      "Confirm how jobs are handled when no family member can be on site.",
+      "Confirm that larger homes may be split across more than one visit."
+    ]
+  }
+}

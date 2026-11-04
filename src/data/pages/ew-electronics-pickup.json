@@ -1,0 +1,203 @@
+{
+  "id": "ew-electronics-pickup",
+  "type": "ewaste",
+  "path": "/e-waste/",
+  "status": "published",
+  "refs": { "serviceId": "electronics-pickup", "itemIds": ["desktop-computers", "laptops", "peripherals", "flat-monitors", "flat-tvs", "crt-tvs", "printers", "copiers", "cell-phones", "tablets", "game-consoles", "audio-video", "cables", "chargers", "small-electronics", "network-gear", "servers", "ups-units", "loose-batteries", "damaged-batteries"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Electronics Pickup in Mobile, AL | E-Waste Removal | Zoiris",
+    "description": "Old computers, monitors, printers, phones, and cords picked up from homes and businesses in Mobile, AL. See what qualifies and how to prepare your devices.",
+    "h1": "Electronics & E-Waste Pickup in Mobile, AL",
+    "primaryKeyword": "electronics pickup Mobile AL",
+    "secondaryKeywords": ["e-waste removal Mobile AL", "e-waste pickup Mobile", "electronics recycling pickup Mobile AL", "old electronics disposal Mobile", "where to get rid of old electronics in Mobile AL"],
+    "intent": "transactional",
+    "ogTitle": "Electronics & E-Waste Pickup in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Computers, monitors, printers, phones, game consoles, and boxes of cords carried out and hauled away from homes and businesses in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "E-Waste Pickup", "parentId": "core-home" },
+  "purpose": "The e-waste hub: explain to Mobile homeowners and businesses which electronics Zoiris picks up, which items need a call first, how batteries differ from electronics, how to protect personal data, what happens after pickup, and how a private pickup compares with the City of Mobile's resident drop-off option. Routes visitors to the specific e-waste pages.",
+  "content": {
+    "eyebrow": "E-Waste Pickup",
+    "lead": "Zoiris Junk Removal picks up old and unwanted electronics from homes and businesses in Mobile, Alabama — computers, monitors, printers, phones, game consoles, stereo gear, and the box of tangled cords in the closet. Our crew carries everything out from where it is stored, so you do not have to load a car or find a drop-off that takes what you have. A few things, like TVs, copiers, servers, and anything battery-heavy, need a quick conversation first. This page explains what qualifies and how to get your devices ready.",
+    "quickAnswer": {
+      "question": "Can someone pick up my old electronics in Mobile, AL?",
+      "answer": "Yes. Zoiris picks up electronics from homes and businesses in the City of Mobile. Tell us what you have — and especially mention any TVs, copiers, servers, or battery backups — and we confirm what we can take, an estimate, and a pickup window before anything is scheduled."
+    },
+    "includes": {
+      "heading": "What electronics pickup includes",
+      "intro": "You tell us what is going. We handle the lifting and the hauling.",
+      "points": [
+        "Carrying devices out from offices, spare rooms, attics, closets, and garages — no need to stack them at the curb.",
+        "Picking up electronics on their own or alongside furniture and other junk in the same visit.",
+        "Keeping loose batteries and damaged devices out of the load, so they are not crushed or mixed with general junk.",
+        "Sorting after pickup so electronics can be routed to reuse or recycling outlets where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Electronics we commonly pick up",
+      "intro": "Most household and office electronics qualify. Items marked call to confirm are checked before we schedule.",
+      "list": [
+        "Desktop computers, towers, laptops, keyboards, mice, and webcams",
+        "Flat-panel computer monitors",
+        "Flat-screen TVs — call to confirm the type and screen size",
+        "Tube (CRT) and projection TVs — call first; these need owner approval",
+        "Home printers, scanners, and fax machines",
+        "Office copiers and large multifunction devices — call to confirm",
+        "Cell phones, tablets, and e-readers with intact batteries",
+        "Game consoles, controllers, stereos, speakers, receivers, and DVD players",
+        "Routers, modems, and network switches",
+        "Servers and rack equipment — call to confirm",
+        "Cables, cords, chargers, power adapters, and other small electronics"
+      ],
+      "itemIds": ["desktop-computers", "laptops", "peripherals", "flat-monitors", "flat-tvs", "crt-tvs", "projection-tvs", "printers", "fax-machines", "copiers", "cell-phones", "tablets", "game-consoles", "audio-video", "network-gear", "servers", "cables", "chargers", "small-electronics"]
+    },
+    "audience": {
+      "heading": "Who uses electronics pickup",
+      "body": [
+        "Households call when a closet has filled up with old laptops and printers, when they upgrade a TV or home office, or when they are clearing a parent's home and find decades of devices. For whole-home projects, electronics can ride along with an [estate cleanout](/services/estate-cleanouts/) or a [moving cleanout](/services/moving-cleanouts/).",
+        "Businesses use the service when they refresh workstations, retire a server closet, or clear out storage rooms full of retired equipment. Larger business jobs are covered on [office and IT equipment pickup](/e-waste/office-electronics-pickup/)."
+      ]
+    },
+    "process": {
+      "heading": "How electronics pickup works",
+      "steps": [
+        { "title": "List what you have", "body": "Call or send a [pickup request](/request-pickup/) with a rough inventory: how many computers, screens, and boxes of smaller items, and where they are in the building. Photos of TVs and large equipment help." },
+        { "title": "We flag anything that needs a check", "body": "TVs, copiers, servers, battery backups, and loose batteries are confirmed one by one. We tell you plainly if something is not a fit and, where we can, point you to another option." },
+        { "title": "You prepare your data", "body": "Before pickup day, back up and erase anything personal. The checklist below covers computers, phones, and printers. Zoiris does not erase devices for you." },
+        { "title": "Pickup and sorting", "body": "We confirm an estimate and a pickup window, carry everything out, and sort the load afterward so electronics can go to appropriate outlets where practical options exist." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of electronics pickup",
+      "intro": "We quote each job individually rather than publishing flat rates. The main factors are:",
+      "factors": [
+        "How much there is — a few devices versus a room or storage area full of equipment",
+        "Large or heavy items such as floor-standing copiers, big-screen TVs, and loaded server racks",
+        "Items that need special handling, such as battery backup units",
+        "Access: stairs, elevators, long carries, or loading-dock rules at commercial buildings",
+        "Whether electronics are picked up alone or combined with furniture and other junk"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare electronics for pickup",
+      "tips": [
+        "Gather devices in one area if you can, and keep cords with the equipment they belong to.",
+        "Pull loose batteries out of remotes, wireless keyboards, cameras, and toys and set them aside.",
+        "Look over phones, tablets, and laptops for swelling, cracks, or a lifted screen — set any damaged device apart and tell us about it.",
+        "Return rented cable boxes and modems to your provider; they usually remain the provider's property.",
+        "Work through the data privacy checklist below for anything that stored files, photos, or accounts."
+      ]
+    },
+    "restrictions": {
+      "heading": "Items that need a call first — or that we cannot take",
+      "body": "Electronics vary more than most junk. A few categories need a conversation before scheduling:",
+      "list": [
+        "Tube (CRT) TVs and monitors, and projection or console TVs — call first; these need owner approval before pickup.",
+        "Loose household batteries and power banks — special handling. They are never mixed into a junk load; call so we can confirm handling or point you to a drop-off option.",
+        "Swollen, damaged, or leaking batteries, and devices with them — not accepted because of fire risk. See [old battery safety](/guides/old-batteries-safety/).",
+        "UPS battery backup units — special handling because they contain sealed lead-acid or lithium batteries.",
+        "Leased copiers and rented ISP equipment — usually returned to the owner rather than hauled away.",
+        "Refrigerators, freezers, and window AC units are appliances rather than e-waste and are confirmed separately because they hold refrigerant. See [refrigerator removal](/items/refrigerator-removal/).",
+        "Chemicals, fuel, and other hazardous materials are not accepted. See [restricted items](/restricted-items/)."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Find the page for what you are getting rid of",
+        "body": [
+          "Each type of electronics comes with its own preparation steps and questions. Pick the page closest to your situation:"
+        ],
+        "bullets": [
+          "[Computer recycling pickup](/e-waste/computer-recycling/) — desktops, towers, laptops, and peripherals, plus how to deal with hard drives.",
+          "[TV and monitor pickup](/e-waste/tv-monitor-pickup/) — flat screens, computer monitors, and what to do about older tube TVs.",
+          "[Printer and copier removal](/e-waste/printer-copier-removal/) — home printers, office copiers, leases, and stored scans.",
+          "[Phone and tablet pickup](/e-waste/phone-tablet-pickup/) — resetting devices and checking batteries before they leave the house.",
+          "[Office and IT equipment pickup](/e-waste/office-electronics-pickup/) — workstations, servers, network gear, and bulk business electronics."
+        ]
+      },
+      {
+        "heading": "Batteries are not the same as electronics",
+        "body": [
+          "A laptop or phone with an intact built-in battery is an electronic device, and it can go with your other electronics. A loose battery is different. The U.S. EPA says lithium-ion batteries and devices containing them should not go in household garbage or recycling bins, because they can be damaged in transport or processing and start a fire ([EPA: Used Lithium-Ion Batteries](https://www.epa.gov/recycle/used-lithium-ion-batteries)).",
+          "EPA also recommends removing batteries from electronics before recycling, since they may need to be recycled separately ([EPA: Electronics Donation and Recycling](https://www.epa.gov/recycle/electronics-donation-and-recycling)). That is why we ask you to take loose batteries out of remotes and gadgets and tell us about them rather than tossing them in a box."
+        ],
+        "bullets": [
+          "Intact devices with built-in batteries (laptops, phones, tablets, game controllers): fine to include — just check for swelling first.",
+          "Loose batteries and power banks: tape lithium battery terminals or bag each one separately, as EPA advises, and call us about handling.",
+          "Swollen, cracked, hot, or leaking batteries: not accepted. Keep them away from anything flammable and contact the manufacturer or a household hazardous waste program."
+        ]
+      },
+      {
+        "heading": "Data privacy checklist before any device leaves your hands",
+        "body": [
+          "EPA's first piece of advice before recycling electronics is to delete all personal information ([EPA](https://www.epa.gov/recycle/electronics-donation-and-recycling)). Zoiris is a pickup service: we do not erase, wipe, or destroy drives, and we do not issue any paperwork about data. Protecting what is on a device is up to you, so work through this list first:"
+        ],
+        "bullets": [
+          "**Back up** photos, documents, and anything else you want to keep to a new device or cloud account.",
+          "**Sign out** of email, cloud storage, app stores, streaming services, and gaming accounts, and turn off device-locating features so the device is no longer tied to you.",
+          "**Remove SIM cards and memory cards** from phones, tablets, and cameras, and pull any USB sticks or discs.",
+          "**Factory reset or erase** computers, phones, tablets, and game consoles using the manufacturer's built-in reset option.",
+          "**Clear printers and copiers** — multifunction devices can store scans, fax logs, and address books. See [printer and copier removal](/e-waste/printer-copier-removal/).",
+          "**Consider removing the drive yourself** from a desktop or old laptop and keeping it, especially if the machine no longer turns on. Our [computer preparation guide](/guides/prepare-computer-for-recycling/) walks through it."
+        ]
+      },
+      {
+        "heading": "After pickup, City drop-off, and business pickups",
+        "body": [
+          "Here is what to expect once electronics leave your home, and how pickup compares with the City of Mobile's own option."
+        ],
+        "subsections": [
+          {
+            "heading": "What happens after pickup",
+            "body": [
+              "After pickup, we sort loads so that usable items, recyclable materials, and electronics can be routed to appropriate reuse, recycling, or disposal outlets where practical options exist. Zoiris is a private pickup service, not a recycling facility or a government program. If you want to know where a specific item is likely to go, ask us — we will tell you plainly. More on our approach is on the [responsible disposal](/responsible-disposal/) page."
+            ]
+          },
+          {
+            "heading": "City of Mobile electronics drop-off for residents",
+            "body": [
+              "If you live in the City of Mobile and can transport items yourself, the City accepts residential electronics such as computers, phones, game consoles, and small electronics at its recycling drop-off centers. The service is for City residents only, residents may be asked for proof of residence, and TVs of any kind are not accepted there ([City of Mobile Recycling](https://www.cityofmobile.gov/public-works/recycling/)). Our [electronics drop-off guide](/guides/electronics-drop-off-mobile-al/) covers it in more detail.",
+              "A pickup makes more sense when you have TVs, heavy equipment, a large volume, items you cannot lift or load, or electronics mixed in with other junk — our crew carries it all out in one visit."
+            ]
+          },
+          {
+            "heading": "Commercial electronics",
+            "body": [
+              "The City's drop-off centers do not accept recyclables from businesses ([City of Mobile](https://www.cityofmobile.gov/public-works/recycling/)). Zoiris picks up business electronics — from a few retired workstations to a storage room of equipment. Businesses are responsible for sanitizing data on their equipment before pickup unless something different is agreed in writing. See [office and IT equipment pickup](/e-waste/office-electronics-pickup/)."
+            ]
+          }
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Can you pick up old computers in Mobile, Alabama?", "a": "Yes. Desktops, towers, laptops, keyboards, and mice are among the most common things we pick up in Mobile. Back up and erase your data first — or remove the hard drive and keep it. Details are on our [computer recycling pickup](/e-waste/computer-recycling/) page." },
+      { "q": "Do you remove old televisions?", "a": "Flat-screen TVs can usually be picked up once we confirm the type and screen size, so describe the TV when you call. Older tube (CRT) TVs and projection or console TVs need owner approval before we can schedule them, so please call first rather than booking them online. See [TV and monitor pickup](/e-waste/tv-monitor-pickup/)." },
+      { "q": "What happens to electronics after pickup?", "a": "We sort each load so that usable items, recyclable materials, and electronics can be routed to appropriate reuse, recycling, or disposal outlets where practical options exist. We are a pickup service, not a recycler, and we will tell you plainly where a specific item is likely to go if you ask." },
+      { "q": "Will you erase the data on my devices?", "a": "No. Zoiris does not erase, wipe, or destroy drives. Before pickup, back up what you want, sign out of your accounts, remove SIM and memory cards, and factory reset each device. If a computer will not turn on, removing and keeping the drive is a simple option." },
+      { "q": "Should I use the City of Mobile drop-off instead?", "a": "If you are a City resident, can load items yourself, and have no TVs, the City's electronics drop-off at its recycling centers is a good option. A pickup is the better fit when you have TVs (which the City drop-off does not accept), heavy equipment, a large quantity, or items you cannot carry." },
+      { "q": "Do you take batteries?", "a": "Intact batteries built into laptops, phones, and tablets can go with those devices. Loose household batteries and power banks need special handling and are never mixed into a junk load — call us first. Swollen, damaged, or leaking batteries are not accepted because of the fire risk." },
+      { "q": "Do you pick up electronics from businesses?", "a": "Yes. Offices, shops, and other businesses in Mobile use us for retired computers, printers, network gear, and bulk electronics. Servers, copiers, and battery backup units are confirmed before scheduling, and data on business equipment must be handled by the business before pickup." }
+    ],
+    "areaNote": "Electronics and e-waste pickup is available throughout the City of Mobile. If your home or business is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "electronics"
+  },
+  "related": ["ew-computer-recycling", "ew-tv-monitor-pickup", "ew-office-electronics-pickup", "guide-electronics-drop-off-mobile", "guide-prepare-computer-for-recycling", "core-responsible-disposal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "E-waste hub. City of Mobile drop-off facts (residents only, proof of residence may be requested, no TVs of any kind, businesses not accepted) verified 2026-11-04 at https://www.cityofmobile.gov/public-works/recycling/. EPA battery and data-deletion advice verified at https://www.epa.gov/recycle/used-lithium-ion-batteries and https://www.epa.gov/recycle/electronics-donation-and-recycling. Disposal paragraph mirrors business.disposalStatement. No data-erasure, certification, or custody claims.",
+    "ownerVerification": [
+      "Confirm downstream outlets used for electronics (reuse, recyclers) before the after-pickup statement is strengthened.",
+      "Confirm which TV types and maximum screen sizes are accepted (flat panel, CRT, projection/console).",
+      "Confirm whether intact loose household batteries and power banks are ever accepted, or whether callers are always referred to drop-off options.",
+      "Confirm handling for UPS battery backup units (lead-acid and lithium).",
+      "Confirm whether there is a minimum job size for small electronics-only pickups.",
+      "Confirm capacity for large commercial electronics volumes."
+    ]
+  }
+}

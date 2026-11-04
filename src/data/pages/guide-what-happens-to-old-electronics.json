@@ -1,0 +1,35 @@
+{
+  "id": "guide-what-happens-to-old-electronics",
+  "type": "article",
+  "path": "/guides/what-happens-to-old-electronics/",
+  "status": "draft",
+  "refs": {},
+  "seo": {
+    "title": "What Happens to Old Electronics After Pickup? | Zoiris",
+    "description": "",
+    "h1": "What Happens to Old Electronics After Pickup?",
+    "primaryKeyword": "what happens to old electronics after recycling",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Article",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "What Happens to Old Electronics After Pickup?",
+    "parentId": "core-guides"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Blocked until the owner documents the actual downstream outlets for electronics. Overlaps with /responsible-disposal/.",
+    "ownerVerification": []
+  }
+}

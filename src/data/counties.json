@@ -1,0 +1,38 @@
+[
+  {
+    "id": "mobile-county-al",
+    "name": "Mobile County",
+    "state": "AL",
+    "seat": "Mobile",
+    "coverage": "limited",
+    "pageId": "loc-mobile-county-al",
+    "subRegions": [
+      "City of Mobile",
+      "North Mobile Metro",
+      "West Mobile & Semmes",
+      "South Mobile & Coastal Bayous"
+    ],
+    "geoReference": "Southwestern Alabama Gulf Coast bounded by Mobile Bay and the Mobile-Tensaw River Delta on the east, Mississippi Sound and the Gulf of Mexico on the south, and Mississippi on the west; served by I-10, I-65, I-165, US-90, US-98, US-43, US-45, AL-163, AL-188, and AL-193.",
+    "solidWasteNotes": "City of Mobile biweekly 2 cu yd bulk trash rules and 3 resident-only recycling drop-off centers apply strictly inside Mobile corporate limits. Unincorporated Mobile County has no county curbside garbage or bulk collection (residents contract private haulers); Mobile County Commission operates the Hitt Rd Recycling Center (7450 Hitt Rd) and periodic Operation Clean Sweep events.",
+    "source": "https://www.mobilecountyal.gov/",
+    "lastVerifiedAt": "2026-11-04"
+  },
+  {
+    "id": "baldwin-county-al",
+    "name": "Baldwin County",
+    "state": "AL",
+    "seat": "Bay Minette",
+    "coverage": "research-only",
+    "pageId": "loc-baldwin-county-al",
+    "subRegions": [
+      "Eastern Shore",
+      "North Baldwin",
+      "Central Baldwin",
+      "South Baldwin / Pleasure Island"
+    ],
+    "geoReference": "East of Mobile Bay across the I-10 Bayway and US-90/98 Causeway, stretching from the Mobile-Tensaw River Delta south to the Gulf of Mexico and east to the Perdido River/Florida line; served by I-10, I-65, US-31, US-90, US-98, AL-59, AL-104, AL-180, AL-181, AL-182, and the Baldwin/Foley Beach Express.",
+    "solidWasteNotes": "The Solid Waste Disposal Authority of Baldwin County (SWDA) operates Magnolia Sanitary Landfill, the county MRF, C&D landfills, 3 CHaRM centers, and residential garbage/monthly bulk collection for unincorporated Baldwin County plus Bay Minette, Summerdale, Magnolia Springs, and Perdido Beach; the remaining 10 municipalities run independent public works or franchise sanitation programs.",
+    "source": "https://baldwincountyal.gov/municipalities",
+    "lastVerifiedAt": "2026-11-04"
+  }
+]

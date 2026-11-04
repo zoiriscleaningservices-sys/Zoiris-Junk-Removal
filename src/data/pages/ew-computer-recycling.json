@@ -1,0 +1,215 @@
+{
+  "id": "ew-computer-recycling",
+  "type": "ewaste",
+  "path": "/e-waste/computer-recycling/",
+  "status": "published",
+  "refs": {
+    "serviceId": "computer-recycling",
+    "itemIds": [
+      "desktop-computers",
+      "laptops",
+      "peripherals"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Computer & Laptop Recycling Pickup in Mobile, AL | Zoiris",
+    "description": "Zoiris picks up old desktops, laptops, towers, keyboards, and mice from homes and offices in Mobile, AL. Learn how to back up, erase, or pull the hard drive.",
+    "h1": "Computer Recycling Pickup in Mobile, AL",
+    "primaryKeyword": "computer recycling Mobile AL",
+    "secondaryKeywords": [
+      "laptop recycling Mobile AL",
+      "old computer pickup Mobile",
+      "desktop computer disposal Mobile",
+      "how to get rid of an old computer",
+      "PC recycling pickup Mobile Alabama"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Computer Recycling Pickup in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Old desktops, towers, laptops, and peripherals carried out and hauled away from homes and offices in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Computer Recycling",
+    "parentId": "ew-electronics-pickup"
+  },
+  "purpose": "Serve Mobile residents and offices getting rid of desktops, laptops, and peripherals (laptop recycling and desktop removal are consolidated here), with a strong focus on what to do about hard drives and personal data before a computer leaves the building.",
+  "content": {
+    "eyebrow": "E-Waste Pickup",
+    "lead": "Zoiris Junk Removal picks up old desktop computers, towers, all-in-ones, laptops, and the keyboards, mice, and webcams that go with them from homes and offices in Mobile, Alabama. The one thing we cannot do is protect the data on them for you — so before pickup day, back up your files and erase the computer, or take the hard drive out and keep it. Once that is done, our crew carries the machines out and hauls them away.",
+    "quickAnswer": {
+      "question": "How do I get rid of an old computer in Mobile, AL?",
+      "answer": "Back up anything you want to keep, sign out of your accounts, and erase the computer or remove its hard drive. Then request a pickup with a count of the computers and where they are. We confirm an estimate and a pickup window, and our crew carries them out."
+    },
+    "includes": {
+      "heading": "What computer pickup includes",
+      "intro": "Whether it is one dusty tower or a stack of retired office laptops, the job looks the same.",
+      "points": [
+        "Collecting computers from desks, closets, attics, and storage shelves and carrying them out.",
+        "Taking the peripherals with them — keyboards, mice, speakers, docking stations, and their power cords.",
+        "Setting aside laptops whose batteries show swelling, so they are not loaded with everything else.",
+        "Sorting machines after pickup so they can be routed to reuse or recycling outlets where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Computers and accessories we pick up",
+      "intro": "Brand and age do not matter. Working, broken, or obsolete machines all qualify.",
+      "list": [
+        "Desktop towers, small-form-factor PCs, and all-in-one computers",
+        "Laptops, notebooks, and Chromebooks with intact batteries",
+        "Keyboards, mice, webcams, and computer speakers",
+        "Docking stations, power bricks, and computer cables",
+        "Loose internal parts such as power supplies, fans, and cards, bagged or boxed"
+      ],
+      "itemIds": [
+        "desktop-computers",
+        "laptops",
+        "peripherals",
+        "chargers",
+        "cables"
+      ]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Most calls come from people who have upgraded and kept the old machine just in case, families clearing a home office after a move, and anyone who has found three generations of laptops in a closet.",
+        "Small offices use the same service when they replace a few workstations. If you are retiring many machines at once along with servers or network gear, see [office and IT equipment pickup](/e-waste/office-electronics-pickup/). Monitors have their own page: [TV and monitor pickup](/e-waste/tv-monitor-pickup/)."
+      ]
+    },
+    "process": {
+      "heading": "How computer pickup works",
+      "steps": [
+        {
+          "title": "Count the machines",
+          "body": "Tell us roughly how many desktops, laptops, and boxes of accessories you have, and whether monitors or printers are coming too. A quick photo of the pile helps."
+        },
+        {
+          "title": "Decide what happens to the drives",
+          "body": "For each computer, either erase it using the built-in reset tool or remove the drive and keep it. Our [preparation guide](/guides/prepare-computer-for-recycling/) explains both options."
+        },
+        {
+          "title": "Confirm the estimate and window",
+          "body": "We confirm an estimate and a pickup window with you. Nothing is scheduled until you agree to it."
+        },
+        {
+          "title": "We carry them out",
+          "body": "Our crew collects the machines and accessories from wherever they are stored and loads them, keeping any laptop with a damaged battery out of the load."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of computer pickup",
+      "intro": "Each job is quoted individually. These are the main factors:",
+      "factors": [
+        "How many computers and boxes of accessories there are",
+        "Whether monitors, printers, or other electronics are part of the same pickup",
+        "Where the equipment sits — a back bedroom, an attic, or an upstairs office",
+        "Whether the computers are combined with furniture or other junk in one visit"
+      ]
+    },
+    "prepare": {
+      "heading": "Getting your computers ready",
+      "tips": [
+        "Copy your files, photos, and saved passwords to a new computer, external drive, or cloud account.",
+        "Sign out of email, cloud storage, and software licenses you want to move to a new machine.",
+        "Use the operating system's reset or erase option to return the computer to factory settings.",
+        "If a desktop will not turn on, open the side panel and remove the hard drive or SSD — it is usually held in by a few screws.",
+        "Take out discs, USB sticks, and SD cards still sitting in ports and drives.",
+        "Check laptops for a bulging case or a keyboard that has lifted; set those aside and mention them."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few situations need a word with us first:",
+      "list": [
+        "Laptops with swollen, cracked, or leaking batteries are not accepted because of fire risk. See [battery safety](/guides/old-batteries-safety/).",
+        "Loose laptop batteries removed from their machines need special handling — call before including them.",
+        "Older tube (CRT) computer monitors need owner approval before pickup. Flat-panel monitors are fine.",
+        "Zoiris does not erase, wipe, or destroy drives. Any data left on a computer is your responsibility."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Erase it or pull the drive: choosing what works",
+        "body": [
+          "The U.S. EPA advises deleting all personal information from electronics before donating or recycling them ([EPA: Electronics Donation and Recycling](https://www.epa.gov/recycle/electronics-donation-and-recycling)). For a computer, that comes down to two practical paths."
+        ],
+        "subsections": [
+          {
+            "heading": "If the computer still turns on",
+            "body": [
+              "Back up first, then use the built-in reset or erase feature in the operating system to remove your accounts and files and return the machine to factory settings. Sign out of any accounts tied to the device before you start, so it is no longer linked to you."
+            ]
+          },
+          {
+            "heading": "If it will not turn on — or you would rather not risk it",
+            "body": [
+              "Remove the storage drive and keep it. In most desktop towers, the drive sits in a bay behind the side panel and comes out with a screwdriver. Many older laptops have a small access panel on the bottom. Some newer laptops have storage built into the main board, so it cannot be removed — for those, erasing through the reset feature is the option, or keep the laptop until you can."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Desktops versus laptops at pickup",
+        "body": [
+          "Desktops are bulky but simple: no battery to worry about, and towers stack easily. Laptops are small, but each one has a lithium-ion battery. EPA notes that devices with lithium-ion batteries should not go in household trash or curbside recycling, because a damaged battery can start a fire ([EPA](https://www.epa.gov/recycle/used-lithium-ion-batteries)). That is why we ask you to look each laptop over before pickup and tell us about any that are swollen or damaged."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to take the hard drive out before pickup?",
+        "a": "Not if you have erased the computer using its built-in reset option. If the computer will not turn on, or you simply want certainty, removing the drive and keeping it is the most straightforward choice. Zoiris does not erase or destroy drives."
+      },
+      {
+        "q": "My old computer won't turn on. How do I protect my files?",
+        "a": "You cannot run a reset on a dead machine, so take the drive out. On most desktops it is behind the side panel; on many older laptops it is under a small bottom panel. Keep the drive, and the rest of the computer can be picked up."
+      },
+      {
+        "q": "Do you take laptops with dead batteries?",
+        "a": "Yes, as long as the battery is intact. A battery that no longer charges is fine. A battery that is swollen, cracked, or leaking is not, because it can catch fire — look for a bulging case or a lifted keyboard."
+      },
+      {
+        "q": "Will you pick up a box of old computer parts?",
+        "a": "Yes. Bag or box loose parts like power supplies, fans, and cards and we take them with the rest of your electronics. Keep any loose storage drives yourself unless you have erased them."
+      },
+      {
+        "q": "Do you take all brands, including Apple?",
+        "a": "Yes. Brand, age, and condition do not matter for desktops, laptops, and accessories. On Apple and other devices, sign out of your account and turn off device-locating features before erasing so the machine is no longer tied to you."
+      },
+      {
+        "q": "Can you take the monitor and printer at the same time?",
+        "a": "Yes. Flat-panel monitors and home printers are picked up alongside computers. Older tube monitors need a call first. See [printer and copier removal](/e-waste/printer-copier-removal/) for printers that store scanned documents."
+      }
+    ],
+    "areaNote": "Computer pickup is available throughout the City of Mobile. If your address is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "electronics"
+  },
+  "related": [
+    "ew-electronics-pickup",
+    "guide-prepare-computer-for-recycling",
+    "ew-tv-monitor-pickup",
+    "ew-printer-copier-removal",
+    "ew-office-electronics-pickup",
+    "svc-office-cleanouts"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Laptop recycling and desktop removal consolidated here. EPA data-deletion and lithium-ion advice verified 2026-11-04. Page explicitly states Zoiris does not erase or destroy drives.",
+    "ownerVerification": [
+      "Confirm downstream outlets for computers (reuse vs. recycling).",
+      "Confirm that loose internal computer parts are accepted.",
+      "Confirm policy for loose laptop batteries removed from machines.",
+      "Confirm whether there is a minimum for single-laptop or single-tower pickups."
+    ]
+  }
+}

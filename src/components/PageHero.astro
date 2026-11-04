@@ -1,0 +1,52 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import Icon from './Icon.astro';
+import Illustration from './Illustration.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { breadcrumbTrail } from '../lib/internal-links.ts';
+import { business, data } from '../lib/data.ts';
+import { inlineToHtml } from '../lib/format.ts';
+
+interface Props {
+  page: PageRecord;
+  eyebrow?: string;
+  lead?: string;
+  illustration?: string | null;
+  ctas?: boolean;
+}
+const { page, eyebrow, lead, illustration, ctas = true } = Astro.props;
+const trail = breadcrumbTrail(page, data.pages);
+const art = illustration === undefined ? page.content?.illustration : illustration;
+const leadText = lead ?? page.content?.lead;
+---
+
+<section class="page-hero">
+  <div class:list={['container', 'page-hero__inner', { 'page-hero__inner--art': !!art }]}>
+    <div class="reveal">
+      <Breadcrumbs trail={trail} />
+      {(eyebrow ?? page.content?.eyebrow) && <p class="eyebrow">{eyebrow ?? page.content?.eyebrow}</p>}
+      <h1>{page.seo.h1}</h1>
+      {leadText && <p class="lead" set:html={inlineToHtml(leadText)} />}
+      <slot />
+      {
+        ctas && (
+          <div class="btn-row" style="margin-top:1.5rem">
+            <a class="btn btn--primary btn--lg" href={business.phoneHref} data-track="call" data-track-location="page-hero">
+              <Icon name="call" /> Call {business.phoneDisplay}
+            </a>
+            <a class="btn btn--ghost btn--lg" href="/request-pickup/" data-track="cta" data-track-location="page-hero">
+              Request a Pickup
+            </a>
+          </div>
+        )
+      }
+    </div>
+    {
+      art && (
+        <div class="page-hero__art reveal reveal--2">
+          <Illustration name={art} sizes="(min-width: 960px) 440px, 0px" />
+        </div>
+      )
+    }
+  </div>
+</section>

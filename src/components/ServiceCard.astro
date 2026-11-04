@@ -1,0 +1,22 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  href: string;
+  title: string;
+  body: string;
+  icon: string;
+  tone?: 'teal' | 'orange';
+  dark?: boolean;
+  more?: string;
+  headingLevel?: 'h2' | 'h3';
+}
+const { href, title, body, icon, tone = 'teal', dark = false, more = 'Learn more', headingLevel = 'h3' } = Astro.props;
+const Tag = headingLevel;
+---
+
+<article class:list={['card', 'card--link', { 'card--dark': dark }]}>
+  <span class:list={['card__icon', { 'card__icon--orange': tone === 'orange' }]}><Icon name={icon} /></span>
+  <Tag><a class="card__link" href={href}>{title}</a></Tag>
+  <p>{body}</p>
+  <span class="card__more" aria-hidden="true">{more} <Icon name="arrow-right" /></span>
+</article>

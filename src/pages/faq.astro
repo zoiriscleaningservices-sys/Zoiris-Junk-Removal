@@ -1,0 +1,81 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQ from '../components/FAQ.astro';
+import { getPage } from '../lib/data.ts';
+import { slugify } from '../lib/format.ts';
+
+const page = getPage('core-faq');
+const groups: { title: string; faqs: { q: string; a: string }[] }[] = [
+  {
+    title: 'General',
+    faqs: [
+      { q: 'What does Zoiris Junk Removal do?', a: 'We pick up and haul away unwanted furniture, appliances, mattresses, household clutter, non-hazardous renovation debris, and qualifying electronics for homes and businesses in Mobile, Alabama. See [all services](/services/).' },
+      { q: 'Is Zoiris a government recycling program?', a: 'No. Zoiris is a private pickup service. The City of Mobile runs its own drop-off and collection programs with their own rules; our guides explain them, such as [electronics drop-off in Mobile](/guides/electronics-drop-off-mobile-al/).' },
+      { q: 'Do you rent dumpsters or do demolition?', a: 'No. We provide full-service pickup — our crew loads everything. If you are deciding between options, read [junk removal vs. renting a dumpster](/guides/junk-removal-vs-dumpster-rental/).' }
+    ]
+  },
+  {
+    title: 'Scheduling & pickup',
+    faqs: [
+      { q: 'How do I schedule a pickup?', a: 'Call or text, or send a [pickup request](/request-pickup/). We confirm the details and an estimate with you first, then agree on a pickup window. A submitted form alone does not book a pickup.' },
+      { q: 'Do I need to carry things outside?', a: 'No. We pick items up from where they are — inside rooms, upstairs, in garages, sheds, or offices.' },
+      { q: 'Can you take just one item?', a: 'Yes. Single-item pickups are common. See [bulk item pickup](/services/bulk-item-pickup/) for heavy or oversized single items.' },
+      { q: 'How should I prepare?', a: 'Set aside anything you are keeping, clear a path, empty drawers, and separate restricted items like paint or propane. Each service page has a preparation checklist — for example [garage cleanouts](/services/garage-cleanouts/).' }
+    ]
+  },
+  {
+    title: 'Electronics & batteries',
+    faqs: [
+      { q: 'Can you pick up old computers in Mobile, Alabama?', a: 'Yes. We pick up desktops, laptops, and peripherals from homes and businesses in Mobile. Please back up and erase your data first. See [computer recycling pickup](/e-waste/computer-recycling/).' },
+      { q: 'Do you remove old televisions?', a: 'Flat-screen TVs are picked up after we confirm the type and size. Older tube (CRT) and projection TVs need approval before pickup, so please call first. See [TV and monitor pickup](/e-waste/tv-monitor-pickup/).' },
+      { q: 'Do you wipe or destroy hard drives?', a: 'No. We do not provide data wiping, certified data destruction, or destruction certificates. Erase devices before pickup, or remove the drives and keep them. Our [computer prep guide](/guides/prepare-computer-for-recycling/) explains how.' },
+      { q: 'Can I include batteries?', a: 'Devices with intact built-in batteries are usually fine. Loose batteries and power banks need special handling — call first. Swollen, damaged, or leaking batteries are not accepted. See [battery safety](/guides/old-batteries-safety/).' }
+    ]
+  },
+  {
+    title: 'Pricing',
+    faqs: [
+      { q: 'How much does junk removal cost?', a: 'Each job is quoted individually based on volume, weight, item types, access, and special handling. See [pricing and estimates](/pricing/).' },
+      { q: 'Do you charge for estimates?', a: 'Call us to discuss your job — we will explain how the estimate works for your situation before anything is scheduled.' }
+    ]
+  },
+  {
+    title: 'Service area',
+    faqs: [
+      { q: 'Where do you pick up?', a: 'Throughout the City of Mobile, Alabama. If you are outside city limits, call first and we will tell you whether we can help. See [service areas](/areas/).' },
+      { q: 'Do you have a drop-off location?', a: 'No. Zoiris is a pickup service — we come to you.' }
+    ]
+  }
+];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="FAQs" lead="Quick answers about what we pick up, how scheduling works, electronics and batteries, pricing, and where we serve." illustration={null} />
+
+  <section class="section">
+    <div class="container content-layout">
+      <div class="content-main">
+        {
+          groups.map((g) => (
+            <section aria-labelledby={slugify(g.title)}>
+              <h2 id={slugify(g.title)}>{g.title}</h2>
+              <FAQ faqs={g.faqs} />
+            </section>
+          ))
+        }
+      </div>
+      <aside class="content-aside" aria-label="Jump to a topic">
+        <div class="aside-links" style="margin-top:0">
+          <h2>Topics</h2>
+          <ul>
+            {groups.map((g) => <li><a href={`#${slugify(g.title)}`}>{g.title}</a></li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <CTABand title="Still have a question?" body="Call or text and ask — we'd rather answer it before pickup day." location="faq" />
+</MainLayout>

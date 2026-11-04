@@ -1,0 +1,19 @@
+{
+  "publishPrices": false,
+  "currency": "USD",
+  "note": "Prices are intentionally not published. To publish a price list, set publishPrices to true and fill in the tiers below with owner-approved figures only. The pricing page renders tiers automatically when enabled.",
+  "tiers": [],
+  "minimumCharge": null,
+  "factors": [
+    { "title": "Number of items", "body": "A single recliner and a full garage are very different jobs. We look at how many pieces are going." },
+    { "title": "Volume", "body": "How much space the load takes up in the truck is one of the biggest drivers of cost." },
+    { "title": "Weight", "body": "Dense materials such as tile, concrete, and solid-wood furniture take more effort to move and can cost more to dispose of." },
+    { "title": "Item type", "body": "Some items, such as mattresses, appliances, and certain electronics, have their own handling or disposal requirements." },
+    { "title": "Access difficulty", "body": "Narrow hallways, tight doorways, attics, and crawl spaces add time and care." },
+    { "title": "Carry distance", "body": "A long walk from where the item sits to where the truck can park adds labor." },
+    { "title": "Stairs and elevators", "body": "Upper floors, walk-ups, and buildings with elevator reservations affect the time a job takes." },
+    { "title": "Pickup location", "body": "Where you are within our service area and how easy it is to park nearby." },
+    { "title": "Recycling and disposal requirements", "body": "Items that must go to specific recycling or disposal outlets can affect the quote." },
+    { "title": "Special handling", "body": "Disassembly, fragile items, or anything requiring extra protection or equipment." }
+  ]
+}

@@ -1,0 +1,45 @@
+---
+/**
+ * Responsive, optimized illustration (AVIF/WebP + JPEG fallback, explicit dimensions).
+ * These are illustrations — never present them as photos of real Zoiris jobs.
+ */
+import { Picture } from 'astro:assets';
+import hero from '../assets/illustrations/hero.jpg';
+import electronics from '../assets/illustrations/electronics.jpg';
+import residential from '../assets/illustrations/residential.jpg';
+import commercial from '../assets/illustrations/commercial.jpg';
+
+interface Props {
+  name: string;
+  alt?: string;
+  priority?: boolean;
+  sizes?: string;
+  class?: string;
+  note?: boolean;
+}
+
+const library = {
+  hero: { src: hero, alt: 'Illustration of a box truck loaded with an old sofa, a mattress, boxes, and computer equipment at dusk near the Mobile waterfront' },
+  electronics: { src: electronics, alt: 'Illustration of old laptops, monitors, a printer, a router, cables, and phones sorted into bins' },
+  residential: { src: residential, alt: 'Illustration of a two-person crew carrying boxes out of a home garage toward a truck' },
+  commercial: { src: commercial, alt: 'Illustration of an office being cleared, with chairs, desks, and computer equipment on a hand truck' }
+} as const;
+
+const { name, alt, priority = false, sizes = '(min-width: 1000px) 560px, 100vw', class: className, note = true } = Astro.props;
+const entry = library[(name in library ? name : 'hero') as keyof typeof library];
+---
+
+<figure class:list={['illustration', className]} style="margin:0">
+  <Picture
+    src={entry.src}
+    alt={alt ?? entry.alt}
+    formats={['avif', 'webp']}
+    widths={[400, 640, 960, 1280].filter((w) => w <= entry.src.width)}
+    sizes={sizes}
+    loading={priority ? 'eager' : 'lazy'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    decoding={priority ? 'sync' : 'async'}
+    quality={72}
+  />
+  {note && <figcaption class="illus-note">Illustration</figcaption>}
+</figure>

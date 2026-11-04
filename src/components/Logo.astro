@@ -1,0 +1,21 @@
+---
+interface Props {
+  class?: string;
+  sub?: boolean;
+}
+const { class: className, sub = true } = Astro.props;
+---
+
+<a href="/" class:list={['brand', className]} aria-label="Zoiris Junk Removal — home">
+  <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+    <rect width="64" height="64" rx="15" fill="#0E1A2B"></rect>
+    <path d="M13 15h26v7.5H13z" fill="#F5EFE4"></path>
+    <path d="M35 22.5h10.5L25.5 41.5H15z" fill="#5EC4B6"></path>
+    <path d="M37 9.5 52 18.75 37 28z" fill="#F26B1D"></path>
+    <path d="M13 41.5h37v7.5H13z" fill="#F5EFE4"></path>
+  </svg>
+  <span class="brand__text">
+    <span class="brand__name">ZOIRIS</span>
+    {sub && <span class="brand__sub">Junk Removal</span>}
+  </span>
+</a>

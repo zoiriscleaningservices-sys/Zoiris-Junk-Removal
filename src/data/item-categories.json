@@ -1,0 +1,18 @@
+[
+  { "id": "furniture", "name": "Furniture", "icon": "sofa", "isEwaste": false, "description": "Seating, tables, bedroom and office furniture." },
+  { "id": "mattresses", "name": "Mattresses & Bedding", "icon": "bed", "isEwaste": false, "description": "Mattresses, box springs, frames, and headboards." },
+  { "id": "appliances", "name": "Appliances", "icon": "appliance", "isEwaste": false, "description": "Large and small household appliances." },
+  { "id": "household", "name": "Household Junk", "icon": "boxes", "isEwaste": false, "description": "Boxes, clutter, décor, toys, and general household items." },
+  { "id": "outdoor", "name": "Outdoor & Garage", "icon": "garage", "isEwaste": false, "description": "Garage, patio, and outdoor items." },
+  { "id": "debris", "name": "Construction & Renovation Debris", "icon": "hammer", "isEwaste": false, "description": "Non-hazardous materials from remodels and repairs." },
+  { "id": "commercial", "name": "Commercial & Office", "icon": "office", "isEwaste": false, "description": "Office furniture, fixtures, and business contents." },
+  { "id": "computers", "name": "Computers & Peripherals", "icon": "laptop", "isEwaste": true, "description": "Desktops, laptops, keyboards, mice, and accessories." },
+  { "id": "screens", "name": "TVs & Monitors", "icon": "tv", "isEwaste": true, "description": "Televisions and computer displays." },
+  { "id": "office-electronics", "name": "Printers & Office Electronics", "icon": "printer", "isEwaste": true, "description": "Printers, copiers, scanners, and fax machines." },
+  { "id": "mobile-devices", "name": "Phones & Tablets", "icon": "phone", "isEwaste": true, "description": "Cell phones, smartphones, tablets, and e-readers." },
+  { "id": "it-network", "name": "IT & Network Equipment", "icon": "server", "isEwaste": true, "description": "Servers, switches, routers, modems, and racks." },
+  { "id": "av-gaming", "name": "Audio, Video & Gaming", "icon": "gamepad", "isEwaste": true, "description": "Consoles, speakers, receivers, and players." },
+  { "id": "cables-power", "name": "Cables, Chargers & Small Electronics", "icon": "cable", "isEwaste": true, "description": "Cords, adapters, and small devices." },
+  { "id": "batteries", "name": "Batteries", "icon": "battery", "isEwaste": true, "description": "Loose and damaged batteries need special care." },
+  { "id": "restricted", "name": "Hazardous & Restricted Materials", "icon": "warning", "isEwaste": false, "description": "Materials we do not pick up." }
+]

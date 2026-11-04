@@ -1,0 +1,41 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { business, getPage } from '../lib/data.ts';
+
+const page = getPage('core-terms');
+const updated = 'November 4, 2026';
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Legal" lead={`Terms for using this website and requesting services from ${business.name}. Last updated ${updated}.`} illustration={null} ctas={false} />
+  <section class="section">
+    <div class="container--narrow prose">
+      <h2>Website information</h2>
+      <p>We work to keep the information on this site accurate, including which items we accept. Item acceptance, service availability, and local rules can change, so details are confirmed with you before any pickup is scheduled. Information about government programs is provided for convenience — always confirm with the official source.</p>
+
+      <h2>Requests and estimates</h2>
+      <p>Submitting a request through this website does not create a booking or a contract. A pickup is scheduled only after we confirm the details, estimate, and pickup window with you. Estimates are based on the information you provide; if the items, volume, or access differ on pickup day, we will review any change with you before proceeding.</p>
+
+      <h2>Your responsibilities</h2>
+      <ul>
+        <li>You confirm you have the right to dispose of the items you ask us to remove.</li>
+        <li>You agree not to include hazardous or restricted materials (see <a href="/restricted-items/">restricted items</a>). We may decline any item we cannot safely or lawfully haul.</li>
+        <li>You are responsible for removing personal data from electronic devices and for removing anything you want to keep.</li>
+        <li>Gas appliances must be disconnected by a qualified person before pickup.</li>
+      </ul>
+
+      <h2>Property access</h2>
+      <p>Please let us know about access limitations, building rules, gate codes, elevator reservations, or parking restrictions before pickup so the crew can plan accordingly.</p>
+
+      <h2>Links to other sites</h2>
+      <p>This website links to government and third-party websites for reference. We are not responsible for their content or availability.</p>
+
+      <h2>Changes</h2>
+      <p>We may update these terms from time to time. The date at the top shows the latest version.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about these terms? Call <a href={business.phoneHref}>{business.phoneDisplay}</a>.</p>
+    </div>
+  </section>
+</MainLayout>

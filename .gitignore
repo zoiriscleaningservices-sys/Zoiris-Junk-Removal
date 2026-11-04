@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment files (never commit secrets)
+.env
+.env.*
+!.env.example
+
+# OS / Editor noise
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+
+# Test & audit artifacts
+tests/lighthouse/.tmp/
+tests/lighthouse/latest-summary.json
+
+# Private CRM database, customer media vault, and backups (NEVER commit)
+.zoiris-private/
+.zoiris-test-*/
+backups/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.db

@@ -1,0 +1,36 @@
+{
+  "id": "core-services",
+  "type": "core",
+  "path": "/services/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "All Junk Removal & Cleanout Services in Mobile, AL | Zoiris",
+    "description": "Browse every Zoiris service: furniture, mattress, and appliance removal, home and business cleanouts, debris hauling, and electronics pickup in Mobile, AL.",
+    "h1": "Junk Removal & Cleanout Services",
+    "primaryKeyword": "Zoiris junk removal services",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Services",
+    "parentId": "core-home"
+  },
+  "purpose": "Hub listing every published service so visitors and crawlers can reach each service page in one click.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

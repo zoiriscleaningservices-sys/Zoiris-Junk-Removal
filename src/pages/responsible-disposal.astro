@@ -1,0 +1,66 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import { business, getPage } from '../lib/data.ts';
+
+const page = getPage('core-responsible-disposal');
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Responsible disposal" lead="What happens after the truck pulls away matters. Here's how we approach it — and the claims we deliberately don't make." illustration="electronics" />
+
+  <section class="section">
+    <div class="container--narrow content-main">
+      <section aria-labelledby="approach">
+        <h2 id="approach">Our approach</h2>
+        <p>{business.disposalStatement}</p>
+        <ul class="checklist">
+          <li><strong>Sorting:</strong> loads are separated so items that can be reused or recycled aren't automatically treated as trash.</li>
+          <li><strong>Reuse where practical:</strong> furniture and household goods in usable condition may be routed toward reuse when a practical outlet exists.</li>
+          <li><strong>Recycling where available:</strong> metal, cardboard, and electronics can go to recycling outlets where available.</li>
+          <li><strong>Proper disposal for the rest:</strong> items that can't be reused or recycled go to appropriate disposal facilities.</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="electronics">
+        <h2 id="electronics">Electronics</h2>
+        <p>Electronics are kept separate from general junk so they can be routed to electronics-appropriate outlets. Devices with batteries are handled with care, and loose or damaged batteries are not mixed into loads.</p>
+        <div class="notice">
+          <Icon name="lock" />
+          <p><strong>Your data is your responsibility.</strong> We don't provide data wiping or certified data destruction. Before pickup, back up what you need, sign out of accounts, remove SIM and memory cards, and erase the device — or remove the drive and keep it. <a href="/guides/prepare-computer-for-recycling/">Here's how</a>.</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="refrigerant">
+        <h2 id="refrigerant">Appliances with refrigerant</h2>
+        <p>Refrigerators, freezers, and window air conditioners contain refrigerant. Under EPA rules, the final facility in the disposal chain is responsible for making sure refrigerant is recovered before the appliance is scrapped. Our crew never cuts lines, drains, or releases refrigerant, and we confirm each refrigerant-containing appliance before scheduling. See <a href="/items/refrigerator-removal/">refrigerator removal</a> and the <a href="https://www.epa.gov/section608/stationary-refrigeration-safe-disposal-requirements" rel="noopener" target="_blank">EPA's safe disposal requirements<span class="sr-only"> (opens in a new tab)</span></a>.</p>
+      </section>
+
+      <section aria-labelledby="hazardous">
+        <h2 id="hazardous">Hazardous materials</h2>
+        <p>We don't pick up paint, chemicals, fuel, propane cylinders, asbestos, medical waste, or damaged batteries. These need specialized programs. Our <a href="/restricted-items/">restricted items page</a> lists safer options in Mobile.</p>
+      </section>
+
+      <section aria-labelledby="never">
+        <h2 id="never">What we don't claim</h2>
+        <p>Some junk haulers advertise "zero landfill" or certifications. We only say what we can stand behind. Unless and until we can document it, we do not claim:</p>
+        <ul class="checklist xlist">
+          <li>Certified electronics recycling (such as R2 or e-Stewards)</li>
+          <li>Certified data destruction or chain-of-custody tracking</li>
+          <li>A specific percentage of material diverted from landfill</li>
+          <li>Partnerships with particular charities or recyclers</li>
+        </ul>
+        <p>If you want to know where a particular item is likely to go, ask us before pickup. We'll tell you plainly.</p>
+      </section>
+
+      <section aria-labelledby="city">
+        <h2 id="city">City of Mobile options</h2>
+        <p>City of Mobile residents can drop off certain small electronics at City recycling centers (TVs are not accepted there), and the City runs separate collection for some bulky household trash. These programs have rules and limits; see our <a href="/guides/electronics-drop-off-mobile-al/">electronics drop-off guide</a> and the <a href="https://www.cityofmobile.gov/public-works/recycling/" rel="noopener" target="_blank">City recycling page<span class="sr-only"> (opens in a new tab)</span></a>. Zoiris is a private pickup service and is not affiliated with the City.</p>
+      </section>
+    </div>
+  </section>
+
+  <CTABand location="responsible-disposal" />
+</MainLayout>

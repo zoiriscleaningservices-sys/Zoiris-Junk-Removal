@@ -1,0 +1,148 @@
+{
+  "id": "guide-old-batteries-safety",
+  "type": "article",
+  "path": "/guides/old-batteries-safety/",
+  "status": "published",
+  "refs": { "itemIds": ["loose-batteries", "damaged-batteries", "car-batteries", "ups-units"], "customerType": "both" },
+  "seo": {
+    "title": "How to Handle and Dispose of Old Batteries Safely | Zoiris",
+    "description": "Tape terminals, store batteries apart, and never trash a swollen lithium battery. How to handle old batteries safely and where Mobile residents can take them.",
+    "h1": "How to Handle Old Batteries Safely",
+    "primaryKeyword": "how to dispose of old batteries safely",
+    "secondaryKeywords": ["swollen lithium battery disposal", "how to store old batteries", "tape battery terminals before recycling", "battery drop-off Mobile AL", "can batteries go in the trash"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Old Batteries Safety", "parentId": "core-guides" },
+  "purpose": "Help households identify, store, and route old batteries safely (especially lithium-ion), explain what to do with swollen or damaged batteries, point to official drop-off options in Mobile, and state clearly that Zoiris does not accept damaged batteries and only handles intact loose batteries after a call.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "Treat old batteries as a fire risk until they are recycled: **tape the terminals, bag them separately, and store them somewhere cool and away from anything flammable.** Lithium-ion batteries — and devices that contain them — should not go in household trash or curbside recycling, the EPA says. A swollen, cracked, or leaking battery needs extra care, and Zoiris cannot pick those up.",
+    "sections": [
+      {
+        "heading": "Why old batteries need careful handling",
+        "body": [
+          "A battery does not have to be new to be dangerous. The EPA warns that even used batteries can have enough energy to injure someone or start a fire. When a lithium-ion battery, or a device that contains one, is thrown in the trash or a recycling bin, it can be crushed or damaged in a truck or at a sorting facility and become a fire hazard.",
+          "Most problems start at home with simple things: loose batteries rattling around a drawer with keys and coins, a puffy phone left on a charger, or a box of old tool batteries sitting in a hot garage."
+        ]
+      },
+      {
+        "heading": "Know which battery you have",
+        "body": [
+          "The right handling depends on the chemistry. Check the label before you decide where a battery goes."
+        ],
+        "bullets": [
+          "**Single-use alkaline (AA, AAA, C, D, 9-volt):** the everyday batteries in remotes and flashlights.",
+          "**Single-use lithium metal:** found in cameras, watches, remote controls, handheld games, and smoke detectors. The EPA notes these can look like ordinary alkaline sizes or come as coin and button cells — look for the word lithium on the label.",
+          "**Rechargeable lithium-ion:** in phones, laptops, tablets, power tools, children's toys, e-cigarettes, power banks, and many small appliances. Some come out easily; others are built in.",
+          "**Lead-acid:** car and truck batteries, plus the sealed batteries inside many UPS battery backups."
+        ]
+      },
+      {
+        "heading": "How to store batteries until you drop them off",
+        "body": [
+          "Most people collect batteries for a while before making a trip. A few habits make that much safer:"
+        ],
+        "bullets": [
+          "Put non-conductive tape, such as electrical tape, over the terminals of lithium batteries and 9-volts, as the EPA recommends.",
+          "Place each battery, or each device containing a battery, in its own plastic bag so terminals cannot touch.",
+          "Keep the collection in a sturdy non-metal container with a lid, away from heat, direct sun, and anything flammable.",
+          "Never store batteries loose with coins, keys, or tools that can bridge the terminals.",
+          "Keep coin and button batteries well out of reach of children and pets.",
+          "Do not wait years — the bigger the pile, the bigger the risk."
+        ]
+      },
+      {
+        "heading": "Swollen, damaged, or leaking batteries",
+        "body": [
+          "Signs of a damaged lithium-ion battery include a bulging case, a phone screen or laptop trackpad being pushed up, cracks, leaking fluid, a chemical smell, or a battery that gets hot when it is not in use. If you see any of these:"
+        ],
+        "bullets": [
+          "Stop using and stop charging the device right away.",
+          "Do not puncture, squeeze, bend, or try to flatten the battery.",
+          "Move it, if it is safe to do so, to a cool spot away from anything that can burn.",
+          "Never put it in household trash or a curbside recycling bin.",
+          "Contact the battery or device manufacturer for specific handling instructions, as the EPA advises, and check with your local household hazardous waste program."
+        ],
+        "subsections": [
+          {
+            "heading": "Zoiris does not accept damaged batteries",
+            "body": [
+              "We cannot pick up swollen, damaged, or leaking batteries, or devices that contain them — including laptops, phones, and tablets with puffy batteries. That fire risk needs a specialized drop-off or collection program, not a junk-removal truck. Our [restricted items](/restricted-items/) page lists other things we do not take."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Where to take old batteries in Mobile",
+        "body": [
+          "The right destination depends on the type of battery and whether it is intact."
+        ],
+        "subsections": [
+          {
+            "heading": "City of Mobile Household Hazardous Waste events",
+            "body": [
+              "The City of Mobile has hosted Household Hazardous Waste collection events since 2022. Its HHW page lists batteries — automotive and household, including rechargeable — among the accepted items. The events are open to Mobile residents and individuals only, not businesses or contractors. Dates are announced on the [City's HHW page](https://www.cityofmobile.gov/hhw/), and the City's Environmental Engineering Department answers questions (contact details are on the HHW page)."
+            ]
+          },
+          {
+            "heading": "Retail and mail-in programs",
+            "body": [
+              "For rechargeable batteries and devices containing them, the EPA recommends battery recyclers, participating retailers with take-back programs, or your local solid waste or household hazardous waste program. It lists [Call2Recycle](https://www.call2recycle.org/) and Earth911 as places to search for drop-off locations. Call ahead to confirm a location accepts your battery type."
+            ]
+          },
+          {
+            "heading": "Car and other large batteries",
+            "body": [
+              "Many auto parts retailers take back car batteries; call ahead to confirm. For large lithium-ion batteries, such as those in electric vehicles or home energy storage, the EPA says to contact the dealer, manufacturer, or installer."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "What Zoiris can and cannot take",
+        "body": [
+          "If you are booking a pickup, here is how batteries fit in:"
+        ],
+        "bullets": [
+          "**Devices with intact batteries** — laptops, phones, tablets, and game consoles — are part of our regular [phone and tablet pickup](/e-waste/phone-tablet-pickup/) and electronics service.",
+          "**Loose household batteries and power banks** are never mixed into a junk load. Call first; we will confirm whether we can handle them or point you to a drop-off option. Tape lithium terminals either way.",
+          "**UPS battery backups** need special handling — call first so we can confirm.",
+          "**Car and lead-acid batteries:** call to check before including them.",
+          "**Swollen, damaged, or leaking batteries:** not accepted."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Can I throw old AA batteries in the trash?", "a": "The EPA's firm warning is about lithium batteries: lithium-ion batteries and devices containing them should not go in household trash or recycling bins. Rules for ordinary alkaline batteries vary by area, so the safest choice is to collect them with your other batteries for a recycling drop-off." },
+      { "q": "Why should I tape battery terminals?", "a": "Tape prevents the metal ends of a battery from touching each other or other metal objects, which can cause a short circuit, heat, and fire. The EPA recommends non-conductive tape, such as electrical tape, over the terminals of lithium-ion batteries." },
+      { "q": "What do I do with a swollen phone or laptop battery?", "a": "Stop charging and using it, do not puncture or press on it, keep it away from flammable materials, and contact the device or battery manufacturer for handling instructions. Ask your local household hazardous waste program about drop-off. Do not put it in the trash." },
+      { "q": "Will Zoiris pick up my old batteries?", "a": "We do not accept swollen, damaged, or leaking batteries. Intact loose batteries and power banks are not mixed into a junk load — call first and we will confirm handling or point you to a drop-off option. Devices with intact batteries are picked up as normal." }
+    ],
+    "illustration": "electronics",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        { "label": "EPA — Used Lithium-Ion Batteries", "url": "https://www.epa.gov/recycle/used-lithium-ion-batteries" },
+        { "label": "EPA — Electronics Donation and Recycling", "url": "https://www.epa.gov/recycle/electronics-donation-and-recycling" },
+        { "label": "City of Mobile — Household Hazardous Waste Collection", "url": "https://www.cityofmobile.gov/hhw/" },
+        { "label": "Call2Recycle (drop-off locator referenced by EPA)", "url": "https://www.call2recycle.org/" }
+      ]
+    }
+  },
+  "related": ["core-restricted-items", "ew-phone-tablet-pickup", "guide-prepare-computer-for-recycling", "guide-electronics-drop-off-mobile", "core-responsible-disposal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "EPA handling guidance and City HHW accepted items verified 2026-11-04. Specific next HHW date deliberately not stated (events are periodic); readers are sent to the City page. Car battery retailer note mirrors items.json public note. Zoiris acceptance mirrors items.json (loose = special handling, damaged = not accepted, car = unknown, UPS = special handling).",
+    "ownerVerification": [
+      "Confirm whether intact loose household batteries and power banks are ever accepted.",
+      "Confirm car/lead-acid battery policy."
+    ]
+  }
+}

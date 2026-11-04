@@ -1,0 +1,184 @@
+{
+  "id": "guide-junk-removal-vs-dumpster",
+  "type": "article",
+  "path": "/guides/junk-removal-vs-dumpster-rental/",
+  "status": "published",
+  "refs": {
+    "serviceId": "junk-removal",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Junk Removal vs. Dumpster Rental: Which Fits Your Project?",
+    "description": "A fair comparison of junk removal and dumpster rental: who does the loading, timing, space, restricted items, and questions to ask either provider.",
+    "h1": "Junk Removal vs. Dumpster Rental: How to Choose",
+    "primaryKeyword": "junk removal vs dumpster rental",
+    "secondaryKeywords": [
+      "should I rent a dumpster or hire junk removal",
+      "dumpster rental or junk hauling",
+      "junk removal or roll-off dumpster for renovation",
+      "difference between junk removal and dumpster rental"
+    ],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Article",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Junk Removal vs. Dumpster Rental",
+    "parentId": "core-guides"
+  },
+  "purpose": "Give a balanced, price-free comparison between hiring a junk removal crew and renting a dumpster so readers can choose the right tool for their project — including cases where a dumpster is the better fit, since Zoiris does not rent dumpsters.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "The main difference is **who does the work and over how long**. With a dumpster rental, a container is dropped at your property, you load it yourself over days or weeks, and it is hauled away later. With junk removal, a crew comes to you, does the lifting and loading, and leaves with everything in one visit. Dumpsters tend to suit long do-it-yourself projects; junk removal tends to suit clearing existing stuff quickly.",
+    "sections": [
+      {
+        "heading": "How each option works",
+        "subsections": [
+          {
+            "heading": "Dumpster rental",
+            "body": [
+              "A rental company drops an open container in your driveway or another approved spot. You fill it at your own pace during the rental period, then the company picks it up and takes it for disposal. Containers come in different sizes, and the rental terms usually set limits on weight, rental length, and what can go inside."
+            ]
+          },
+          {
+            "heading": "Junk removal",
+            "body": [
+              "You describe what needs to go, agree on an estimate and a pickup window, and a crew arrives with a truck. They carry items out from wherever they sit — upstairs bedrooms, attics, garages, back yards — load them, and drive away. Nothing sits on your property afterward."
+            ]
+          }
+        ],
+        "body": [
+          "To be upfront: Zoiris Junk Removal is a junk removal company. We do not rent dumpsters, so if a dumpster is the right fit for your project, a rental company is the place to call."
+        ]
+      },
+      {
+        "heading": "When a dumpster tends to make more sense",
+        "body": [
+          "A dumpster is often the better tool when waste is produced steadily over time and you have the people to load it."
+        ],
+        "bullets": [
+          "A multi-week do-it-yourself renovation where debris comes out a little at a time.",
+          "Projects with a steady flow of material, like tearing out a deck or gutting a room yourself.",
+          "You have friends or family ready to do the loading and you are comfortable with heavy lifting.",
+          "There is room on your property for a container, and your driveway and any HOA rules allow it.",
+          "You want to keep tossing things as you go instead of scheduling a single pickup."
+        ]
+      },
+      {
+        "heading": "When junk removal tends to make more sense",
+        "body": [
+          "Junk removal is usually the better fit when the stuff already exists and the hard part is moving it."
+        ],
+        "bullets": [
+          "Heavy items are inside the home — a sleeper sofa upstairs, a refrigerator in the garage, a treadmill in a back bedroom.",
+          "You want the space cleared in one visit, such as before a move, a sale, or a new tenant.",
+          "There is no good place for a container, or you do not want one sitting in the driveway for days.",
+          "The load is a mix of furniture, boxes, appliances, and electronics.",
+          "Nobody available can safely do the lifting.",
+          "The volume is small to medium — a few large items or a single room or garage."
+        ]
+      },
+      {
+        "heading": "What to check whichever option you choose",
+        "body": [
+          "Whichever route you pick, a few questions up front prevent surprises on pickup day."
+        ],
+        "subsections": [
+          {
+            "heading": "Restricted materials",
+            "body": [
+              "Neither a dumpster nor a junk removal truck is a place for hazardous waste. Paint, solvents, fuel, propane tanks, and chemicals are commonly excluded, and some providers also restrict tires, batteries, mattresses, or appliances. Ask for the provider's restricted list before you start — see our [restricted items](/restricted-items/) page for what Zoiris does not take."
+            ]
+          },
+          {
+            "heading": "Heavy and dense debris",
+            "body": [
+              "Concrete, tile, brick, and soil are very heavy for their size. Dumpster rentals often set weight limits, and junk removal crews may limit quantities. If your project involves a lot of dense material, tell the provider exactly what and roughly how much."
+            ]
+          },
+          {
+            "heading": "Placement and permission",
+            "body": [
+              "A container on a driveway can mark or damage some surfaces, and HOAs or landlords may have rules about containers. If a container would sit on a street or sidewalk, ask the City whether permission is required before you book."
+            ]
+          },
+          {
+            "heading": "Contractor debris",
+            "body": [
+              "If you hire a contractor in the City of Mobile, the City's Trash Collection Rules say it is the contractor's responsibility to collect and remove the debris and take it to the landfill — the City will not collect it at the curb. Clarify in your contract who handles debris before work begins."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Questions to ask any provider",
+        "body": [
+          "Whether you call a rental company or a junk removal service, these questions help you compare honestly:"
+        ],
+        "bullets": [
+          "What exactly is included, and who does the loading?",
+          "How is the price determined — by volume, weight, time, or a flat rental?",
+          "Are there extra charges for going over a weight or volume limit, extending a rental, or specific items?",
+          "Which items are not allowed?",
+          "How is the pickup or drop-off time confirmed?",
+          "What happens to usable or recyclable items after they leave?"
+        ]
+      },
+      {
+        "heading": "Combining options",
+        "body": [
+          "Many projects do not need to be either-or. During a remodel, your contractor may haul away construction debris while a junk removal crew clears the furniture and contents first. If you are a City of Mobile resident with just a few pieces of furniture, the City's every-other-week roadside trash collection may handle them within its size limit — our guide to [getting rid of old furniture in Mobile](/guides/get-rid-of-old-furniture-mobile-al/) explains the rules.",
+          "If you decide a crew is the better fit, our [junk removal service in Mobile](/junk-removal-mobile-al/) covers household, business, and non-hazardous [construction debris removal](/services/construction-debris-removal/). We confirm an estimate and a pickup window with you before anything is scheduled."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Does Zoiris rent dumpsters?",
+        "a": "No. Zoiris is a junk removal service: our crew comes to you, does the lifting and carrying, and hauls everything away in one visit. If you need a container on site for several days, contact a dumpster rental company."
+      },
+      {
+        "q": "Which is cheaper, junk removal or a dumpster?",
+        "a": "It depends on the project — how much material there is, how heavy it is, how long you need, and whether you are paying with your own time and labor. Get quotes from both and ask what is included and what triggers extra charges."
+      },
+      {
+        "q": "Is a dumpster better for a renovation?",
+        "a": "For a long do-it-yourself renovation that produces debris over weeks, a dumpster is often practical. For a shorter job, or to clear contents before work starts, junk removal can be simpler. If a contractor is doing the work in Mobile, the City's rules make debris removal the contractor's responsibility."
+      },
+      {
+        "q": "Can junk removal take renovation debris?",
+        "a": "Zoiris picks up non-hazardous remodel debris such as drywall, lumber, cabinets, and fixtures. Heavy materials like tile, brick, and concrete are limited by quantity, so describe the volume when you call."
+      }
+    ],
+    "illustration": "hero",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        {
+          "label": "City of Mobile — Trash Collection Rules (contractor debris, roadside limits)",
+          "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/"
+        }
+      ]
+    }
+  },
+  "related": [
+    "svc-junk-removal-mobile-al",
+    "svc-construction-debris-removal",
+    "core-how-it-works",
+    "core-pricing",
+    "core-restricted-items"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Balanced comparison; states plainly that Zoiris does not rent dumpsters and recommends a dumpster where appropriate. No prices or invented cost comparisons. Contractor-debris rule verified on City Trash Collection Rules page 2026-11-04. Street-placement permit requirement not verified, so readers are told to ask the City.",
+    "ownerVerification": []
+  }
+}

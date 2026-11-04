@@ -1,0 +1,36 @@
+{
+  "id": "core-restricted-items",
+  "type": "core",
+  "path": "/restricted-items/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Items We Cannot Take: Hazardous & Restricted | Zoiris",
+    "description": "Paint, chemicals, propane, asbestos, medical waste, and damaged batteries are not picked up. See restricted items and safer disposal options in Mobile, AL.",
+    "h1": "Restricted & Hazardous Items",
+    "primaryKeyword": "items junk removal will not take",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Restricted Items",
+    "parentId": "core-home"
+  },
+  "purpose": "Clear list of items Zoiris does not accept, with safety guidance and official alternatives.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "id": "guide-prepare-computer-for-recycling",
+  "type": "article",
+  "path": "/guides/prepare-computer-for-recycling/",
+  "status": "published",
+  "refs": { "serviceId": "computer-recycling", "itemIds": ["desktop-computers", "laptops", "peripherals"], "customerType": "both" },
+  "seo": {
+    "title": "How to Prepare a Computer or Laptop for Recycling | Zoiris",
+    "description": "Back up files, sign out of accounts, erase the drive, and check the battery: what to do before you recycle, donate, or toss an old computer or laptop.",
+    "h1": "How to Prepare a Computer or Laptop for Recycling",
+    "primaryKeyword": "how to prepare a computer for recycling",
+    "secondaryKeywords": ["what to do before disposing of an old laptop", "how to wipe a computer before recycling", "remove hard drive before recycling computer", "laptop battery safety before recycling"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Prepare a Computer for Recycling", "parentId": "core-guides" },
+  "purpose": "Give anyone retiring a desktop or laptop a clear, source-backed checklist (backup, sign-out, erase, battery check) so personal data is protected before the machine is recycled, donated, sold, or picked up — and make clear that data erasure is the owner's job, not a Zoiris service.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "Before an old computer or laptop leaves your hands, **back up what you want to keep, sign out of your accounts, and erase the drive** — deleting files or emptying the trash is not enough, according to the FTC. Then check the battery: a laptop with a swollen, cracked, or leaking battery needs special handling and should never go in household trash.",
+    "sections": [
+      {
+        "heading": "Step 1: Back up the files you want to keep",
+        "body": [
+          "Start by deciding what is worth saving. Most people think of photos and documents, but it is easy to forget tax returns stored as PDFs, scanned receipts, saved email archives, browser bookmarks, and files sitting on the desktop or in the downloads folder.",
+          "The FTC suggests a few ways to save your information: transfer it directly to your new computer, copy it to an external hard drive or USB flash drive, or upload it to a cloud storage service. If you use cloud storage, turn on multi-factor authentication for that account.",
+          "Before you erase anything, open a few of the backed-up files on another device to confirm the copy actually worked. Once the drive is wiped, there is no getting them back."
+        ]
+      },
+      {
+        "heading": "Step 2: Sign out, deauthorize, and turn off device locks",
+        "body": [
+          "A computer stays tied to your accounts until you untie it. Taking a few minutes here prevents headaches for you and for whoever handles the machine next."
+        ],
+        "bullets": [
+          "Sign out of email, cloud storage, browser sync, and messaging apps.",
+          "Deauthorize the computer in any software, music, or app store that limits how many devices you can use.",
+          "Turn off device-finding or activation-lock features so the machine is not locked to your account after you let it go.",
+          "Remove the computer from your account's list of trusted devices, if the service keeps one.",
+          "Write down any software license keys you plan to reuse on a new machine."
+        ]
+      },
+      {
+        "heading": "Step 3: Erase the drive properly",
+        "body": [
+          "The FTC is clear that deleting files and emptying the recycle bin does not remove them — deleted data can often be recovered. To actually remove your information, use the computer's built-in reset or erase feature with the option that removes everything, or use reputable disk-wiping software.",
+          "For businesses and anyone handling sensitive records, NIST publishes **Guidelines for Media Sanitization (SP 800-88)**, which explain how to choose sanitization methods, such as cryptographic erase and secure erase, based on how sensitive the information is."
+        ],
+        "subsections": [
+          {
+            "heading": "If the computer still works",
+            "body": [
+              "Run the operating system's reset or erase process and choose the option that removes all files and apps, not the one that keeps your files. Look up the exact steps on your operating system maker's support site, because menus change between versions."
+            ]
+          },
+          {
+            "heading": "If the computer will not turn on",
+            "body": [
+              "You can still protect your data by removing the storage drive. In most desktop towers the drive is easy to reach; in laptops it varies, and some have storage built into the board. Keep the removed drive, connect it to another computer to wipe it, or have it destroyed by a provider that offers that service."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Step 4: Check the battery and remove the extras",
+        "body": [
+          "The EPA advises removing batteries from electronics before recycling when you can, because they may need to be recycled separately, and says lithium-ion batteries and devices that contain them should **not** go in household garbage or recycling bins. Most laptops use lithium-ion batteries.",
+          "Look at the laptop closely. If the case is bulging, the trackpad is lifting, or the battery is cracked or leaking, stop charging it and keep it away from anything flammable. Our guide on [handling old batteries safely](/guides/old-batteries-safety/) walks through what to do next."
+        ],
+        "bullets": [
+          "Pop out discs, USB drives, and SD or memory cards.",
+          "If the battery is removable and intact, take it out and put tape over the terminals.",
+          "Gather the power cord, docking station, keyboard, and mouse so everything leaves together.",
+          "Remove loose batteries from wireless keyboards and mice."
+        ]
+      },
+      {
+        "heading": "Where an old computer can go",
+        "body": [
+          "If the computer still works, it may have another life. The EPA notes that manufacturers and retailers offer options to donate or recycle electronics, and it points to locator sites such as Call2Recycle and Earth911 for finding them.",
+          "City of Mobile residents can drop off computers, including components and accessories, in the electronics bins at the City's three recycling drop-off centers. Our guide to [electronics drop-off in Mobile](/guides/electronics-drop-off-mobile-al/) explains who qualifies and what the City accepts.",
+          "If you have a heavy desktop tower, several machines, or a mix of monitors and printers, Zoiris can pick them up through our [computer recycling](/e-waste/computer-recycling/) service — our crew does the lifting and carrying. We do not wipe drives or destroy data, so please finish Steps 1 through 3 before your pickup. Laptops must have intact batteries."
+        ]
+      },
+      {
+        "heading": "Quick checklist",
+        "body": ["Run through this list before the computer leaves your home or office:"],
+        "bullets": [
+          "Files backed up and spot-checked on another device",
+          "Signed out of accounts and device-finding turned off",
+          "Drive erased with a remove-everything reset or wiping tool — or drive removed",
+          "Discs, USB sticks, and memory cards removed",
+          "Battery inspected: no swelling, cracks, or leaks",
+          "Power cords and accessories gathered together"
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Is a factory reset enough to protect my data?", "a": "A reset that removes everything is the step the FTC points people to, and it is far better than deleting files by hand. Choose the option that removes all files rather than the one that keeps them. If the drive held highly sensitive records, review NIST's media sanitization guidance or remove the drive and keep it." },
+      { "q": "What should I do before disposing of an old laptop that will not turn on?", "a": "Remove the storage drive if you can reach it, take out any memory cards, and check the battery for swelling or damage. If the drive is built into the board, consider having the laptop handled by a provider that offers data destruction." },
+      { "q": "Does Zoiris wipe hard drives or destroy data?", "a": "No. We are a pickup service and do not provide data wiping, drive destruction, or certificates. Please back up and erase your computer, or remove the drive, before we collect it." },
+      { "q": "Can I put an old laptop in the trash?", "a": "The EPA says devices containing lithium-ion batteries should not go in household garbage or recycling bins, because the battery can be damaged and start a fire. Use an electronics drop-off, a retailer take-back program, or a pickup service instead." }
+    ],
+    "illustration": "electronics",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 5,
+      "sources": [
+        { "label": "FTC — How To Remove Your Personal Information Before You Get Rid of Your Computer", "url": "https://consumer.ftc.gov/articles/how-remove-your-personal-information-you-get-rid-your-computer" },
+        { "label": "NIST SP 800-88 Rev. 2 — Guidelines for Media Sanitization", "url": "https://csrc.nist.gov/pubs/sp/800/88/r2/final" },
+        { "label": "EPA — Electronics Donation and Recycling", "url": "https://www.epa.gov/recycle/electronics-donation-and-recycling" },
+        { "label": "EPA — Used Lithium-Ion Batteries", "url": "https://www.epa.gov/recycle/used-lithium-ion-batteries" },
+        { "label": "City of Mobile — Recycling", "url": "https://www.cityofmobile.gov/public-works/recycling/" }
+      ]
+    }
+  },
+  "related": ["ew-computer-recycling", "guide-electronics-drop-off-mobile", "guide-old-batteries-safety", "ew-office-electronics-pickup", "ew-electronics-pickup"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Covers both 'prepare computer for recycling' and 'before disposing of an old laptop' intents. States plainly that Zoiris does not wipe or destroy data. FTC page is bot-protected; content verified via search grounding. NIST and EPA pages fetched directly on 2026-11-04.",
+    "ownerVerification": []
+  }
+}

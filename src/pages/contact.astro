@@ -1,0 +1,65 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import { business, getPage } from '../lib/data.ts';
+
+const page = getPage('core-contact');
+---
+
+<MainLayout page={page} localBusiness>
+  <PageHero page={page} eyebrow="Contact" lead="The quickest way to reach Zoiris Junk Removal is by phone. You can also send a pickup request online and we'll get back to you." illustration={null} ctas={false} />
+
+  <section class="section">
+    <div class="container grid grid--3">
+      <div class="card">
+        <span class="card__icon card__icon--orange"><Icon name="call" /></span>
+        <h2 style="font-size:var(--step-1);margin:0">Call or text</h2>
+        <p><a href={business.phoneHref} class="cta-card__phone" style="color:var(--navy-900);margin:0" data-track="call" data-track-location="contact-card">{business.phoneDisplay}</a></p>
+        <p>Describe what you have — photos help us give a more accurate estimate.</p>
+        {business.hoursDisplay && <p><strong>Hours:</strong> {business.hoursDisplay}</p>}
+      </div>
+      <div class="card">
+        <span class="card__icon"><Icon name="clipboard" /></span>
+        <h2 style="font-size:var(--step-1);margin:0">Request online</h2>
+        <p>Send the details through our pickup request form. Submitting a request doesn't book a pickup — we'll confirm with you first.</p>
+        <a class="btn btn--teal" href="/request-pickup/">Request a Pickup</a>
+      </div>
+      <div class="card">
+        <span class="card__icon"><Icon name="pin" /></span>
+        <h2 style="font-size:var(--step-1);margin:0">Service area</h2>
+        <p>We pick up throughout the City of Mobile, Alabama. Zoiris is a mobile service — there's no public drop-off location.</p>
+        <a class="text-link" href="/areas/">Service areas <Icon name="arrow-right" /></a>
+      </div>
+      {
+        business.email && (
+          <div class="card">
+            <span class="card__icon">
+              <Icon name="mail" />
+            </span>
+            <h2 style="font-size:var(--step-1);margin:0">Email</h2>
+            <p>
+              <a href={`mailto:${business.email}`}>{business.email}</a>
+            </p>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--sand">
+    <div class="container--narrow">
+      <h2>Before you call</h2>
+      <p>Having a few details ready makes the conversation quick:</p>
+      <ul class="checklist">
+        <li>What needs to go, and roughly how much (one item, a room, a garage, a whole property)</li>
+        <li>Where the items are — upstairs, in a basement or attic, in a storage unit, or already in the driveway</li>
+        <li>Any electronics, appliances with refrigerant, or batteries in the mix</li>
+        <li>Your address or ZIP code within Mobile</li>
+      </ul>
+    </div>
+  </section>
+
+  <CTABand location="contact" />
+</MainLayout>

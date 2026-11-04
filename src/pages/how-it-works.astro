@@ -1,0 +1,60 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQ from '../components/FAQ.astro';
+import Icon from '../components/Icon.astro';
+import Illustration from '../components/Illustration.astro';
+import { getPage } from '../lib/data.ts';
+
+const page = getPage('core-how-it-works');
+const faqs = [
+  { q: 'Do I need to be there during the pickup?', a: 'For most jobs it helps to have someone on site to point out what goes and what stays. If that isn\'t possible, tell us when you book and we will talk through access and how to clearly mark items.' },
+  { q: 'Do I need to move items outside first?', a: 'No. The crew carries items out from where they are. If some things are already in the driveway or garage, that is fine too.' },
+  { q: 'What if I have more than I described?', a: 'Tell the crew before loading starts. We will review the estimate with you on site before adding anything, so there are no surprises.' },
+  { q: 'Will the pickup be confirmed in writing?', a: 'We confirm the details and pickup window with you directly before the job. A submitted online request on its own is not a booking.' }
+];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="How it works" lead="A simple process from first contact to an empty space — with an estimate confirmed before anything is scheduled." illustration="residential" />
+
+  <section class="section">
+    <div class="container">
+      <ol class="steps">
+        <li><h2 style="font-size:var(--step-1);margin-bottom:.5rem">Tell us what's going</h2><p>Call, text, or <a href="/request-pickup/">send a request</a>. Describe the items, how many, and where they are. Photos make estimates more accurate.</p></li>
+        <li><h2 style="font-size:var(--step-1);margin-bottom:.5rem">Get an estimate</h2><p>We look at volume, weight, access, and any items that need special handling, then confirm an estimate with you.</p></li>
+        <li><h2 style="font-size:var(--step-1);margin-bottom:.5rem">Pick a time</h2><p>Once you're happy with the estimate, we agree on a pickup window together. Nothing is booked until then.</p></li>
+        <li><h2 style="font-size:var(--step-1);margin-bottom:.5rem">We lift and load</h2><p>The crew carries items out from wherever they are, protects doorways where needed, and loads the truck.</p></li>
+        <li><h2 style="font-size:var(--step-1);margin-bottom:.5rem">After the pickup</h2><p>Loads are sorted so usable, recyclable, and electronic items can go to appropriate outlets where practical. <a href="/responsible-disposal/">Learn more</a>.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="pickup-day">
+    <div class="container split">
+      <div>
+        <h2 id="pickup-day">On pickup day</h2>
+        <ul class="checklist">
+          <li>Point out exactly what goes — we will confirm anything that's unclear before loading.</li>
+          <li>Make sure there's somewhere reasonably close for the truck to park.</li>
+          <li>Keep pets and children away from open doors and carry paths.</li>
+          <li>Set aside anything you're keeping, plus restricted items like paint or propane.</li>
+        </ul>
+        <h3>Electronics in the load?</h3>
+        <p>Back up and erase personal data first, sign out of accounts, and remove SIM and memory cards. Our <a href="/guides/prepare-computer-for-recycling/">computer prep guide</a> walks through it.</p>
+      </div>
+      <Illustration name="electronics" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="hiw-faq">
+    <div class="container--narrow">
+      <h2 id="hiw-faq">Process questions</h2>
+      <FAQ faqs={faqs} />
+      <p style="margin-top:1.5rem"><a class="text-link" href="/faq/">All FAQs <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <CTABand location="how-it-works" />
+</MainLayout>

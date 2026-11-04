@@ -1,0 +1,254 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Icon from '../components/Icon.astro';
+import Illustration from '../components/Illustration.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FAQ from '../components/FAQ.astro';
+import CTABand from '../components/CTABand.astro';
+import { business, getPage, liveServicePages } from '../lib/data.ts';
+
+const page = getPage('core-home');
+const flagship = getPage('svc-junk-removal-mobile-al');
+const ewasteHub = getPage('ew-electronics-pickup');
+const junk = liveServicePages('junk');
+const ewaste = liveServicePages('ewaste').filter((x) => x.service.id !== 'electronics-pickup');
+const pick = (ids: string[]) => ids.map((id) => junk.find((x) => x.service.id === id)).filter((x): x is NonNullable<typeof x> => !!x);
+const mainServices = pick(['residential-junk-removal', 'commercial-junk-removal', 'furniture-removal', 'appliance-removal', 'mattress-removal', 'garage-cleanouts', 'estate-cleanouts', 'construction-debris-removal']);
+
+const categories = [
+  { icon: 'sofa', label: 'Furniture', sub: 'Couches, recliners, dressers', href: '/services/furniture-removal/' },
+  { icon: 'appliance', label: 'Appliances', sub: 'Washers, dryers, stoves', href: '/services/appliance-removal/' },
+  { icon: 'bed', label: 'Mattresses', sub: 'Mattresses & box springs', href: '/services/mattress-removal/' },
+  { icon: 'boxes', label: 'Household junk', sub: 'Boxes, clutter, décor', href: '/services/residential-junk-removal/' },
+  { icon: 'laptop', label: 'Computers', sub: 'Desktops, laptops, peripherals', href: '/e-waste/computer-recycling/' },
+  { icon: 'tv', label: 'TVs & monitors', sub: 'Confirmed by type', href: '/e-waste/tv-monitor-pickup/' },
+  { icon: 'printer', label: 'Printers & copiers', sub: 'Home & office', href: '/e-waste/printer-copier-removal/' },
+  { icon: 'hammer', label: 'Renovation debris', sub: 'Non-hazardous materials', href: '/services/construction-debris-removal/' }
+];
+
+const faqs = [
+  { q: 'What does Zoiris Junk Removal pick up?', a: 'Unwanted furniture, mattresses, household appliances, boxes and clutter, non-hazardous renovation debris, and qualifying electronics such as computers, monitors, printers, and phones. Check the [accepted items list](/accepted-items/) for item-by-item status.' },
+  { q: 'Do you pick up electronics and e-waste?', a: 'Yes. Electronics pickup is a core part of what we do, for homes and businesses. Some items, like flat-screen TVs and large copiers, are confirmed by type and size before scheduling, and damaged batteries are never accepted. See [electronics pickup](/e-waste/) for details.' },
+  { q: 'Where do you provide service?', a: 'We pick up throughout the City of Mobile, Alabama. If your address is outside city limits, call us before booking and we will tell you honestly whether we can help. See [service areas](/areas/).' },
+  { q: 'How much does junk removal cost?', a: 'Every job is quoted individually based on volume, weight, item types, access, and any special handling. We confirm an estimate with you before anything is scheduled. Learn more on our [pricing page](/pricing/).' },
+  { q: 'Do I have to bring everything to the curb?', a: 'No. Our crew carries items out from where they are — inside rooms, upstairs, garages, or offices — and loads them onto the truck.' },
+  { q: 'Is there anything you cannot take?', a: 'Yes. We do not pick up paint, chemicals, fuel, propane tanks, asbestos, medical waste, or swollen and damaged batteries. See [restricted items](/restricted-items/) for safer disposal options.' }
+];
+---
+
+<MainLayout page={page} localBusiness>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <div class="reveal">
+        <p class="eyebrow">Mobile, Alabama · Homes &amp; Businesses</p>
+        <h1 id="hero-title">Junk Gone. <span class="accent">Electronics Handled Responsibly.</span></h1>
+        <p class="hero__lead">
+          Zoiris Junk Removal picks up unwanted furniture, appliances, and household clutter, clears out homes and businesses, and hauls away qualifying electronics across the City of Mobile. You point — we lift, load, and haul.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--primary btn--lg" href={business.phoneHref} data-track="call" data-track-location="hero"><Icon name="call" /> Call {business.phoneDisplay}</a>
+          <a class="btn btn--ghost btn--lg" href="/request-pickup/" data-track="cta" data-track-location="hero">Request a Pickup</a>
+        </div>
+        <ul class="hero__facts">
+          <li><Icon name="pin" /> Pickup across Mobile, AL</li>
+          <li><Icon name="hand" /> We do the lifting</li>
+          <li><Icon name="chip" /> Electronics &amp; e-waste</li>
+          <li><Icon name="building" /> Residential &amp; commercial</li>
+        </ul>
+      </div>
+      <div class="hero__art reveal reveal--2">
+        <Illustration name="hero" priority sizes="(min-width: 1000px) 560px, (min-width: 640px) 90vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Accepted item categories -->
+  <section class="section section--tight section--white" aria-labelledby="cats-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">What we take</p>
+        <h2 id="cats-title">If it's unwanted, start here</h2>
+        <p>From a single recliner to a roomful of old computers. Not sure about an item? <a href="/accepted-items/">Check the accepted items list</a>.</p>
+      </div>
+      <ul class="chips">
+        {
+          categories.map((c) => (
+            <li>
+              <a class="chip" href={c.href}>
+                <Icon name={c.icon} />
+                <span>
+                  {c.label}
+                  <small>{c.sub}</small>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Main services -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Services</p>
+        <h2 id="services-title">Junk removal for every kind of job</h2>
+        <p>Single items, full cleanouts, and business hauls. Each service page explains what's included, how pickup works, and what affects the estimate.</p>
+      </div>
+      <div class="grid grid--4">
+        {mainServices.map(({ service, page: p }) => <ServiceCard href={p.path} title={service.name} body={service.summary} icon={service.icon} />)}
+      </div>
+      <div class="btn-row" style="margin-top:2rem">
+        <a class="btn btn--outline" href={flagship.path}>Junk removal in Mobile <Icon name="arrow-right" /></a>
+        <a class="btn btn--outline" href="/services/">See all services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Residential -->
+  <section class="section section--sand" aria-labelledby="res-title">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Residential pickup</p>
+        <h2 id="res-title">Clear the garage, the spare room, or the whole house</h2>
+        <p class="lead">Replacing a couch, getting ready to move, or helping family with an estate — we carry it out from wherever it sits, so nothing has to be dragged to the curb.</p>
+        <ul class="checklist">
+          <li>Furniture, mattresses, appliances, and boxed clutter</li>
+          <li><a href="/services/garage-cleanouts/">Garage</a>, <a href="/services/house-cleanouts/">house</a>, <a href="/services/apartment-cleanouts/">apartment</a>, and <a href="/services/estate-cleanouts/">estate</a> cleanouts</li>
+          <li>Upstairs rooms, attics, and tight spaces — just tell us about access</li>
+          <li>An estimate confirmed with you before anything is scheduled</li>
+        </ul>
+        <a class="btn btn--teal" href="/services/residential-junk-removal/">Residential junk removal <Icon name="arrow-right" /></a>
+      </div>
+      <Illustration name="residential" />
+    </div>
+  </section>
+
+  <!-- Commercial -->
+  <section class="section" aria-labelledby="com-title">
+    <div class="container split split--reverse">
+      <div>
+        <p class="eyebrow">Commercial pickup</p>
+        <h2 id="com-title">Offices, rentals, and businesses that need space back</h2>
+        <p class="lead">Office furniture, fixtures, rental turnovers, and obsolete equipment hauled out so your team can stay focused on work.</p>
+        <ul class="checklist">
+          <li>Desks, chairs, cubicles, and file cabinets</li>
+          <li><a href="/services/property-cleanouts/">Property cleanouts</a> for landlords and managers</li>
+          <li><a href="/e-waste/office-electronics-pickup/">Office and IT equipment</a> pickup, including servers and network gear</li>
+          <li>Clear scoping up front so the job matches the estimate</li>
+        </ul>
+        <a class="btn btn--teal" href="/services/commercial-junk-removal/">Commercial junk removal <Icon name="arrow-right" /></a>
+      </div>
+      <Illustration name="commercial" />
+    </div>
+  </section>
+
+  <!-- Electronics -->
+  <section class="section section--navy" aria-labelledby="ew-title">
+    <div class="container">
+      <div class="split" style="align-items:start">
+        <div>
+          <p class="eyebrow">Electronics &amp; e-waste</p>
+          <h2 id="ew-title">Old electronics deserve more than the trash can</h2>
+          <p class="lead" style="color:#c8d3df">Computers, monitors, printers, phones, and networking gear are handled as their own category — not tossed in with household junk. Batteries are kept separate, and we tell you upfront which items need confirmation.</p>
+          <ul class="checklist">
+            <li>Pickup from homes, offices, and server closets</li>
+            <li>Clear acceptance rules for TVs, copiers, and battery-powered devices</li>
+            <li>A <a href="/guides/prepare-computer-for-recycling/">data-privacy checklist</a> so you can wipe devices before pickup</li>
+          </ul>
+          <div class="btn-row">
+            <a class="btn btn--primary" href={ewasteHub.path}>Electronics pickup <Icon name="arrow-right" /></a>
+            <a class="btn btn--ghost" href="/accepted-items/">Accepted items</a>
+          </div>
+        </div>
+        <div class="grid grid--4" style="gap:1rem">
+          {ewaste.map(({ service, page: p }) => <ServiceCard href={p.path} title={service.name} body={service.summary} icon={service.icon} dark />)}
+        </div>
+      </div>
+      <div class="notice notice--teal" style="margin-top:2.5rem">
+        <Icon name="info" />
+        <p>
+          City of Mobile residents can also drop off certain small electronics at City recycling centers (TVs are not accepted there). Zoiris is a private pickup service, not a government program —
+          <a href="/guides/electronics-drop-off-mobile-al/" style="color:var(--teal-800)">compare your options</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-title">Four simple steps</h2>
+        <p>No guesswork about what happens next.</p>
+      </div>
+      <ol class="steps">
+        <li><h3>Tell us what's going</h3><p>Call or send a request with a description or photos of the items and where they are.</p></li>
+        <li><h3>Confirm the estimate</h3><p>We review volume, access, and any special items, then confirm an estimate and pickup window with you.</p></li>
+        <li><h3>We lift and load</h3><p>Our crew carries everything out from where it sits and loads the truck. You don't need to move a thing.</p></li>
+        <li><h3>Handled after pickup</h3><p>Loads are sorted so usable, recyclable, and electronic items can go to appropriate outlets where practical.</p></li>
+      </ol>
+      <p style="text-align:center;margin-top:2rem"><a class="text-link" href="/how-it-works/">More about our process <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <!-- Why Zoiris -->
+  <section class="section section--sand" aria-labelledby="why-title">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Why Zoiris</p>
+        <h2 id="why-title">Straight answers. Careful hands. No surprises.</h2>
+        <p class="lead">We would rather tell you "call us first" than promise something we can't stand behind.</p>
+      </div>
+      <ul class="kicker-list">
+        <li><span class="card__icon"><Icon name="check-circle" /></span><div><h3>Clear on what we take</h3><p>An item-by-item directory shows what's accepted, what needs confirmation, and what we can't take.</p></div></li>
+        <li><span class="card__icon"><Icon name="clipboard" /></span><div><h3>Estimate before scheduling</h3><p>You know the plan and the estimate before the truck is booked.</p></div></li>
+        <li><span class="card__icon"><Icon name="chip" /></span><div><h3>Electronics, done properly</h3><p>E-waste is kept separate from general junk, and batteries are handled with care.</p></div></li>
+        <li><span class="card__icon"><Icon name="recycle" /></span><div><h3>Honest about disposal</h3><p>We explain where items are likely to go and never claim certifications we don't hold. <a href="/responsible-disposal/">Read how we handle loads</a>.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Service area -->
+  <section class="section" aria-labelledby="area-title">
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Service area</p>
+        <h2 id="area-title">Serving Mobile, Alabama</h2>
+        <p class="lead">We pick up throughout the City of Mobile — homes, apartments, offices, and storefronts. Just outside the city? Call first and we will tell you plainly whether we can help.</p>
+        <div class="btn-row">
+          <a class="btn btn--teal" href="/areas/mobile-al/">Service in Mobile, AL <Icon name="arrow-right" /></a>
+          <a class="btn btn--outline" href="/areas/">All service areas</a>
+        </div>
+      </div>
+      <div class="card" style="gap:1rem">
+        <div style="display:flex;gap:.75rem;align-items:center">
+          <span class="card__icon"><Icon name="pin" /></span>
+          <div>
+            <h3 style="margin:0">City of Mobile, AL</h3>
+            <p style="margin:0">Active service area</p>
+          </div>
+        </div>
+        <p>Junk removal, cleanouts, and electronics pickup are available at addresses within Mobile city limits.</p>
+        <p class="form-note" style="margin:0">Nearby communities are evaluated case by case. We only list areas here once coverage is confirmed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section--white" aria-labelledby="faq-title">
+    <div class="container--narrow">
+      <div class="section-head section-head--center">
+        <p class="eyebrow">FAQs</p>
+        <h2 id="faq-title">Questions we hear most</h2>
+      </div>
+      <FAQ faqs={faqs} />
+      <p style="text-align:center;margin-top:2rem"><a class="text-link" href="/faq/">More answers <Icon name="arrow-right" /></a></p>
+    </div>
+  </section>
+
+  <CTABand title="Let's make room." body="Call, text, or send a pickup request. We will confirm what you have, give you an estimate, and set a time that works." location="home-final" />
+</MainLayout>

@@ -1,0 +1,30 @@
+---
+/**
+ * Accessible FAQ list using native <details>. Answers are present in the HTML
+ * (crawlable without JavaScript). FAQPage markup is intentionally not emitted:
+ * Google no longer shows FAQ rich results for sites like this one.
+ */
+import { inlineToHtml } from '../lib/format.ts';
+interface Props {
+  faqs: { q: string; a: string }[];
+  headingLevel?: 'h3' | 'h4';
+  openFirst?: boolean;
+}
+const { faqs, headingLevel = 'h3', openFirst = false } = Astro.props;
+const Tag = headingLevel;
+---
+
+<div class="faq">
+  {
+    faqs.map((f, i) => (
+      <details open={openFirst && i === 0}>
+        <summary>
+          <Tag>{f.q}</Tag>
+        </summary>
+        <div class="faq__answer">
+          <p set:html={inlineToHtml(f.a)} />
+        </div>
+      </details>
+    ))
+  }
+</div>

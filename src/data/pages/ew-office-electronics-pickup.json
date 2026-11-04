@@ -1,0 +1,226 @@
+{
+  "id": "ew-office-electronics-pickup",
+  "type": "ewaste",
+  "path": "/e-waste/office-electronics-pickup/",
+  "status": "published",
+  "refs": {
+    "serviceId": "office-electronics-pickup",
+    "itemIds": [
+      "servers",
+      "network-gear",
+      "ups-units",
+      "desktop-computers",
+      "laptops",
+      "flat-monitors",
+      "printers",
+      "copiers"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "commercial"
+  },
+  "seo": {
+    "title": "Commercial E-Waste & IT Pickup in Mobile, AL | Zoiris",
+    "description": "Office and IT equipment pickup for Mobile, AL businesses: workstations, servers, network gear, and bulk electronics. Plan quantities and data prep first.",
+    "h1": "Commercial E-Waste & IT Equipment Pickup in Mobile, AL",
+    "primaryKeyword": "commercial e-waste pickup Mobile",
+    "secondaryKeywords": [
+      "IT equipment disposal Mobile AL",
+      "server removal Mobile",
+      "business electronics recycling Mobile AL",
+      "office electronics disposal Mobile",
+      "bulk electronics pickup Mobile"
+    ],
+    "intent": "commercial",
+    "ogTitle": "Commercial E-Waste & IT Equipment Pickup in Mobile, AL — Zoiris",
+    "ogDescription": "Workstations, servers, network gear, and bulk electronics picked up from offices and businesses in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Office & IT Equipment",
+    "parentId": "ew-electronics-pickup"
+  },
+  "purpose": "Serve businesses in Mobile retiring IT equipment and bulk electronics (server, network equipment, IT equipment, and bulk electronics intents consolidated here). Set clear expectations: what is confirmed in advance, how to plan a larger pickup, and that the business is responsible for data sanitization unless otherwise agreed.",
+  "content": {
+    "eyebrow": "Commercial E-Waste",
+    "lead": "Zoiris Junk Removal picks up retired office and IT equipment from businesses in Mobile, Alabama — workstations, laptops, monitors, printers, network gear, servers, and the storage-room backlog of equipment nobody has dealt with. We confirm quantities and any special items, like servers and battery backups, before scheduling. Data on your equipment is your organization's responsibility: drives should be sanitized or removed by your team before pickup unless something different is agreed in writing.",
+    "quickAnswer": {
+      "question": "Who picks up old IT equipment for businesses in Mobile, AL?",
+      "answer": "Zoiris picks up retired IT equipment and bulk electronics from Mobile businesses. Send a rough inventory and access details; we confirm servers, copiers, and battery backups individually, then agree on an estimate and pickup window. Your team handles data on the equipment before we arrive."
+    },
+    "includes": {
+      "heading": "What commercial e-waste pickup includes",
+      "intro": "Our crew handles the physical side of retiring equipment:",
+      "points": [
+        "Carrying equipment out of offices, server closets, storage rooms, and back-of-house areas.",
+        "Working from your inventory or a staged pile, and loading everything in one visit where volume allows.",
+        "Keeping battery backup units and anything with a damaged battery separate from the rest of the load.",
+        "Picking up office furniture and general junk in the same trip if you are clearing more than electronics."
+      ]
+    },
+    "items": {
+      "heading": "Equipment we commonly pick up",
+      "intro": "Items marked call to confirm are checked before scheduling.",
+      "list": [
+        "Desktop workstations, laptops, docking stations, and peripherals",
+        "Flat-panel monitors and conference-room displays",
+        "Office printers, scanners, and fax machines",
+        "Copiers and large multifunction devices — call to confirm",
+        "Routers, switches, firewalls, access points, and modems you own",
+        "Servers, storage arrays, and rack equipment — call to confirm",
+        "UPS battery backup units — special handling, call first",
+        "Phone systems, desk phones, and boxed cabling"
+      ],
+      "itemIds": [
+        "desktop-computers",
+        "laptops",
+        "peripherals",
+        "flat-monitors",
+        "printers",
+        "fax-machines",
+        "copiers",
+        "network-gear",
+        "servers",
+        "ups-units",
+        "small-electronics",
+        "cables"
+      ]
+    },
+    "audience": {
+      "heading": "Who uses commercial e-waste pickup",
+      "body": [
+        "Typical customers include offices replacing a round of workstations, businesses closing or relocating, property managers clearing equipment left in a vacant suite, and IT teams decommissioning a server closet after a move to the cloud.",
+        "When electronics are only part of the job, combine them with an [office cleanout](/services/office-cleanouts/) or [commercial junk removal](/services/commercial-junk-removal/) so desks, chairs, and filing cabinets go in the same visit."
+      ]
+    },
+    "process": {
+      "heading": "How a business e-waste pickup works",
+      "steps": [
+        {
+          "title": "Send an inventory",
+          "body": "A rough count by category works: workstations, monitors, printers, servers, network gear, UPS units, and boxes of accessories. Note anything heavy or rack-mounted."
+        },
+        {
+          "title": "Settle data responsibilities",
+          "body": "Your IT staff or provider sanitizes or removes drives before pickup. If you need anything different, raise it before scheduling so it can be agreed in writing — or not."
+        },
+        {
+          "title": "Plan building access",
+          "body": "Tell us about loading docks, freight elevators, building rules, parking, and any paperwork your property manager requires from vendors."
+        },
+        {
+          "title": "Confirm and collect",
+          "body": "We confirm an estimate and a pickup window. On the day, our crew loads the staged equipment and keeps battery units separate."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a commercial e-waste pickup",
+      "intro": "Every business job is quoted individually. The main factors are:",
+      "factors": [
+        "Total volume and the mix of equipment",
+        "Heavy items such as loaded server racks, storage arrays, and floor-standing copiers",
+        "Items needing special handling, such as UPS battery backups",
+        "Building access: floors, elevators, dock availability, and carry distance",
+        "Whether furniture and general office junk are included in the same visit"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare for a business pickup",
+      "tips": [
+        "Have your IT team sanitize or pull drives from computers, servers, storage arrays, and copiers before pickup day.",
+        "Release laptops, phones, and tablets from your device-management system so they are not still enrolled.",
+        "Stage equipment in one room or near the exit and label anything that is staying.",
+        "Return leased copiers and ISP-owned modems or routers to their owners instead of including them.",
+        "Power down and unplug UPS units, and tell us their size and battery type.",
+        "Reserve the freight elevator or loading dock if your building requires it."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "So expectations are clear from the start:",
+      "list": [
+        "Zoiris does not erase, wipe, shred, or destroy drives, and does not issue destruction or asset-tracking paperwork. Data sanitization is the customer's responsibility unless otherwise agreed in writing.",
+        "Servers and rack equipment are accepted after confirmation — tell us quantity, rack size, and whether drives have been removed or wiped.",
+        "UPS battery backups contain sealed lead-acid or lithium batteries and need special handling. Call first.",
+        "Equipment with swollen or damaged batteries is not accepted.",
+        "Leased equipment and provider-owned network devices should go back to their owners."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Data responsibilities: who handles what",
+        "body": [
+          "Business equipment often holds customer records, financial files, and saved credentials. EPA's first step before recycling any electronics is to delete all personal information ([EPA: Electronics Donation and Recycling](https://www.epa.gov/recycle/electronics-donation-and-recycling)). For a business, that work belongs with your IT staff or an IT provider, and it should be finished before the equipment leaves your control.",
+          "Zoiris is a pickup and hauling service. We collect and haul the equipment and sort it afterward so it can be routed to appropriate reuse, recycling, or disposal outlets where practical options exist. If your organization has compliance requirements for how data-bearing equipment is handled, meet them before pickup, or tell us before scheduling so we can discuss whether anything different can be agreed in writing."
+        ],
+        "bullets": [
+          "Your team: inventory, drive sanitization or removal, device-management release, returning leased equipment.",
+          "Our crew: confirming special items, carrying out, loading, hauling, and sorting after pickup."
+        ]
+      },
+      {
+        "heading": "Businesses and the City of Mobile drop-off",
+        "body": [
+          "The City of Mobile's recycling drop-off centers, including their electronics bins, are a service for City residents only; the City does not accept recyclables from businesses. The City's page notes that businesses with larger quantities can arrange a commercial pickup directly with its electronics recycling partner ([City of Mobile Recycling](https://www.cityofmobile.gov/public-works/recycling/)).",
+          "A Zoiris pickup is a fit when you want electronics, furniture, and general junk cleared in the same visit, or when you need a crew to carry equipment out of the building."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do you provide paperwork showing our drives were destroyed?",
+        "a": "No. Zoiris does not erase or destroy drives and does not issue destruction or asset-tracking documentation. Have your IT team or a provider handle drives before pickup, then we collect the hardware."
+      },
+      {
+        "q": "Can you remove a server rack?",
+        "a": "Servers and rack equipment are accepted after confirmation. Tell us how many racks and servers there are, the rack size, whether it is still loaded, and whether drives have been removed or wiped. We confirm access and an estimate before scheduling."
+      },
+      {
+        "q": "What about UPS battery backup units?",
+        "a": "UPS units contain sealed lead-acid or lithium batteries, so they need special handling. Power them down, note the size and battery type, and call first so we can confirm how they will be handled."
+      },
+      {
+        "q": "Can electronics go with the rest of our office cleanout?",
+        "a": "Yes. Desks, chairs, filing cabinets, and general office junk can go in the same visit as your IT equipment. See [office cleanouts](/services/office-cleanouts/) for the furniture side of the job."
+      },
+      {
+        "q": "Can our business use the City of Mobile electronics drop-off?",
+        "a": "No. The City's recycling drop-off centers are for City residents only and do not accept recyclables from businesses. A private pickup like ours is one alternative."
+      },
+      {
+        "q": "Should we include our internet provider's modem?",
+        "a": "Usually not. Modems and routers rented from an internet provider generally remain the provider's property and should be returned. Network gear your business owns can be picked up."
+      }
+    ],
+    "areaNote": "Commercial e-waste pickup is available for businesses throughout the City of Mobile. If your business is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "commercial"
+  },
+  "related": [
+    "ew-electronics-pickup",
+    "ew-printer-copier-removal",
+    "ew-computer-recycling",
+    "svc-office-cleanouts",
+    "svc-commercial-junk-removal",
+    "guide-prepare-computer-for-recycling"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Server, network, IT equipment, and bulk electronics consolidated here. Customer responsible for data sanitization unless otherwise agreed in writing; no destruction, certification, or custody claims. City facts (residents only, businesses not accepted, commercial pickup via City's partner) verified 2026-11-04 at https://www.cityofmobile.gov/public-works/recycling/.",
+    "ownerVerification": [
+      "Confirm capacity and maximum volume for large commercial electronics pickups.",
+      "Confirm server rack handling (loaded vs. empty racks, weight limits).",
+      "Confirm UPS battery backup handling (lead-acid and lithium).",
+      "Confirm whether the business can provide vendor paperwork some commercial buildings request (e.g., certificates of insurance) — no insurance claim is made on the page.",
+      "Confirm whether any written data-handling agreements will ever be offered; the page currently says customers handle data unless otherwise agreed in writing.",
+      "Confirm downstream outlets for commercial electronics."
+    ]
+  }
+}

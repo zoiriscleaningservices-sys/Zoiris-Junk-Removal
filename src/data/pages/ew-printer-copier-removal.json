@@ -1,0 +1,136 @@
+{
+  "id": "ew-printer-copier-removal",
+  "type": "ewaste",
+  "path": "/e-waste/printer-copier-removal/",
+  "status": "published",
+  "refs": { "serviceId": "printer-copier-removal", "itemIds": ["printers", "copiers", "fax-machines"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Printer & Copier Removal in Mobile, AL | Zoiris Junk Removal",
+    "description": "Zoiris removes home printers, scanners, fax machines, and office copiers in Mobile, AL. Copiers are confirmed first — check your lease and clear stored data.",
+    "h1": "Printer & Copier Removal in Mobile, AL",
+    "primaryKeyword": "printer and copier removal Mobile",
+    "secondaryKeywords": ["copier disposal Mobile AL", "printer recycling Mobile AL", "office copier removal Mobile", "multifunction printer disposal", "old printer pickup Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Printer & Copier Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Home printers, scanners, fax machines, and office copiers carried out and hauled away in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Printer & Copier Removal", "parentId": "ew-electronics-pickup" },
+  "purpose": "Serve homes and offices in Mobile getting rid of printers, scanners, fax machines, and floor-standing copiers, covering the two issues unique to this equipment: leased copiers that belong to a leasing company, and multifunction devices that store scanned and copied documents.",
+  "content": {
+    "eyebrow": "E-Waste Pickup",
+    "lead": "Zoiris Junk Removal picks up home printers, scanners, fax machines, and office copiers in Mobile, Alabama. Desktop printers are simple. Floor-standing copiers and large multifunction devices are confirmed before scheduling because of their weight — and before you call, check two things: whether the machine is leased, and whether it stores copies of documents on an internal drive.",
+    "quickAnswer": {
+      "question": "Can someone haul away an old office copier in Mobile?",
+      "answer": "Yes, once we confirm it. First check your paperwork — leased copiers usually go back to the leasing company. If you own it, clear any stored documents and address books, then send us the model and where it sits. We confirm access, an estimate, and a pickup window."
+    },
+    "includes": {
+      "heading": "What printer and copier removal includes",
+      "intro": "From a single inkjet to a hallway copier, our crew does the carrying.",
+      "points": [
+        "Unplugged printers and copiers moved from offices, copy rooms, and home desks out to the truck.",
+        "Rolling floor-standing copiers on their casters where floors allow, and lifting them where they do not.",
+        "Taking paper trays, finisher units, stands, and cables that belong with the machine.",
+        "Sorting afterward so equipment can go to appropriate recycling outlets where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Equipment we pick up",
+      "intro": "Here is how each kind of printing equipment is handled:",
+      "list": [
+        "Home inkjet and laser printers, all-in-ones, and flatbed scanners",
+        "Office laser printers and wide-format printers",
+        "Fax machines and label printers",
+        "Floor-standing copiers and large multifunction devices — call to confirm"
+      ],
+      "itemIds": ["printers", "fax-machines", "copiers"]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Households call when a printer stops working and replacing it is cheaper than fixing it. Offices call when they downsize to fewer machines, switch vendors, or clear a copy room during a move.",
+        "If printers are part of a bigger office clear-out with desks and filing cabinets, our [office cleanouts](/services/office-cleanouts/) page covers the whole job."
+      ]
+    },
+    "process": {
+      "heading": "How copier and printer removal works",
+      "steps": [
+        { "title": "Check ownership", "body": "Look at your lease or service agreement. If the copier is leased, contact the leasing company first — it usually expects the machine back." },
+        { "title": "Clear what the machine remembers", "body": "Use the device's settings menu to clear stored jobs, scan history, fax logs, and address books, or ask your service provider how to clear the internal storage." },
+        { "title": "Describe size and access", "body": "Send the model, a photo, and how it gets out: stairs, elevator, doorway widths, and any loading-dock rules. We confirm an estimate and pickup window." },
+        { "title": "Disconnect and remove", "body": "Unplug the machine and disconnect it from the network before we arrive. Our crew moves it out and loads it." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost",
+      "intro": "Each job is quoted individually. The biggest factors are:",
+      "factors": [
+        "Size and weight — a floor-standing copier with a finisher is a very different job from a desktop printer",
+        "How many machines are going",
+        "Stairs, elevator access, and the distance to the truck",
+        "Whether other office equipment or furniture is part of the same pickup"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare printers and copiers",
+      "tips": [
+        "Remove paper from all trays and the output bin.",
+        "Ink and toner cartridges can stay installed; mention any spare or loose toner when you call.",
+        "Print a configuration page first if you need the network settings for a replacement machine.",
+        "Unplug the power cord and network cable, and close all doors and trays.",
+        "For large copiers, clear the hallway and measure tight doorways before pickup day."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few situations need a word with us first:",
+      "list": [
+        "Leased copiers usually belong to the leasing company. We cannot remove equipment you do not own without the owner's go-ahead.",
+        "Floor-standing copiers and large multifunction devices are accepted after confirmation, because of their weight and access needs.",
+        "Zoiris does not erase or remove internal storage from copiers. Clearing stored data is the owner's responsibility.",
+        "Bulk toner supplies or spilled toner should be mentioned in advance so we can confirm handling."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Leased or owned? Check before you schedule",
+        "body": [
+          "Many office copiers are leased rather than owned. At the end of a lease, the agreement usually spells out how the machine goes back to the leasing company, and sending it anywhere else can create problems with your contract.",
+          "Before calling us, find the lease or service agreement, or look for a dealer sticker with a phone number on the machine. If it turns out you own the copier outright, or the leasing company releases it, we can schedule the pickup."
+        ]
+      },
+      {
+        "heading": "Multifunction printers can store your documents",
+        "body": [
+          "Copiers and many multifunction printers that scan, copy, and fax keep information inside the machine — on a hard drive or on memory. That can include images of copied and scanned pages, fax logs, email address books, and network or Wi-Fi settings. EPA's advice to delete all personal information before recycling electronics applies here too ([EPA: Electronics Donation and Recycling](https://www.epa.gov/recycle/electronics-donation-and-recycling)).",
+          "Most machines have an option in the administrator or security settings to clear stored data or return to factory defaults. Your copier dealer or IT provider can tell you the right steps for your model, or remove the internal drive for you to keep. Zoiris picks up the machine; clearing its memory is up to you."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Our copier is leased. Can you take it?", "a": "Usually not without the leasing company's go-ahead. Leased copiers generally go back to the lessor at the end of the agreement. Check your lease first; if you own the machine or the lessor releases it, we can schedule a pickup." },
+      { "q": "Do copiers really store copies of documents?", "a": "Many do. Copiers and multifunction printers can keep scanned and copied images, fax logs, and address books on an internal drive or memory. Clear them through the device's settings, or ask your dealer or IT provider, before pickup." },
+      { "q": "Do I need to take out the ink or toner?", "a": "No. Installed ink and toner cartridges can stay in the printer. Please remove paper, and mention any spare cartridges or loose toner bottles when you call." },
+      { "q": "Can you get a large copier down a flight of stairs?", "a": "Tell us about the stairs, elevator, and doorway widths when you call. Floor-standing copiers are confirmed case by case because of their weight, and we plan the carry-out before scheduling." },
+      { "q": "Will you take a single home printer?", "a": "Yes. A home printer can be picked up on its own or added to a larger pickup with other electronics or junk. Remove the paper and unplug it, and it is ready." },
+      { "q": "Do you take fax machines and label printers?", "a": "Yes. Fax machines, label printers, and receipt printers are picked up the same way as other printers. Some fax machines keep call logs and stored numbers, so clear those first if you can." }
+    ],
+    "areaNote": "Printer and copier removal is available throughout the City of Mobile. If your home or office is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "electronics"
+  },
+  "related": ["ew-electronics-pickup", "ew-office-electronics-pickup", "ew-computer-recycling", "svc-office-cleanouts", "svc-commercial-junk-removal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Copiers described as accepted after confirmation per items.json. Lease and internal-storage guidance included; no erasure claims. EPA data-deletion advice verified 2026-11-04.",
+    "ownerVerification": [
+      "Confirm maximum copier size/weight the crew will move, and whether stairs are acceptable for floor-standing units.",
+      "Confirm policy for spare toner cartridges, loose toner bottles, and waste-toner containers.",
+      "Confirm downstream outlet for printers and copiers."
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+---
+/**
+ * Single dynamic route for every templated page record (services, e-waste,
+ * items, counties, locations, neighborhoods, combos, articles).
+ *
+ * Only records with status "published" or "noindex" produce HTML in production.
+ * Drafts render only in a preview build (ZOIRIS_PREVIEW=1), always noindex.
+ * Core pages (home, about, …) are authored as explicit .astro files.
+ */
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import LocationLayout from '../layouts/LocationLayout.astro';
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { templatedPagesToBuild } from '../lib/data.ts';
+
+export function getStaticPaths() {
+  return templatedPagesToBuild().map((page) => ({
+    params: { path: page.path.replace(/^\/|\/$/g, '') },
+    props: { page }
+  }));
+}
+
+interface Props {
+  page: PageRecord;
+}
+const { page } = Astro.props;
+const isGeographicPage = page.type === 'county' || page.type === 'location' || page.type === 'neighborhood';
+---
+
+{page.type === 'article' ? <ArticleLayout page={page} /> : isGeographicPage ? <LocationLayout page={page} /> : <ServiceLayout page={page} />}

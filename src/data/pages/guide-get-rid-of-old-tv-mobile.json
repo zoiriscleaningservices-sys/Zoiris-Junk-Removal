@@ -1,0 +1,115 @@
+{
+  "id": "guide-get-rid-of-old-tv-mobile",
+  "type": "article",
+  "path": "/guides/get-rid-of-old-tv-mobile-al/",
+  "status": "published",
+  "refs": { "serviceId": "tv-monitor-pickup", "itemIds": ["flat-tvs", "crt-tvs", "projection-tvs"], "locationId": "mobile-al", "customerType": "residential" },
+  "seo": {
+    "title": "How to Get Rid of an Old TV in Mobile, AL | Zoiris Guide",
+    "description": "City of Mobile recycling drop-offs do not take TVs. Real options for an old flat screen or tube TV in Mobile: reuse, take-back, City pickup, or haul-away.",
+    "h1": "How to Get Rid of an Old TV in Mobile, Alabama",
+    "primaryKeyword": "how to get rid of an old TV in Mobile AL",
+    "secondaryKeywords": ["where to recycle a TV in Mobile", "old flat screen TV disposal Mobile", "tube TV disposal Mobile AL", "does Mobile recycling take TVs"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Get Rid of an Old TV in Mobile", "parentId": "core-guides" },
+  "purpose": "Explain honestly why TVs are harder to get rid of than other electronics in Mobile (City drop-off bins exclude them), lay out every realistic alternative for working and broken sets, and describe when Zoiris pickup fits — flat screens after confirming size and type, tube TVs only after approval.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "In Mobile, an old TV **cannot** go in the electronics bins at the City's recycling drop-off centers — the City says TVs of any kind are not accepted there. Your realistic options are to reuse it if it works, use a retailer or manufacturer take-back program, request a City electronics pickup through Mobile 311, or have a pickup service haul it away after confirming the type and size.",
+    "sections": [
+      {
+        "heading": "Why TVs are a special case in Mobile",
+        "body": [
+          "The City of Mobile accepts many household electronics at its three recycling drop-off centers, but its recycling page states that its electronics partner cannot accept TVs of any kind, and asks residents not to leave TVs at the drop-off locations. A TV left beside the bins is not recycled — it becomes a problem for City staff.",
+          "TVs also cannot simply go on your regular roadside trash pile. The City's Trash Collection Rules say electronics must not be placed on the regular pile, warn that the entire pile will not be picked up if they are, and tell residents to call 311 to place a work order for an electronics pickup instead."
+        ]
+      },
+      {
+        "heading": "First, figure out what kind of TV you have",
+        "body": [
+          "The type of set changes which options are open to you, so it is worth a quick look before you make calls."
+        ],
+        "bullets": [
+          "**Flat panel (LCD, LED, OLED, or plasma):** thin, relatively light for its size, usually on a stand or wall mount.",
+          "**CRT or tube TV:** deep and boxy, very heavy, with a curved glass screen. Most sets made before flat panels took over are CRTs.",
+          "**Rear-projection or console TV:** large cabinet-style sets, often built into wood furniture.",
+          "Note the screen size (measured diagonally) and whether the screen is cracked. Many programs ask for both."
+        ]
+      },
+      {
+        "heading": "If it still works: sell, give it away, or donate",
+        "body": [
+          "A working flat screen is often wanted by someone. Selling it locally, offering it to friends or neighbors, or listing it as a free giveaway are usually the simplest ways to keep it in use.",
+          "If you plan to donate, call the organization first. Many donation centers have restrictions on TVs — by age, type, or condition — and tube TVs are commonly declined. Include the remote and power cord, and test the set before you drop it off.",
+          "On a smart TV, sign out of streaming apps and run the factory reset from the settings menu so the next owner cannot access your accounts."
+        ]
+      },
+      {
+        "heading": "Retailer and manufacturer take-back programs",
+        "body": [
+          "The EPA notes that manufacturers and retailers offer several options to donate or recycle electronics, and points to locator sites such as Call2Recycle and Earth911 to find them. Some electronics retailers accept TVs for recycling; programs, size limits, and fees vary by store and change over time, so call ahead.",
+          "The City's own [Trash Collection Rules page](https://www.cityofmobile.gov/public-works/trash-collection-rules/) also lists recycling referrals for flat-screen TVs and for older CRT sets. Check that page for current contacts before you load the TV into your car."
+        ]
+      },
+      {
+        "heading": "City electronics pickup for Mobile residents",
+        "body": [
+          "If you live in the City of Mobile, you can call 311 and ask for an electronics pickup work order, as the Trash Collection Rules direct. Ask how and when to set the TV out, and do not put it on your regular trash pile — City ordinance also prohibits setting trash out more than 48 hours before your scheduled pickup day.",
+          "This route works well if you can get the TV to the curb yourself and are flexible on timing."
+        ]
+      },
+      {
+        "heading": "Having a pickup service haul it away",
+        "body": [
+          "If the TV is heavy, upstairs, or part of a larger cleanout, a pickup is often more practical. Zoiris picks up TVs and monitors in Mobile through our [TV and monitor pickup](/e-waste/tv-monitor-pickup/) service, with a few honest conditions:"
+        ],
+        "bullets": [
+          "**Flat-screen TVs:** tell us the screen size and type when you call so we can confirm before scheduling.",
+          "**CRT tube TVs and monitors:** these need approval before pickup, so please call first — we cannot promise to take them until we confirm.",
+          "**Projection and console TVs:** large and heavy; call first so we can check.",
+          "**Wall-mounted TVs:** let us know if the set is still on the wall so we can confirm before scheduling.",
+          "**Computer monitors:** flat-panel LCD and LED monitors are picked up routinely — mention cracked screens in advance."
+        ]
+      },
+      {
+        "heading": "Moving a TV safely",
+        "body": [
+          "Whatever route you choose, a TV is easy to damage and awkward to carry. Carry flat screens upright with two people, hold the frame rather than the screen, and do not lay them face-down. Tube TVs concentrate their weight at the front; lift with your legs and get help. If the screen is cracked, wear gloves and wrap it in a blanket before moving it."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Can I drop off a TV at a City of Mobile recycling center?", "a": "No. The City's recycling page says TVs of any kind are not accepted in the electronics bins and asks residents not to leave TVs at the drop-off locations." },
+      { "q": "Can I put an old TV out with my roadside trash in Mobile?", "a": "Not on your regular trash pile. The City's rules say electronics on the pile can cause the entire pile to be skipped. City residents can call 311 to request an electronics pickup work order instead." },
+      { "q": "Will Zoiris take an old tube TV?", "a": "Possibly, but CRT tube TVs need approval before pickup. Call first and describe the set, its size, and where it sits so we can confirm before anything is scheduled." },
+      { "q": "What should I do to a smart TV before getting rid of it?", "a": "Sign out of streaming and app accounts, then run the factory reset in the TV's settings menu. That removes saved logins and keeps the next owner out of your accounts." }
+    ],
+    "illustration": "electronics",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 5,
+      "sources": [
+        { "label": "City of Mobile — Recycling (drop-off locations and electronics)", "url": "https://www.cityofmobile.gov/public-works/recycling/" },
+        { "label": "City of Mobile — Trash Collection Rules", "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/" },
+        { "label": "EPA — Electronics Donation and Recycling", "url": "https://www.epa.gov/recycle/electronics-donation-and-recycling" }
+      ]
+    }
+  },
+  "related": ["ew-tv-monitor-pickup", "guide-electronics-drop-off-mobile", "ew-electronics-pickup", "guide-prepare-computer-for-recycling", "core-restricted-items"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "City TV exclusion and 311 electronics work order verified on City pages 2026-11-04. Named third-party referrals and fees on the City rules page deliberately not reproduced; readers are sent to the City page. Zoiris acceptance follows items.json (flat TVs after confirmation, CRT/projection unknown).",
+    "ownerVerification": [
+      "Confirm flat-screen TV acceptance by type and size.",
+      "Confirm whether CRT and projection TVs can ever be accepted, and on what conditions.",
+      "Confirm whether the crew will take down wall-mounted TVs."
+    ]
+  }
+}

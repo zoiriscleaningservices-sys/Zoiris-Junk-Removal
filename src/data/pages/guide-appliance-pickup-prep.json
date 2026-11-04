@@ -1,0 +1,139 @@
+{
+  "id": "guide-appliance-pickup-prep",
+  "type": "article",
+  "path": "/guides/prepare-for-appliance-pickup/",
+  "status": "published",
+  "refs": { "serviceId": "appliance-removal", "itemIds": ["refrigerators", "washer-dryer", "stoves", "dishwashers", "water-heaters", "ac-units"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "How to Prepare for an Appliance Pickup | Zoiris Guide",
+    "description": "Empty and defrost the fridge, have gas lines capped by a qualified person, drain the washer and water heater, and clear the route before appliance pickup.",
+    "h1": "How to Prepare for an Appliance Pickup",
+    "primaryKeyword": "how to prepare for appliance pickup",
+    "secondaryKeywords": ["how to defrost a refrigerator before removal", "how to drain a washing machine for removal", "disconnect gas dryer before pickup", "old refrigerator disposal rules"],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Article", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Prepare for an Appliance Pickup", "parentId": "core-guides" },
+  "purpose": "Explain, appliance by appliance, how to get refrigerators, freezers, washers, dryers, ranges, dishwashers, and water heaters ready for removal safely — including why refrigerant appliances are confirmed first and why gas lines must be capped by a qualified person.",
+  "content": {
+    "eyebrow": "Guide",
+    "lead": "To get ready for an appliance pickup, **empty and defrost refrigerators and freezers, have any gas line disconnected and capped by a qualified person, shut off and disconnect water lines, drain washers and water heaters, and clear a path to the door.** Refrigerators, freezers, and window air conditioners contain refrigerant, so they are confirmed before scheduling rather than booked automatically.",
+    "sections": [
+      {
+        "heading": "Start by describing exactly what is going",
+        "body": [
+          "A good description avoids surprises on pickup day. Note the type of appliance, its approximate size, whether it runs on gas or electricity, whether it is still installed, and where it sits — kitchen, laundry room, garage, upstairs, or down steps. A photo of the appliance and the path out helps a lot.",
+          "With Zoiris, washers, dryers, stoves and ranges, microwaves, and dishwashers are standard pickups. Refrigerators, freezers, window AC units, dehumidifiers, and water heaters are picked up after confirmation, so tell us about them when you request an estimate. Our [appliance removal](/services/appliance-removal/) page has the full list."
+        ]
+      },
+      {
+        "heading": "Refrigerators and freezers",
+        "body": [
+          "Under Section 608 of the Clean Air Act, the EPA has safe disposal requirements for household refrigerators, freezers, and window air conditioners, which usually enter the waste stream with their refrigerant still inside. The final facility in the disposal chain, such as a scrap metal recycler or landfill, is responsible for making sure the refrigerant is recovered before final disposal. That is why we confirm refrigerant appliances before scheduling. Our crew does not recover refrigerant or dismantle appliances.",
+          "Never cut refrigerant lines or try to drain the system yourself. Also note that the City of Mobile's Trash Collection Rules say the City will not pick up refrigerators, freezers, air conditioners, and similar items that contain hazardous material such as Freon."
+        ],
+        "subsections": [
+          {
+            "heading": "Fridge and freezer prep checklist",
+            "body": ["Start a day or two before the pickup:"],
+            "bullets": [
+              "Use up or remove all food and drinks, including the freezer and door bins.",
+              "Unplug the unit ahead of time — ideally the day before — and prop the doors open so the freezer can defrost.",
+              "Lay towels on the floor and empty any drip pan to catch meltwater.",
+              "If there is an ice maker or water dispenser, turn off the water supply valve and disconnect the line, or have a plumber do it.",
+              "Remove loose shelves and drawers, or secure them so they do not slide during the carry.",
+              "Wipe out the interior so it does not leak or smell on the way out."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Gas ranges and gas dryers",
+        "body": [
+          "Gas appliances must be disconnected and the gas line capped by a qualified person before pickup. This is not a do-it-yourself step unless you are qualified, and it is not something our crew does. Schedule the disconnect before your pickup date so the appliance is free to move when the crew arrives.",
+          "If you ever smell gas, do not operate switches or appliances; leave the building and call your gas utility or 911 from outside."
+        ],
+        "bullets": [
+          "Electric ranges: unplug them or switch off the circuit breaker if the range is hard-wired.",
+          "Remove grates, knobs, and anything loose from the cooktop, and empty the drawer underneath.",
+          "Gas dryers: also disconnect the vent duct, or leave it for the qualified person disconnecting the gas."
+        ]
+      },
+      {
+        "heading": "Washers, dryers, and dishwashers",
+        "body": [
+          "Water is the main thing to deal with here. A washer that looks empty can still hold water in the drum, hoses, and pump, which spills during the carry."
+        ],
+        "bullets": [
+          "Turn off the hot and cold water valves behind the washer, then disconnect the fill hoses over a bucket.",
+          "Drain the washer: run a drain or spin cycle before disconnecting, or lower the drain hose into a bucket. Front-loaders may also have a small drain filter near the bottom front.",
+          "Unplug the washer and dryer and clean the dryer's lint trap.",
+          "Dishwashers are easiest when already uninstalled. If yours is still plumbed in, ask us when you book so we can confirm before scheduling."
+        ],
+        "subsections": [
+          {
+            "heading": "More detail on laundry pairs",
+            "body": [
+              "Our [washer and dryer removal](/items/washer-dryer-removal/) page covers stacked units, laundry closets, and other common situations."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "Water heaters",
+        "body": [
+          "Water heaters must be drained and disconnected before pickup, and they are confirmed before scheduling. Draining takes time, and the water inside can be very hot, so plan ahead."
+        ],
+        "bullets": [
+          "Turn off the power at the breaker for electric units; gas units must be shut off and disconnected by a qualified person.",
+          "Shut off the cold water supply and let the tank cool before draining.",
+          "Drain through the valve at the bottom with a hose run to a safe drain or outdoors.",
+          "Have the water lines disconnected, by a plumber if you are not comfortable doing it."
+        ]
+      },
+      {
+        "heading": "Clear the route before pickup day",
+        "body": [
+          "Most appliance pickups are about the path out. A refrigerator that came in years ago may not fit through the same doorway if furniture has been added since."
+        ],
+        "bullets": [
+          "Measure doorways and hallways and remove anything in the way — rugs, small furniture, wall décor at shoulder height.",
+          "Tell us about stairs, tight turns, or a long carry from a back room or garage.",
+          "Make space in the driveway or near the door for the truck.",
+          "Keep pets and children in another room while the appliance is moved.",
+          "For a refrigerator, see our [refrigerator removal](/items/refrigerator-removal/) page for more on how those pickups are confirmed."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "How long before pickup should I unplug my refrigerator?", "a": "Unplug it ahead of time — ideally the day before — so the freezer has time to defrost. Prop the doors open, put towels down, and empty the drip pan before the crew arrives." },
+      { "q": "Will Zoiris disconnect my gas dryer or gas range?", "a": "No. Gas appliances must be disconnected and the line capped by a qualified person before pickup. Once that is done, our crew handles the lifting and carrying." },
+      { "q": "Why do you confirm refrigerators before scheduling?", "a": "Refrigerators, freezers, and window AC units contain refrigerant. Under EPA Section 608 safe disposal requirements, the refrigerant must be recovered before final disposal, so we confirm handling before we book the pickup." },
+      { "q": "Will the City of Mobile pick up my old refrigerator?", "a": "The City's Trash Collection Rules say it will not pick up refrigerators, freezers, air conditioners, and similar items that contain hazardous material such as Freon. City residents can call 311 to ask about appliance pickup work orders for other appliances." },
+      { "q": "Do I need to drain my washing machine?", "a": "Yes, please. Run a drain or spin cycle, or lower the drain hose into a bucket, so water does not spill while the washer is carried out." }
+    ],
+    "illustration": "residential",
+    "article": {
+      "lastReviewed": "2026-11-04",
+      "readingMinutes": 6,
+      "sources": [
+        { "label": "EPA — Stationary Refrigeration Safe Disposal Requirements (Section 608)", "url": "https://www.epa.gov/section608/stationary-refrigeration-safe-disposal-requirements" },
+        { "label": "City of Mobile — Trash Collection Rules", "url": "https://www.cityofmobile.gov/public-works/trash-collection-rules/" }
+      ]
+    }
+  },
+  "related": ["svc-appliance-removal", "item-refrigerator-removal", "item-washer-dryer-removal", "guide-garage-cleanout-prep", "core-accepted-items"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "EPA 608 safe disposal summary and City Freon-appliance exclusion verified 2026-11-04. Copy states the crew does not recover refrigerant, dismantle appliances, or disconnect gas. Acceptance mirrors items.json (refrigerators, AC units, water heaters after confirmation; dishwashers still plumbed in need a question).",
+    "ownerVerification": [
+      "Confirm downstream refrigerant-recovery outlet for refrigerators, freezers, and AC units.",
+      "Confirm whether the crew disconnects installed dishwashers or water lines."
+    ]
+  }
+}

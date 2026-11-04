@@ -1,0 +1,189 @@
+{
+  "id": "svc-apartment-cleanouts",
+  "type": "service",
+  "path": "/services/apartment-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "apartment-cleanouts",
+    "itemIds": [
+      "couch",
+      "mattress",
+      "bed-frames",
+      "tables-chairs",
+      "dressers",
+      "boxes-clutter",
+      "grills-patio",
+      "microwaves"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Apartment Cleanouts & Move-Out Hauling, Mobile AL | Zoiris",
+    "description": "Moving out of an apartment or condo in Mobile, AL? Zoiris carries furniture down the stairs or elevator and hauls it away before you turn in your keys.",
+    "h1": "Apartment Cleanouts in Mobile, AL",
+    "primaryKeyword": "apartment cleanout Mobile AL",
+    "secondaryKeywords": [
+      "apartment junk removal Mobile",
+      "condo cleanout Mobile AL",
+      "apartment move-out cleanout Mobile",
+      "vacant unit cleanout Mobile",
+      "furniture removal from upstairs apartment"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Apartment & Condo Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Stairs, elevators, and lease deadlines handled. We clear apartments and condos for tenants and property managers in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Apartment Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve tenants moving out of apartments and condos in Mobile, along with property managers clearing vacated units. The page focuses on what makes apartments different: stairs and elevators, building rules, parking and loading, and lease or inspection deadlines.",
+  "content": {
+    "eyebrow": "Cleanouts",
+    "lead": "Apartment cleanouts come with their own obstacles: third-floor walk-ups, shared elevators, tight parking, and a move-out date that does not move. Zoiris Junk Removal clears apartments and condos in Mobile, Alabama for tenants and property managers. We carry furniture and leftovers down to the truck and haul them away, so the unit is empty when it is time to turn in the keys.",
+    "quickAnswer": {
+      "question": "Can you clear my apartment before my lease ends?",
+      "answer": "Tell us your move-out or inspection date when you first contact us. We will confirm a pickup window that lands before that date if one is available, so book as early as you can. Waiting until the last day leaves the fewest options, especially if your building limits when moving work can happen."
+    },
+    "includes": {
+      "heading": "What an apartment cleanout includes",
+      "intro": "The work itself is familiar. What changes is getting everything from the unit to the truck:",
+      "points": [
+        "Carrying furniture and boxes down interior and exterior stairwells, whatever floor you are on.",
+        "Using the freight or service elevator when the building has one and you have reserved it.",
+        "Clearing balconies, patios, and any storage closet or cage assigned to your unit.",
+        "Loading from wherever the building lets trucks stop, even if that means a longer walk from the door.",
+        "Leaving common hallways and stairwells as clear as we found them."
+      ]
+    },
+    "items": {
+      "heading": "What we usually take out of apartments",
+      "intro": "Apartment loads tend to be furniture-heavy. Here is what comes out most often:",
+      "list": [
+        "Sofas, futons, and loveseats that will not fit in the new place",
+        "Mattresses, box springs, and bed frames",
+        "Dining sets, desks, dressers, and bookcases",
+        "Boxes, bags, and the odds and ends left at the end of a move",
+        "Balcony chairs, tables, and small grills (with no propane tanks)",
+        "Microwaves, toasters, and small kitchen appliances"
+      ],
+      "itemIds": [
+        "couch",
+        "mattress",
+        "bed-frames",
+        "tables-chairs",
+        "dressers",
+        "boxes-clutter",
+        "grills-patio",
+        "microwaves"
+      ]
+    },
+    "audience": {
+      "heading": "Tenants and property managers",
+      "body": [
+        "Tenants call when they are moving and the old furniture is not worth hauling to the next place, when roommates split up and nobody wants the shared couch, or when the move ran long and the unit still is not empty.",
+        "Property managers and condo owners call to clear a unit a resident left behind, so it can be cleaned and shown. For multi-unit turnovers and abandoned contents, see [property cleanouts](/services/property-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "How an apartment cleanout works",
+      "steps": [
+        {
+          "title": "Share the building details",
+          "body": "In your [pickup request](/request-pickup/), include the floor number, whether there is an elevator, where trucks can park, and your move-out date. Photos of the rooms help us estimate volume."
+        },
+        {
+          "title": "Check the building's rules",
+          "body": "We confirm an estimate and a pickup window, and you confirm the timing works with your building's moving hours and any elevator reservation."
+        },
+        {
+          "title": "Down and out",
+          "body": "The crew carries everything from the unit to the truck by stairs or elevator. Wrap-up is a quick walk through the empty rooms with you or your property manager."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of an apartment cleanout",
+      "intro": "We quote apartment jobs individually because the building matters as much as the stuff. Main factors:",
+      "factors": [
+        "Floor level and whether everything has to come down stairs",
+        "Elevator access, including whether one is available and can be reserved",
+        "Distance from the unit door to where the truck can park",
+        "How much furniture and how many boxes are going",
+        "Any time windows the building sets for moving or loading"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare for an apartment cleanout",
+      "tips": [
+        "Ask the leasing office or HOA about moving hours, elevator reservations, and where a truck may park or load.",
+        "Send us gate codes, building entry instructions, and the unit number ahead of time.",
+        "Do not leave furniture by the dumpster or in a breezeway. It may break your community's rules, and it is easier for us to take it straight from the unit.",
+        "Empty dresser drawers and kitchen cabinets, and check the balcony storage closet.",
+        "Separate what is going with you from what is going with us, ideally in different rooms.",
+        "If the property manager will let us in, confirm with them and with us who is handling the keys or fob."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know for apartments",
+      "body": "A few apartment-specific situations need a heads-up:",
+      "list": [
+        "Mattresses or furniture with bed bugs — tell us in advance so we can plan handling, and check whether your building has its own procedure.",
+        "Appliances that belong to the landlord, such as the refrigerator or stove, stay unless the owner tells us otherwise.",
+        "Propane tanks from balcony grills, paint, and cleaning chemicals are not accepted.",
+        "Buildings that require vendor paperwork before work begins — ask the property manager what is needed and tell us early."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "I'm on the third floor with no elevator. Can you still do it?",
+        "a": "Yes. Carrying furniture down stairwells is routine. Tell us the floor and whether the stairs are inside or outside, because that affects the estimate."
+      },
+      {
+        "q": "Do I need to reserve the elevator?",
+        "a": "If your building uses reservations for the freight or service elevator, yes. Reserve it for the pickup window we confirm with you. If no elevator is available, we will plan to use the stairs."
+      },
+      {
+        "q": "Where will your truck park?",
+        "a": "Wherever your building allows, whether that is a loading zone, a visitor space, or the curb out front. Ask your leasing office if there is a designated spot and pass it along to us."
+      },
+      {
+        "q": "My movers already left. Can you take what's still in the unit?",
+        "a": "Yes. Clearing the last load after movers leave is common. Our [moving junk removal](/services/moving-cleanouts/) page covers timing your cleanout around a move."
+      },
+      {
+        "q": "Can a property manager book a cleanout for a vacated unit?",
+        "a": "Yes. The manager or owner tells us what goes and arranges access. If the contents belong to a former tenant, make sure your required procedures are complete first."
+      }
+    ],
+    "areaNote": "Apartment and condo cleanouts are available at buildings within the City of Mobile. Ask us about addresses outside the city.",
+    "illustration": "residential"
+  },
+  "related": [
+    "svc-moving-cleanouts",
+    "svc-property-cleanouts",
+    "svc-furniture-removal",
+    "svc-mattress-removal",
+    "svc-residential-junk-removal",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Emphasizes stairs, elevators, parking and loading, building rules, and lease deadlines. No timing guarantees; deadlines are framed as 'tell us your date and we confirm a window if available'.",
+    "ownerVerification": [
+      "Confirm policy for bed-bug-affected mattresses and furniture.",
+      "Confirm whether Zoiris can provide vendor documentation some buildings request (for example, a certificate of insurance). Do not advertise insurance until documented.",
+      "Confirm the crew can work with property-manager access (keys or fobs) without the tenant present."
+    ]
+  }
+}

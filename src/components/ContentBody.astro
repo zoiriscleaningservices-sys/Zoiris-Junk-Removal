@@ -1,0 +1,233 @@
+---
+/**
+ * Renders the structured content of a service / e-waste / item / location page.
+ * Every section is plain HTML so search engines can read it without JavaScript.
+ */
+import FAQ from './FAQ.astro';
+import Icon from './Icon.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { data } from '../lib/data.ts';
+import { inlineToHtml } from '../lib/format.ts';
+import { ACCEPTANCE_LABELS } from '../lib/labels.ts';
+import { slugify } from '../lib/format.ts';
+
+interface Props {
+  page: PageRecord;
+}
+const { page } = Astro.props;
+const c = page.content!;
+const html = inlineToHtml;
+const itemRecords = (c.items?.itemIds ?? []).map((id) => data.items.find((i) => i.id === id)).filter((i): i is NonNullable<typeof i> => !!i);
+const id = (s: string) => slugify(s).slice(0, 60);
+---
+
+<div class="content-main">
+  {
+    c.quickAnswer && (
+      <section class="answer" aria-labelledby="quick-answer">
+        <p class="answer__label">Quick answer</p>
+        <h2 id="quick-answer">{c.quickAnswer.question}</h2>
+        <p set:html={html(c.quickAnswer.answer)} />
+      </section>
+    )
+  }
+
+  {
+    c.includes && (
+      <section aria-labelledby={id(c.includes.heading ?? 'whats-included')}>
+        <h2 id={id(c.includes.heading ?? 'whats-included')}>{c.includes.heading ?? "What's included"}</h2>
+        {c.includes.intro && <p set:html={html(c.includes.intro)} />}
+        <ul class="checklist">
+          {c.includes.points.map((p) => (
+            <li set:html={html(p)} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    c.items && (
+      <section aria-labelledby={id(c.items.heading ?? 'items')}>
+        <h2 id={id(c.items.heading ?? 'items')}>{c.items.heading ?? 'What we pick up'}</h2>
+        {c.items.intro && <p set:html={html(c.items.intro)} />}
+        <ul class="item-tags">
+          {c.items.list.map((i) => (
+            <li set:html={html(i)} />
+          ))}
+        </ul>
+        {itemRecords.length > 0 && (
+          <div class="table-wrap">
+            <table class="directory-table">
+              <caption class="sr-only">Acceptance status for related items</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Good to know</th>
+                </tr>
+              </thead>
+              <tbody>
+                {itemRecords.map((i) => (
+                  <tr>
+                    <td>{i.name}</td>
+                    <td>
+                      <span class={`badge badge--${i.acceptance}`}>{ACCEPTANCE_LABELS[i.acceptance]}</span>
+                    </td>
+                    <td>{i.publicNote}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <p style="margin-top:1rem">
+          <a class="text-link" href="/accepted-items/">
+            See the full accepted items list <Icon name="arrow-right" />
+          </a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    c.audience && (
+      <section aria-labelledby={id(c.audience.heading ?? 'who-its-for')}>
+        <h2 id={id(c.audience.heading ?? 'who-its-for')}>{c.audience.heading ?? 'Who this is for'}</h2>
+        {c.audience.body.map((p) => (
+          <p set:html={html(p)} />
+        ))}
+      </section>
+    )
+  }
+
+  {
+    c.process && (
+      <section aria-labelledby={id(c.process.heading ?? 'how-it-works')}>
+        <h2 id={id(c.process.heading ?? 'how-it-works')}>{c.process.heading ?? 'How it works'}</h2>
+        <ol class="steps">
+          {c.process.steps.map((s) => (
+            <li>
+              <h3>{s.title}</h3>
+              <p set:html={html(s.body)} />
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  {
+    c.sections?.map((s) => (
+      <section aria-labelledby={id(s.heading)}>
+        <h2 id={id(s.heading)}>{s.heading}</h2>
+        {s.body.map((p) => (
+          <p set:html={html(p)} />
+        ))}
+        {s.bullets && (
+          <ul class="checklist">
+            {s.bullets.map((b) => (
+              <li set:html={html(b)} />
+            ))}
+          </ul>
+        )}
+        {s.subsections?.map((sub) => (
+          <>
+            <h3>{sub.heading}</h3>
+            {sub.body.map((p) => (
+              <p set:html={html(p)} />
+            ))}
+            {sub.bullets && (
+              <ul>
+                {sub.bullets.map((b) => (
+                  <li set:html={html(b)} />
+                ))}
+              </ul>
+            )}
+          </>
+        ))}
+      </section>
+    ))
+  }
+
+  {
+    c.pricingFactors && (
+      <section aria-labelledby={id(c.pricingFactors.heading ?? 'pricing')}>
+        <h2 id={id(c.pricingFactors.heading ?? 'pricing')}>{c.pricingFactors.heading ?? 'What affects the price'}</h2>
+        {c.pricingFactors.intro && <p set:html={html(c.pricingFactors.intro)} />}
+        <ul>
+          {c.pricingFactors.factors.map((f) => (
+            <li set:html={html(f)} />
+          ))}
+        </ul>
+        <p>
+          <a class="text-link" href="/pricing/">
+            How estimates work <Icon name="arrow-right" />
+          </a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    c.prepare && (
+      <section aria-labelledby={id(c.prepare.heading ?? 'prepare')}>
+        <h2 id={id(c.prepare.heading ?? 'prepare')}>{c.prepare.heading ?? 'How to prepare'}</h2>
+        <ul class="checklist">
+          {c.prepare.tips.map((t) => (
+            <li set:html={html(t)} />
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    c.restrictions && (
+      <section aria-labelledby={id(c.restrictions.heading ?? 'restrictions')}>
+        <h2 id={id(c.restrictions.heading ?? 'restrictions')}>{c.restrictions.heading ?? 'Restrictions'}</h2>
+        {c.restrictions.body && <p set:html={html(c.restrictions.body)} />}
+        <ul class="checklist infolist">
+          {c.restrictions.list.map((r) => (
+            <li set:html={html(r)} />
+          ))}
+        </ul>
+        <p>
+          <a class="text-link" href="/restricted-items/">
+            Items we cannot take <Icon name="arrow-right" />
+          </a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    c.areaNote && (
+      <section aria-labelledby="service-area">
+        <h2 id="service-area">Where this service is available</h2>
+        <div class="notice notice--teal">
+          <Icon name="pin" />
+          <p set:html={html(c.areaNote)} />
+        </div>
+        {page.type !== 'location' && (
+          <p style="margin-top:1rem">
+            <a class="text-link" href="/areas/mobile-al/">
+              Service in Mobile, AL <Icon name="arrow-right" />
+            </a>
+          </p>
+        )}
+      </section>
+    )
+  }
+
+  <slot />
+
+  {
+    c.faqs.length > 0 && (
+      <section aria-labelledby="faqs">
+        <h2 id="faqs">Frequently asked questions</h2>
+        <FAQ faqs={c.faqs} />
+      </section>
+    )
+  }
+</div>

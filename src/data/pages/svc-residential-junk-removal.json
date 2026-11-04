@@ -1,0 +1,124 @@
+{
+  "id": "svc-residential-junk-removal",
+  "type": "service",
+  "path": "/services/residential-junk-removal/",
+  "status": "published",
+  "refs": { "serviceId": "residential-junk-removal", "itemIds": ["boxes-clutter", "clothing-linens", "toys-decor", "carpet", "couch", "mattress", "bicycles-tools", "microwaves"], "locationId": "mobile-al", "customerType": "residential" },
+  "seo": {
+    "title": "Residential Junk Removal in Mobile, AL | Zoiris",
+    "description": "Clearing a spare room, closet, attic, or garage in Mobile? Zoiris hauls away household junk — boxes, toys, clothes, rugs, and old furniture — with no lifting.",
+    "h1": "Residential Junk Removal in Mobile, AL",
+    "primaryKeyword": "residential junk removal Mobile",
+    "secondaryKeywords": ["household junk removal Mobile AL", "home junk pickup Mobile", "clutter removal Mobile AL", "attic junk removal Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Residential Junk Removal in Mobile — Zoiris Junk Removal",
+    "ogDescription": "Household clutter, room by room, carried out and hauled away from homes in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Residential Junk Removal", "parentId": "core-services" },
+  "purpose": "Serve Mobile homeowners and renters who want part of their home decluttered — a room, a closet, an attic, or a mixed pile of household stuff — without hiring a full house cleanout.",
+  "content": {
+    "eyebrow": "For Homes",
+    "lead": "Zoiris Junk Removal clears household clutter from homes in Mobile, Alabama — the overflowing closet, the spare room that became storage, the attic boxes nobody has opened since the last move. You decide what goes. We bag up loose odds and ends if needed, carry everything out, and haul it away in one trip.",
+    "quickAnswer": {
+      "question": "Can you haul away a mix of household stuff, not just big furniture?",
+      "answer": "Yes. Most home jobs are a mix: a few bags of clothes, some boxed décor, a broken chair, an old rug, a toddler bed nobody uses. As long as it's non-hazardous household junk, it goes on the same load. Just keep food waste and liquids out of it."
+    },
+    "includes": {
+      "heading": "What residential junk removal looks like",
+      "intro": "This service is built for the parts of a home that slowly fill up.",
+      "points": [
+        "Clearing specific spaces — closets, spare bedrooms, laundry rooms, porches, and attics with safe access.",
+        "Taking bagged and boxed clutter together with the larger pieces, so you don't need separate trips for small and big stuff.",
+        "Carrying down from upper floors and out through the house without you lifting anything.",
+        "Picking up a pile you've already staged in the carport or driveway."
+      ]
+    },
+    "items": {
+      "heading": "Household items we often haul",
+      "intro": "These turn up on nearly every home job. Bigger single categories have their own pages.",
+      "list": [
+        "Bagged clothing, shoes, linens, towels, and curtains",
+        "Boxes of décor, dishes, books, picture frames, and housewares",
+        "Toys, outgrown baby gear, and play sets that are already taken apart",
+        "Area rugs and rolled carpet",
+        "Old couches and chairs — see [furniture removal](/services/furniture-removal/)",
+        "Mattresses and box springs — see [mattress removal](/services/mattress-removal/)",
+        "Bikes, hand tools, and freestanding shelving",
+        "Microwaves, toasters, coffee makers, and other small kitchen appliances"
+      ],
+      "itemIds": ["clothing-linens", "boxes-clutter", "toys-decor", "carpet", "couch", "mattress", "bicycles-tools", "microwaves"]
+    },
+    "audience": {
+      "heading": "When Mobile households call us",
+      "body": [
+        "The reasons vary: making room for a new baby, turning a junk room into a home office, clearing out after the kids move away, getting a house ready to list, or just finally tackling the closet that won't close. Renters call before move-out inspections, and grown children call when a parent is downsizing.",
+        "If the whole home needs emptying, our [house cleanouts](/services/house-cleanouts/) page is a better fit. For a garage packed to the rafters, see [garage cleanouts](/services/garage-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "From cluttered room to cleared room",
+      "steps": [
+        { "title": "Walk the rooms", "body": "Make a quick room-by-room list or snap a few photos, then send it with a [pickup request](/request-pickup/). Mention which floor things are on." },
+        { "title": "We go over it with you", "body": "We review your list, flag anything that needs a closer look, and confirm an estimate and a pickup window before anything is booked." },
+        { "title": "Point, and we lift", "body": "On pickup day, walk the crew through what goes. They clear it room by room while you keep doing your day." },
+        { "title": "Gone for good", "body": "The load leaves with us. Where practical options exist, usable and recyclable household goods are sorted away from the rest." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What shapes a residential estimate",
+      "intro": "Every home is different, so we price each job on what's actually there:",
+      "factors": [
+        "How many rooms or areas we're clearing and how full they are",
+        "Bagged and boxed items load faster than loose clutter scattered around a room",
+        "Which floor things are on, attic access, and how far the carry is to the truck",
+        "Whether heavy pieces like furniture or appliances are mixed in",
+        "Items on your list that need confirmation before pickup"
+      ]
+    },
+    "prepare": {
+      "heading": "Getting your home ready",
+      "tips": [
+        "Sort into three piles: keep, give away yourself, and haul. Anything you plan to donate or sell personally should be set aside before we arrive.",
+        "Bag soft goods like clothes and bedding — it speeds up loading and keeps things from spilling on the stairs.",
+        "Look through attic and closet boxes for photos, documents, and keepsakes before they leave the house.",
+        "Pull batteries out of toys, remotes, and clocks; loose batteries are handled separately from a junk load.",
+        "Move cars out of the driveway if you can, so the truck can park close to the door."
+      ]
+    },
+    "restrictions": {
+      "heading": "Household items that need a different route",
+      "body": "A few common household items can't go in the load:",
+      "list": [
+        "Cleaning chemicals, pesticides, and old paint cans from under the sink or in the garage",
+        "Food waste, open containers, and liquids",
+        "Prescription medications and sharps",
+        "Loose batteries and power banks — call first so we can confirm handling or point you elsewhere (see our [battery safety guide](/guides/old-batteries-safety/))"
+      ]
+    },
+    "faqs": [
+      { "q": "Can you clear out my attic?", "a": "Yes, as long as the attic has safe access and solid flooring to walk on. Tell us whether it's a pull-down ladder or a staircase and roughly what's stored up there so we can plan the job." },
+      { "q": "I already piled everything in the carport. Can you take it from there?", "a": "Absolutely. A staged pile is quick to load. Just let us know where it is and whether anything in it is heavy, like a dresser or a rolled rug." },
+      { "q": "Do I have to box or bag everything first?", "a": "No, but bagging loose clothing and small items helps the crew move faster. Furniture and larger pieces can stay as they are." },
+      { "q": "Will you take clothes and toys that are still in good shape?", "a": "Yes. Usable items are separated from items going to disposal where practical options exist. If you want something to go to a particular charity, dropping it off yourself is the surest route." },
+      { "q": "How is this different from a house cleanout?", "a": "Residential junk removal handles part of a home — a few rooms, a closet, an attic, or a pile. A [house cleanout](/services/house-cleanouts/) empties most or all of a home, usually for a sale, move, or estate." }
+    ],
+    "areaNote": "Residential pickups are available at houses, condos, and apartments throughout the City of Mobile. Outside the city? Call first so we can confirm.",
+    "illustration": "residential"
+  },
+  "related": ["svc-house-cleanouts", "svc-garage-cleanouts", "svc-furniture-removal", "svc-moving-cleanouts", "guide-garage-cleanout-prep", "core-accepted-items"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Partial-home clutter angle; whole-home intent routed to house cleanouts. No pricing, timing, or donation-partner claims.",
+    "ownerVerification": [
+      "Confirm attic pickups are offered (safe access and flooring required).",
+      "Confirm the crew will bag loose items on site if the customer has not.",
+      "Confirm how loose batteries found in household loads are handled."
+    ]
+  }
+}

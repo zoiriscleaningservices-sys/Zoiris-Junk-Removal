@@ -1,0 +1,40 @@
+{
+  "id": "loc-theodore-al",
+  "type": "location",
+  "path": "/areas/theodore-al/",
+  "status": "research",
+  "refs": {
+    "locationId": "theodore-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal in Theodore, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Junk Removal in Theodore, AL",
+    "primaryKeyword": "junk removal Theodore AL",
+    "secondaryKeywords": [],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Theodore, AL",
+    "parentId": "loc-mobile-county-al"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Research candidate (verified real place in Mobile County). Blocked until the owner confirms service coverage in Theodore and supplies local, first-party details. Do not publish a templated city page.",
+    "ownerVerification": [
+      "Confirm whether Zoiris serves Theodore.",
+      "Provide real jobs, access notes, or photos from this area before drafting copy."
+    ]
+  }
+}

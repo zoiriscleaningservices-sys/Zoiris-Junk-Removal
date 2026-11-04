@@ -1,0 +1,49 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { business, getPage } from '../lib/data.ts';
+import { integrations } from '../config/integrations.ts';
+
+const page = getPage('core-privacy-policy');
+const updated = 'November 4, 2026';
+const formProvider = { 'zoiris-crm': null, formspree: 'Formspree', gohighlevel: 'GoHighLevel', custom: 'our form-processing provider', none: null }[integrations.form.provider];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Legal" lead={`How ${business.name} handles information you share with us. Last updated ${updated}.`} illustration={null} ctas={false} />
+  <section class="section">
+    <div class="container--narrow prose">
+      <h2>Information we collect</h2>
+      <p>When you request a pickup online or contact us, we collect the information you provide: your name, phone number, email address (optional), pickup address or ZIP code, details about the items and property access, your preferred date, notes, and any photos or videos you choose to upload. Uploaded photos and videos are stored privately for quote review and pickup planning only and are never published on public pages.</p>
+      <p>Like most websites, our hosting provider may automatically log basic technical information such as IP address, browser type, and pages requested, for security and reliability.</p>
+      {integrations.analytics.ga4Id && <p>We use Google Analytics to understand how visitors use the site (for example, which pages are viewed and when the call button or request form is used). Google Analytics uses cookies. You can learn more at <a href="https://policies.google.com/technologies/partner-sites" rel="noopener" target="_blank">How Google uses information from sites that use its services<span class="sr-only"> (opens in a new tab)</span></a>.</p>}
+
+      <h2>How we use it</h2>
+      <ul>
+        <li>To respond to your request, prepare an estimate, and schedule and complete a pickup.</li>
+        <li>To contact you about your request by phone, text, or email.</li>
+        <li>To keep basic business records and improve our website and service.</li>
+      </ul>
+      <p>We do not sell your personal information.</p>
+
+      <h2>Sharing</h2>
+      <p>We share information only with service providers who help us operate{formProvider ? ` (such as ${formProvider}, which processes our online request form)` : ''}, or when required by law.</p>
+      <p>To confirm that a pickup address is real and inside our service area, the address you type (not your name, phone, or email) is checked against the U.S. Census Bureau's public address database and OpenStreetMap address search. If you tap "Use my current location," your device's approximate coordinates are used once to look up the nearest street address and are not stored.</p>
+
+      <h2>Devices and data you hand over</h2>
+      <p>If you give us electronics for pickup, you are responsible for removing or erasing personal data before pickup. We do not provide data wiping or data destruction services.</p>
+
+      <h2>Retention and your choices</h2>
+      <p>We keep request information only as long as needed for the purposes above and for ordinary business records. To ask us to update or delete information you submitted, call {business.phoneDisplay}.</p>
+
+      <h2>Children</h2>
+      <p>This website is not directed to children under 13, and we do not knowingly collect their information.</p>
+
+      <h2>Changes</h2>
+      <p>We may update this policy from time to time. The date at the top shows when it was last changed.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy? Call <a href={business.phoneHref}>{business.phoneDisplay}</a>.</p>
+    </div>
+  </section>
+</MainLayout>

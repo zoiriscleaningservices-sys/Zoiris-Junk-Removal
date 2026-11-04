@@ -1,0 +1,43 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import { business, getPage } from '../lib/data.ts';
+
+const page = getPage('core-about');
+---
+
+<MainLayout page={page} localBusiness>
+  <PageHero page={page} eyebrow="About" lead="Zoiris Junk Removal is a pickup service for Mobile, Alabama. We haul away unwanted household items, clear out homes and businesses, and pick up qualifying electronics — so you get your space back without renting a truck or making trips." illustration="hero" />
+
+  <section class="section">
+    <div class="container split" style="align-items:start">
+      <div>
+        <h2>What we do</h2>
+        <p>We remove the things people no longer want and can't easily get rid of: the sleeper sofa that won't fit in a car, the washer from a laundry room upgrade, a garage full of years of storage, an office's worth of old desks and computers.</p>
+        <p>Electronics are a core part of the business, not an afterthought. Computers, monitors, printers, phones, and IT equipment are kept separate from general junk, and we're upfront about which items need confirmation and which we can't take.</p>
+        <p>We serve homes, apartments, rental properties, offices, and other businesses in the City of Mobile.</p>
+      </div>
+      <div>
+        <h2>How we work</h2>
+        <ul class="kicker-list">
+          <li><span class="card__icon"><Icon name="clipboard" /></span><div><h3>Estimate first</h3><p>You know the plan and the estimate before anything is scheduled.</p></div></li>
+          <li><span class="card__icon"><Icon name="hand" /></span><div><h3>We do the lifting</h3><p>Our crew carries items out from where they sit. No dragging things to the curb.</p></div></li>
+          <li><span class="card__icon"><Icon name="check-circle" /></span><div><h3>Straight answers</h3><p>If we're not sure we can take something, we say "call us first" instead of guessing.</p></div></li>
+          <li><span class="card__icon"><Icon name="recycle" /></span><div><h3>Practical about disposal</h3><p>{business.disposalStatement}</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="honest">
+    <div class="container--narrow">
+      <h2 id="honest">What you won't see on this site</h2>
+      <p>You won't find invented reviews, made-up statistics, or certifications we don't hold on this website. When we add testimonials or photos of our work, they'll be real and shared with permission.</p>
+      <p>If there's something you'd like to know about how we operate — where items go, what we can take, how we handle a particular situation — <a href="/contact/">just ask</a>.</p>
+    </div>
+  </section>
+
+  <CTABand location="about" />
+</MainLayout>

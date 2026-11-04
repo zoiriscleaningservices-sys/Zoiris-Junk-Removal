@@ -1,0 +1,122 @@
+{
+  "id": "svc-mattress-removal",
+  "type": "service",
+  "path": "/services/mattress-removal/",
+  "status": "published",
+  "refs": { "serviceId": "mattress-removal", "itemIds": ["mattress", "bed-frames", "adjustable-bases"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Mattress Removal in Mobile, AL | Box Spring Pickup | Zoiris",
+    "description": "Get rid of an old mattress in Mobile, AL without hauling it yourself. Zoiris picks up mattresses, box springs, and bed frames straight from the bedroom.",
+    "h1": "Mattress Removal in Mobile, AL",
+    "primaryKeyword": "mattress removal Mobile AL",
+    "secondaryKeywords": ["mattress disposal Mobile", "old mattress pickup Mobile", "box spring removal Mobile AL", "bed frame removal Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Mattress Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Mattresses, box springs, and bed frames carried out of the bedroom and hauled away in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Mattress Removal", "parentId": "core-services" },
+  "purpose": "Serve people in Mobile who need an old mattress, box spring, or bed frame gone — often right after a new mattress arrives — and want it carried out of the bedroom instead of dragged to the curb.",
+  "content": {
+    "eyebrow": "Junk Removal",
+    "lead": "Zoiris Junk Removal picks up old mattresses, box springs, and bed frames from homes and rentals in Mobile, Alabama. We take them straight from the bedroom — no wrestling a floppy queen down the stairs, no strapping it to a car roof, and no mattress leaning against the house for a week.",
+    "quickAnswer": {
+      "question": "What's the easiest way to get rid of an old mattress in Mobile?",
+      "answer": "Have it picked up from the room it's in. Tell us the size and how many pieces are going — mattress, box spring, frame, headboard — and we confirm an estimate and a pickup window. Our crew carries everything out and hauls it away."
+    },
+    "includes": {
+      "heading": "What mattress removal includes",
+      "intro": "A mattress pickup covers the whole bed setup, not just the top layer.",
+      "points": [
+        "Lifting the mattress off the bed and carrying it out of the bedroom, including from upstairs rooms.",
+        "Box springs, foundations, and bunkie boards.",
+        "Taking apart metal or wood bed frames, bunk beds, daybeds, and attached headboards so they fit through doorways.",
+        "Several mattresses in one visit — a guest room, kids' bunk beds, or a rental unit's worth."
+      ]
+    },
+    "items": {
+      "heading": "Bedroom items we remove",
+      "intro": "Every size from crib to California king:",
+      "list": [
+        "Innerspring, memory foam, hybrid, and pillow-top mattresses",
+        "Box springs, split foundations, and bunkie boards",
+        "Metal frames, wood bed frames, bunk beds, daybeds, and trundles",
+        "Headboards and footboards",
+        "Adjustable or power bed bases — call to confirm"
+      ],
+      "itemIds": ["mattress", "bed-frames", "adjustable-bases"]
+    },
+    "audience": {
+      "heading": "Who calls for mattress pickup",
+      "body": [
+        "Most calls come after a new mattress has been delivered and the old one has nowhere to go, or when a bed-in-a-box replaced a full mattress set. Parents call when kids move from bunk beds to full-size beds, and people downsizing often need guest room beds cleared.",
+        "Landlords and short-term rental hosts use the same service when they replace mattresses between guests or tenants. If the whole unit needs clearing, see [apartment cleanouts](/services/apartment-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "How mattress pickup works",
+      "steps": [
+        { "title": "Count the pieces", "body": "Let us know the mattress size, how many mattresses and box springs there are, and whether the frame and headboard are going too. Send it by phone or [pickup request](/request-pickup/)." },
+        { "title": "Lock in the details", "body": "We confirm an estimate and a pickup window. If there's a bed bug concern or a power base involved, we talk it through at this step." },
+        { "title": "Off the bed and out the door", "body": "The crew breaks down the frame, carries each piece out, and takes care around railings and door frames on the way." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects mattress removal cost",
+      "intro": "There's no flat rate — the estimate reflects what's actually being removed:",
+      "factors": [
+        "How many pieces: a mattress alone versus a full set with box spring, frame, and headboard",
+        "Size and weight — a king pillow-top is much heavier than a twin foam mattress",
+        "Frame disassembly, especially bunk beds and storage beds",
+        "Stairs, tight landings, or a long carry to the truck",
+        "Mattresses that need special handling, such as ones with bed bugs or water damage"
+      ]
+    },
+    "prepare": {
+      "heading": "Before we arrive",
+      "tips": [
+        "Strip the sheets, mattress protector, and pillows, and keep any bedding you want to reuse.",
+        "If a new mattress is on the way, book the pickup for after it's delivered so nobody spends a night on the floor.",
+        "Check under the bed and between the mattress and box spring — phones, jewelry, and documents turn up there.",
+        "If bed bugs are a concern, tell us first. Sealing the mattress in a plastic mattress bag helps contain them during the carry-out.",
+        "For an adjustable base, lower it flat and unplug it before pickup day."
+      ]
+    },
+    "restrictions": {
+      "heading": "Mattresses that need a heads-up",
+      "body": "These are still possible in many cases, but we need to know before scheduling:",
+      "list": [
+        "Mattresses with known bed bugs or other pests — tell us in advance so handling can be planned",
+        "Mattresses soaked by flooding, leaks, or other water damage",
+        "Adjustable and power bases, which are heavy and have motors — describe the model when you call",
+        "Waterbed mattresses must be completely drained before pickup"
+      ]
+    },
+    "faqs": [
+      { "q": "Do you take the box spring and bed frame too?", "a": "Yes. Box springs, foundations, frames, and headboards are all part of mattress removal. The crew takes the frame apart if it won't fit through the door assembled." },
+      { "q": "Will you take a mattress with bed bugs?", "a": "Tell us before you book. We need to know in advance so we can plan how it's handled, and we'll explain any preparation needed, such as bagging the mattress." },
+      { "q": "Can't I just put the mattress at the curb?", "a": "City of Mobile residents may be able to set bedding out for the city's residential trash collection, following the city's schedule and rules — check with [City of Mobile Public Works](https://www.cityofmobile.gov). A pickup from us makes sense when you'd rather not haul it outside yourself, have other items going too, or don't want it sitting at the curb." },
+      { "q": "Do you take adjustable bed bases?", "a": "Adjustable and power bases are call to confirm. They're heavy and have motors, so describe the brand or model and where the bed is located when you contact us." },
+      { "q": "Will my old mattress be recycled?", "a": "Where practical options exist, mattress materials are separated from items going to disposal. We can't promise a specific outcome for every mattress — ask us if you want to know what's likely for yours." }
+    ],
+    "areaNote": "Mattress removal is available at homes and rental properties throughout the City of Mobile. If you're outside the city, call to confirm before booking.",
+    "illustration": "residential"
+  },
+  "related": ["svc-furniture-removal", "svc-bulk-item-pickup", "svc-moving-cleanouts", "svc-apartment-cleanouts", "core-restricted-items", "core-responsible-disposal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "City of Mobile curbside reference (bedding included in residential trash collection) verified via search of cityofmobile.gov on 2026-11-04; phrased as 'may be able to' with a link to the city. Adjustable bases shown as call to confirm per items.json.",
+    "ownerVerification": [
+      "Confirm bed-bug mattress policy and whether customers should bag the mattress beforehand.",
+      "Confirm handling of water-damaged or flood-soaked mattresses.",
+      "Confirm adjustable/power base acceptance (currently call to confirm).",
+      "Confirm waterbed mattresses are accepted once drained.",
+      "Confirm whether any mattress materials currently go to a recycling outlet (copy only says 'where practical options exist')."
+    ]
+  }
+}

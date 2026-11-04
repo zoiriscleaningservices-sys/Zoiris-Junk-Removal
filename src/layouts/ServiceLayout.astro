@@ -1,0 +1,79 @@
+---
+/**
+ * Layout for templated commercial pages: services, e-waste categories, item
+ * pages, verified locations/neighborhoods and approved service + location combos.
+ */
+import MainLayout from './MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContentBody from '../components/ContentBody.astro';
+import ContactAside from '../components/ContactAside.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CTABand from '../components/CTABand.astro';
+import Icon from '../components/Icon.astro';
+import type { PageRecord } from '../lib/types.ts';
+import { business, data, serviceFor, verifiedLocations } from '../lib/data.ts';
+import { relatedPages } from '../lib/internal-links.ts';
+import { serviceNode } from '../lib/schema.ts';
+import { ACCEPTANCE_HELP, ACCEPTANCE_LABELS } from '../lib/labels.ts';
+
+interface Props {
+  page: PageRecord;
+}
+const { page } = Astro.props;
+const site = (Astro.site?.toString() ?? business.website).replace(/\/+$/, '');
+const service = serviceFor(page);
+const related = relatedPages(page, data.pages);
+const schema = page.seo.schemaTypes.includes('Service') && service ? [serviceNode(page, service, site, verifiedLocations())] : [];
+const primaryItem = page.type === 'item' && page.refs.itemIds?.length ? data.items.find((i) => i.id === page.refs.itemIds![0]) : undefined;
+const iconFor = (p: PageRecord) => data.services.find((s) => s.pageId === p.id)?.icon ?? (p.type === 'article' ? 'sparkle' : p.type === 'core' ? 'info' : 'box');
+const isLocation = page.type === 'location' || page.type === 'neighborhood';
+---
+
+<MainLayout page={page} schema={schema} localBusiness={isLocation}>
+  <PageHero page={page}>
+    {
+      primaryItem && (
+        <p style="margin-top:1rem">
+          <span class={`badge badge--${primaryItem.acceptance}`}>{ACCEPTANCE_LABELS[primaryItem.acceptance]}</span>
+          <span class="meta-line" style="margin-left:.5rem">
+            {ACCEPTANCE_HELP[primaryItem.acceptance]}
+          </span>
+        </p>
+      )
+    }
+  </PageHero>
+
+  <section class="section">
+    <div class="container content-layout">
+      <ContentBody page={page}>
+        <slot />
+      </ContentBody>
+      <ContactAside related={related.slice(0, 6)} />
+    </div>
+  </section>
+
+  {
+    related.length > 0 && (
+      <section class="section section--sand" aria-labelledby="related-heading">
+        <div class="container">
+          <div class="section-head">
+            <p class="eyebrow">Keep exploring</p>
+            <h2 id="related-heading">Related services and guides</h2>
+          </div>
+          <div class="grid grid--3">
+            {related.map((r) => (
+              <ServiceCard href={r.path} title={r.breadcrumb.label} body={r.seo.description} icon={iconFor(r)} more={r.type === 'article' ? 'Read guide' : 'View details'} />
+            ))}
+          </div>
+          <p style="margin-top:2rem">
+            <a class="text-link" href="/services/">
+              Browse all services <Icon name="arrow-right" />
+            </a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <CTABand title={`Ready to schedule ${service ? service.name.toLowerCase() : 'a pickup'}?`} location={`cta-${page.id}`} />
+</MainLayout>

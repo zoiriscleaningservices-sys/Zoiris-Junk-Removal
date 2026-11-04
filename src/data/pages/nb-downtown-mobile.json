@@ -1,0 +1,68 @@
+{
+  "id": "nb-downtown-mobile",
+  "type": "neighborhood",
+  "path": "/areas/mobile-al/downtown-mobile/",
+  "status": "research",
+  "refs": {
+    "neighborhoodId": "downtown-mobile",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste Pickup in Downtown Mobile | Zoiris",
+    "description": "Planning for commercial office cleanouts, apartment hauling, and IT electronics pickup in Downtown Mobile (36602, 36603).",
+    "h1": "Junk Removal & Electronics Pickup in Downtown Mobile",
+    "primaryKeyword": "junk removal Downtown Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Downtown Mobile",
+    "parentId": "loc-mobile-al"
+  },
+  "purpose": "District hub for Downtown Mobile: cover freight-elevator scheduling, loading zones, commercial IT e-waste, and historic-street truck staging.",
+  "related": [
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Neighborhood page requires at least two pieces of first-party local evidence (completed jobs with permission, photos, access notes) before drafting. No invented local details.",
+    "ownerVerification": [
+      "Supply real completed jobs or photos from Downtown Mobile (with customer permission)."
+    ]
+  },
+  "content": {
+    "eyebrow": "Mobile Neighborhood Research Draft",
+    "lead": "Bounded by the Mobile River, Broad St, Beauregard St, and Canal St around Dauphin St, Government St, and Water St, Downtown Mobile combines multi-story office towers, loft apartments, historic districts (De Tonti Square, Lower Dauphin, Church Street East), and retail storefronts.",
+    "quickAnswer": {
+      "question": "Is Downtown Mobile inside Zoiris Junk Removal's service area?",
+      "answer": "Addresses inside City of Mobile corporate limits in Downtown Mobile are served by Zoiris Junk Removal; this dedicated neighborhood page remains unindexed until first-party neighborhood project notes are finalized."
+    },
+    "faqs": [
+      {
+        "q": "How do I verify whether my Downtown Mobile street address is inside Mobile city limits?",
+        "a": "Share your street address and ZIP code when requesting a pickup or calling 251-930-8621 and we will confirm coverage before scheduling."
+      },
+      {
+        "q": "Do City of Mobile trash rules apply in Downtown Mobile?",
+        "a": "Inside corporate limits, City residential trash runs every other week up to 2 cubic yards and excludes electronics, TVs, Freon appliances, and commercial business materials."
+      },
+      {
+        "q": "What should I mention when requesting a pickup here?",
+        "a": "Let us know about narrow driveways, low oak limbs, stairs, alleys, or building loading rules so the crew plans truck staging accurately."
+      }
+    ],
+    "areaNote": "Research draft — excluded from search indexing until owner verification and 2+ first-party local evidence entries are recorded."
+  }
+}

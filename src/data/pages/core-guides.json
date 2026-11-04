@@ -1,0 +1,36 @@
+{
+  "id": "core-guides",
+  "type": "core",
+  "path": "/guides/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste Guides for Mobile, AL | Zoiris",
+    "description": "Practical guides on getting rid of furniture, TVs, computers, batteries, and appliances in Mobile, Alabama, including local drop-off options.",
+    "h1": "Guides & How-Tos",
+    "primaryKeyword": "junk and electronics disposal guides Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Guides",
+    "parentId": "core-home"
+  },
+  "purpose": "Index of educational guides that answer common disposal questions.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

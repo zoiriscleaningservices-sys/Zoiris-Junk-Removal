@@ -1,0 +1,127 @@
+{
+  "id": "svc-warehouse-cleanouts",
+  "type": "service",
+  "path": "/services/warehouse-cleanouts/",
+  "status": "draft",
+  "refs": { "serviceId": "warehouse-cleanouts", "itemIds": ["retail-fixtures", "bicycles-tools", "office-furniture", "file-cabinets", "boxes-clutter", "drywall-lumber", "tires"], "locationId": "mobile-al", "customerType": "commercial" },
+  "seo": {
+    "title": "Warehouse Cleanout in Mobile, AL | Pallets & Shelving | Zoiris",
+    "description": "Need a warehouse or stockroom cleared in Mobile, AL? Zoiris hauls away pallets, shelving, old inventory, packaging, and office furniture from commercial spaces.",
+    "h1": "Warehouse Cleanouts in Mobile, AL",
+    "primaryKeyword": "warehouse cleanout Mobile AL",
+    "secondaryKeywords": ["warehouse junk removal Mobile", "pallet removal Mobile AL", "industrial space cleanout Mobile", "old inventory removal Mobile", "warehouse shelving removal Mobile"],
+    "intent": "transactional",
+    "ogTitle": "Warehouse Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Pallets, shelving, obsolete inventory, and packaging hauled away from warehouses and stockrooms in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Warehouse Cleanouts", "parentId": "core-services" },
+  "purpose": "Serve businesses and commercial landlords in Mobile who need a warehouse, flex space, or large stockroom cleared of pallets, shelving, obsolete inventory, packaging, and office contents. Kept in draft until the owner confirms capacity for racking and large-volume jobs.",
+  "content": {
+    "eyebrow": "Commercial Cleanouts",
+    "lead": "Warehouses collect things quickly: broken pallets, shelving nobody uses, obsolete stock, and mountains of packaging. Zoiris Junk Removal clears warehouses, flex spaces, and large stockrooms in Mobile, Alabama. Warehouse jobs vary enormously in size, so we start by understanding the volume, the materials, and your loading setup, and then confirm what we can take on before anything is scheduled.",
+    "quickAnswer": {
+      "question": "Can you haul away pallets and old shelving from our warehouse?",
+      "answer": "Tell us how many pallets there are, what shape they are in, and what kind of shelving you have. Wooden pallets and light-duty shelving are the most common items on these jobs. Heavy pallet racking needs a call to confirm, because it involves disassembly and a lot of weight. We review the details and confirm the scope before scheduling."
+    },
+    "includes": {
+      "heading": "What a warehouse cleanout can cover",
+      "intro": "Depending on what you need cleared, a warehouse job can include:",
+      "points": [
+        "Hauling away broken and surplus wooden pallets.",
+        "Removing light-duty and steel shelving units, plus heavier racking once it has been confirmed.",
+        "Clearing obsolete, damaged, or unsellable non-hazardous inventory.",
+        "Removing cardboard, stretch-wrapped packaging, crates, and dunnage.",
+        "Emptying the warehouse office and break area of desks, chairs, and file cabinets.",
+        "Working from your dock doors or roll-up doors so loading moves efficiently."
+      ]
+    },
+    "items": {
+      "heading": "What comes out of warehouses",
+      "intro": "Every warehouse is different. These are the most common items, and anything marked \"call to confirm\" needs details first.",
+      "list": [
+        "Wooden pallets, crates, and scrap lumber",
+        "Steel and plastic shelving units and workbenches",
+        "Pallet racking and large shelving systems — call to confirm",
+        "Boxed obsolete inventory, packaging, and cardboard",
+        "Warehouse-office desks, chairs, and file cabinets (emptied first)",
+        "Tires — call to check before including them"
+      ],
+      "itemIds": ["drywall-lumber", "bicycles-tools", "retail-fixtures", "boxes-clutter", "office-furniture", "file-cabinets", "tires"]
+    },
+    "audience": {
+      "heading": "Who needs a warehouse cleanout",
+      "body": [
+        "Businesses consolidating into a smaller space, ending a lease on a warehouse or flex unit, or clearing years of overstock and broken equipment to free up floor space. Online sellers and distribution businesses often call when packaging and returns pile up faster than they can handle.",
+        "Commercial landlords call when a tenant leaves a building with pallets, shelving, and leftovers inside. For smaller business hauling, see [commercial junk removal](/services/commercial-junk-removal/)."
+      ]
+    },
+    "process": {
+      "heading": "How a warehouse cleanout works",
+      "steps": [
+        { "title": "Volume and materials", "body": "Send a [pickup request](/request-pickup/) with photos of the floor, the racking, and any piles, plus a rough count of pallets and shelving units. Include the square footage if you know it." },
+        { "title": "Loading setup", "body": "Tell us whether you have dock-height doors or ground-level roll-ups, and whether your staff can move palletized loads to the door with your own equipment." },
+        { "title": "Scope and phases", "body": "We confirm what we can take, an estimate, and a pickup window. Very large jobs may be split into phases, so your operation can keep running around the work." },
+        { "title": "Clear and haul", "body": "The crew loads the confirmed items and hauls them away. Metal, cardboard, and wood are separated where practical options exist." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a warehouse cleanout",
+      "intro": "Warehouse jobs are quoted individually, based on:",
+      "factors": [
+        "Total volume, often measured in truckloads rather than individual items",
+        "Weight and material type, since steel racking and dense inventory are much heavier than cardboard",
+        "Whether racking or shelving needs to be disassembled first",
+        "Loading setup: dock doors, roll-up doors, and whether staff can stage items at the door",
+        "Number of visits needed to finish the job"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare your warehouse",
+      "tips": [
+        "Walk the space and tag what stays with the building or is going to your new location.",
+        "Stage pallets and loose items near a door if your team has the equipment to do it safely.",
+        "Separate any drums, containers, or products that contain chemicals, oils, or fuel. These are not part of a junk load.",
+        "Check whether any racking is leased or belongs to the landlord before including it.",
+        "Pull computers, label printers, and network equipment for [office electronics pickup](/e-waste/office-electronics-pickup/)."
+      ]
+    },
+    "restrictions": {
+      "heading": "What warehouse cleanouts exclude",
+      "body": "Industrial spaces often hold materials outside what a junk pickup can carry:",
+      "list": [
+        "Chemicals, solvents, paint, oils, and drums of unknown contents — not accepted.",
+        "Fuel, propane cylinders, and compressed gas tanks — not accepted.",
+        "Forklift batteries and other industrial batteries — not accepted in a junk load. Call to discuss.",
+        "Machinery bolted to the floor, and structural mezzanines — not included. We do not do demolition.",
+        "Tires — call to check before including them."
+      ]
+    },
+    "faqs": [
+      { "q": "Do you take pallet racking?", "a": "Call to confirm. Racking is heavy and has to be disassembled before it can be loaded, so we need the quantity, the height, and whether it is anchored to the floor before we can commit." },
+      { "q": "Can we use our forklift to stage items for you?", "a": "If your own trained staff want to move palletized items to the door before we arrive, that can speed up loading. Tell us what you plan to stage so we can plan the truck space." },
+      { "q": "Will you take obsolete inventory?", "a": "Non-hazardous inventory can usually be included once we know what it is and how much there is. Products containing chemicals, batteries, or fuel need to be handled separately." },
+      { "q": "Can a large warehouse be done in stages?", "a": "Yes. Phased cleanouts let you keep operating while sections are cleared. Tell us your deadline and which areas need to go first." }
+    ],
+    "areaNote": "Warehouse cleanouts would be offered for commercial sites in the City of Mobile. Industrial properties outside the city must be confirmed before booking.",
+    "illustration": "commercial"
+  },
+  "related": ["svc-commercial-junk-removal", "svc-office-cleanouts", "svc-construction-debris-removal", "ew-office-electronics-pickup", "core-restricted-items", "core-responsible-disposal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Draft: full content written, but publication awaits owner confirmation of capacity for racking and large-volume jobs. Racking and tires phrased as call to confirm or call to check. Hazardous industrial materials excluded.",
+    "ownerVerification": [
+      "Confirm capacity for warehouse-scale jobs (multi-truckload volume) before publishing.",
+      "Confirm whether the crew disassembles pallet racking, and any height or weight limits.",
+      "Confirm wooden pallet acceptance and any quantity limits.",
+      "Confirm policy for obsolete non-hazardous inventory in bulk.",
+      "Confirm whether customer staff may stage items with their own forklift, and any liability position (do not publish claims).",
+      "Confirm tire policy and any disposal fees."
+    ]
+  }
+}

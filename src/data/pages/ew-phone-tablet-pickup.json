@@ -1,0 +1,141 @@
+{
+  "id": "ew-phone-tablet-pickup",
+  "type": "ewaste",
+  "path": "/e-waste/phone-tablet-pickup/",
+  "status": "published",
+  "refs": { "serviceId": "phone-tablet-pickup", "itemIds": ["cell-phones", "tablets"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Cell Phone & Tablet Recycling Pickup in Mobile, AL | Zoiris",
+    "description": "Old phones, tablets, and e-readers picked up with your other electronics in Mobile, AL. How to reset devices, remove SIM cards, and spot unsafe batteries.",
+    "h1": "Cell Phone & Tablet Pickup in Mobile, AL",
+    "primaryKeyword": "cell phone recycling Mobile AL",
+    "secondaryKeywords": ["tablet recycling Mobile AL", "old phone disposal Mobile", "smartphone recycling pickup", "iPad disposal Mobile", "what to do with old cell phones"],
+    "intent": "transactional",
+    "ogTitle": "Cell Phone & Tablet Pickup in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Old smartphones, flip phones, tablets, and e-readers picked up with your other electronics in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Phone & Tablet Pickup", "parentId": "ew-electronics-pickup" },
+  "purpose": "Serve Mobile residents and businesses with drawers of old phones and tablets: explain the reset and SIM-removal steps that protect personal data, how to spot a swollen battery that cannot be picked up, and how phones fit into a wider electronics pickup.",
+  "content": {
+    "eyebrow": "E-Waste Pickup",
+    "lead": "Zoiris Junk Removal picks up old cell phones, smartphones, tablets, and e-readers in Mobile, Alabama — usually alongside other electronics from the same home or office. Two things matter more with phones than with almost anything else we haul: the personal data on them and the lithium-ion battery inside. Reset each device and pull the SIM and memory cards, check that no battery is swollen, and they are ready to go.",
+    "quickAnswer": {
+      "question": "What should I do with old cell phones in Mobile, AL?",
+      "answer": "Back up and transfer what you need, sign out of your accounts, remove SIM and memory cards, and factory reset each phone. Set aside any with a swollen or damaged battery. The rest can be picked up with your other electronics — mention them when you request a pickup."
+    },
+    "includes": {
+      "heading": "What phone and tablet pickup includes",
+      "intro": "Phones are small, but a drawer of them still adds up. Here is how we handle them:",
+      "points": [
+        "Collecting phones, tablets, and e-readers with your other electronics in one visit.",
+        "Keeping devices with intact batteries together in a box or bag rather than loose in the truck.",
+        "Leaving behind any device with a swollen or damaged battery, which we cannot transport.",
+        "Taking matching chargers, cases, and cords in the same pickup."
+      ]
+    },
+    "items": {
+      "heading": "Devices we pick up",
+      "intro": "Working, broken, or obsolete — the condition of the screen does not matter, but the battery does.",
+      "list": [
+        "Smartphones, flip phones, and older cell phones with intact batteries",
+        "Tablets and e-readers with intact batteries",
+        "Cordless landline handsets and base stations",
+        "Phone chargers, charging cables, and wall adapters"
+      ],
+      "itemIds": ["cell-phones", "tablets", "small-electronics", "chargers"]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Most phones come to us from households that have kept every old handset in a kitchen drawer, or from families clearing a relative's home. Because phones are small, most people add them to a pickup of computers, TVs, or other junk rather than booking them alone.",
+        "Businesses retiring a batch of company phones or tablets can include them in an [office and IT equipment pickup](/e-waste/office-electronics-pickup/). Make sure each device is removed from any management system and reset first."
+      ]
+    },
+    "process": {
+      "heading": "How phone and tablet pickup works",
+      "steps": [
+        { "title": "Gather every device", "body": "Check drawers, old bags, and car consoles. Count the phones, tablets, and e-readers so we know what to expect." },
+        { "title": "Reset and remove cards", "body": "Work through the reset checklist below for each device that powers on. Pull out SIM and memory cards and keep them." },
+        { "title": "Battery check", "body": "Lay each device flat and look for a bulging back, a lifted screen, or a gap along the edges. Set those aside — they cannot be picked up." },
+        { "title": "Add them to your pickup", "body": "List the devices in your [pickup request](/request-pickup/) along with any other electronics. We confirm an estimate and a pickup window and collect them in a bag or box." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost",
+      "intro": "Phones and tablets rarely drive the cost of a job on their own. What matters is the whole pickup:",
+      "factors": [
+        "What other electronics or junk are being picked up in the same visit",
+        "The overall volume of the load",
+        "Access to the items at your home or office"
+      ]
+    },
+    "prepare": {
+      "heading": "Reset checklist for phones and tablets",
+      "tips": [
+        "Back up photos, contacts, and messages, and move two-factor authentication apps to your new phone first.",
+        "Sign out of your Apple, Google, or Samsung account and turn off device-locating features so the device is no longer linked to you.",
+        "Remove the SIM card and any microSD memory card — use a paper clip if you do not have a SIM tool.",
+        "Use the factory reset or erase option in the device's settings.",
+        "Unpair the device from smartwatches, car systems, and other accounts.",
+        "Keep phones with swollen or damaged batteries separate and do not include them."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "Battery condition decides what we can take:",
+      "list": [
+        "Phones, tablets, and e-readers with swollen, cracked, punctured, or leaking batteries are not accepted because of fire risk.",
+        "Loose phone batteries and power banks are treated as batteries, not electronics, and need special handling — call first. See [old battery safety](/guides/old-batteries-safety/).",
+        "Zoiris does not reset, erase, or destroy phones or tablets. Data left on a device is the owner's responsibility.",
+        "Company-managed devices should be released from your organization's device management before pickup."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Why the battery check matters",
+        "body": [
+          "Almost every phone and tablet runs on a lithium-ion battery. The U.S. EPA says lithium-ion batteries and the devices that contain them should not go in household garbage or curbside recycling bins, because they can be damaged or crushed in transport or processing and create a fire hazard ([EPA: Used Lithium-Ion Batteries](https://www.epa.gov/recycle/used-lithium-ion-batteries)).",
+          "EPA also advises that if a lithium-ion battery becomes damaged, you should contact the battery or device manufacturer for specific handling instructions. A phone with a swollen battery should be kept away from heat and anything flammable, not squeezed back together, and never thrown in the trash."
+        ],
+        "bullets": [
+          "Signs of swelling: a back panel that bulges or rocks on a flat table, a screen lifting at one edge, or a widening seam.",
+          "Signs of damage: punctures, burn marks, a hot device when it is off, or a sweet chemical smell."
+        ]
+      },
+      {
+        "heading": "Old phones hold more than you think",
+        "body": [
+          "Phones are worth getting out of the junk drawer. EPA, citing a U.S. Geological Survey estimate, notes that for every million cell phones recycled, about 35,000 pounds of copper, 772 pounds of silver, 75 pounds of gold, and 33 pounds of palladium can be recovered ([EPA: Electronics Donation and Recycling](https://www.epa.gov/recycle/electronics-donation-and-recycling)).",
+          "After pickup, we sort loads so that devices can be routed to appropriate reuse or recycling outlets where practical options exist. Ask us where your devices are likely to go and we will tell you plainly."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Can you pick up just a few old phones?", "a": "Phones are usually added to a larger electronics or junk pickup, since a few handsets fit in a shoebox. If phones are all you have, call and we will talk through the options, including the City of Mobile's resident electronics drop-off described in our [drop-off guide](/guides/electronics-drop-off-mobile-al/)." },
+      { "q": "What if my phone's battery is swollen?", "a": "We cannot take it — swollen batteries are a fire risk. Keep the phone away from heat and flammable materials, do not press on it, and contact the manufacturer or a household hazardous waste program for handling instructions." },
+      { "q": "How do I protect my data on a phone that won't turn on?", "a": "You cannot reset a phone that will not power on, so at minimum remove the SIM card and any memory card. The manufacturer or your carrier may be able to help further. If you are not comfortable with what remains on it, keep the phone." },
+      { "q": "Do I really need to remove the SIM card?", "a": "Yes. A SIM card is tied to your phone number and account, and a memory card can hold photos and files. Both should come out and stay with you before any phone leaves your hands." },
+      { "q": "Do you take tablets, e-readers, and smartwatches?", "a": "Tablets and e-readers with intact batteries are picked up the same way as phones. Smartwatches are small electronics with built-in batteries — unpair and reset them, check for swelling, and mention them when you call." },
+      { "q": "Can I include power banks with my phones?", "a": "Power banks are batteries rather than electronics, so they need special handling and are never mixed into a load. Call first, tape the terminals or bag each one separately as EPA advises, and we will confirm handling or point you to a drop-off option." }
+    ],
+    "areaNote": "Phone and tablet pickup is available throughout the City of Mobile as part of an electronics pickup. If your address is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "electronics"
+  },
+  "related": ["ew-electronics-pickup", "guide-old-batteries-safety", "ew-computer-recycling", "guide-electronics-drop-off-mobile", "core-restricted-items"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "EPA lithium-ion guidance (no trash/recycling bins, tape terminals or bag separately, contact manufacturer if damaged) and USGS cell-phone metals figure quoted by EPA verified 2026-11-04. Swollen devices not accepted, loose batteries/power banks special handling, per items.json.",
+    "ownerVerification": [
+      "Confirm whether phone-only or tablet-only pickups are offered, or only as part of a larger pickup.",
+      "Confirm whether smartwatches and other wearables are accepted.",
+      "Confirm whether intact power banks and loose phone batteries are ever accepted.",
+      "Confirm downstream outlet for phones and tablets."
+    ]
+  }
+}

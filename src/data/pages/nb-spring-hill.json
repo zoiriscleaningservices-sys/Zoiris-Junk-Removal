@@ -1,0 +1,68 @@
+{
+  "id": "nb-spring-hill",
+  "type": "neighborhood",
+  "path": "/areas/mobile-al/spring-hill/",
+  "status": "research",
+  "refs": {
+    "neighborhoodId": "spring-hill",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste Pickup in Spring Hill | Zoiris",
+    "description": "Planning for junk hauling, estate cleanouts, and electronics pickup in Mobile’s Spring Hill neighborhood (36608, 36607).",
+    "h1": "Junk Removal & Electronics Pickup in Spring Hill",
+    "primaryKeyword": "junk removal Spring Hill Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Spring Hill",
+    "parentId": "loc-mobile-al"
+  },
+  "purpose": "Neighborhood hub for Spring Hill in Mobile, AL: address long oak-lined driveways, multi-generation estate cleanouts, and curbside pile rules.",
+  "related": [
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Neighborhood page requires at least two pieces of first-party local evidence (completed jobs with permission, photos, access notes) before drafting. No invented local details.",
+    "ownerVerification": [
+      "Supply real completed jobs or photos from Spring Hill (with customer permission)."
+    ]
+  },
+  "content": {
+    "eyebrow": "Mobile Neighborhood Research Draft",
+    "lead": "Centered on Old Shell Rd, McGregor Ave, Museum Dr, and Spring Hill College along the elevated ridge west of I-65, Spring Hill includes older single-family estates, wooded driveways, and institutional properties.",
+    "quickAnswer": {
+      "question": "Is Spring Hill inside Zoiris Junk Removal's service area?",
+      "answer": "Addresses inside City of Mobile corporate limits in Spring Hill are served by Zoiris Junk Removal; this dedicated neighborhood page remains unindexed until first-party neighborhood project notes are finalized."
+    },
+    "faqs": [
+      {
+        "q": "How do I verify whether my Spring Hill street address is inside Mobile city limits?",
+        "a": "Share your street address and ZIP code when requesting a pickup or calling 251-930-8621 and we will confirm coverage before scheduling."
+      },
+      {
+        "q": "Do City of Mobile trash rules apply in Spring Hill?",
+        "a": "Inside corporate limits, City residential trash runs every other week up to 2 cubic yards and excludes electronics, TVs, Freon appliances, and commercial business materials."
+      },
+      {
+        "q": "What should I mention when requesting a pickup here?",
+        "a": "Let us know about narrow driveways, low oak limbs, stairs, alleys, or building loading rules so the crew plans truck staging accurately."
+      }
+    ],
+    "areaNote": "Research draft — excluded from search indexing until owner verification and 2+ first-party local evidence entries are recorded."
+  }
+}

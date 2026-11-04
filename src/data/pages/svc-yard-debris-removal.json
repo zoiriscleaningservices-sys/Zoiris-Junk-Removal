@@ -1,0 +1,40 @@
+{
+  "id": "svc-yard-debris-removal",
+  "type": "service",
+  "path": "/services/yard-debris-removal/",
+  "status": "research",
+  "refs": {
+    "serviceId": "yard-debris-removal",
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Yard Debris Removal in Mobile, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Yard Debris Removal in Mobile, AL",
+    "primaryKeyword": "yard debris removal Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Yard Debris Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "City of Mobile residents have every-other-week trash/limb collection; a Zoiris page must explain when private pickup is worthwhile. Owner must confirm yard waste is accepted.",
+    "ownerVerification": [
+      "Confirm whether Zoiris offers yard debris removal."
+    ]
+  }
+}

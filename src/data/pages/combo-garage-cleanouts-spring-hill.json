@@ -1,0 +1,43 @@
+{
+  "id": "combo-garage-cleanouts-spring-hill",
+  "type": "combo",
+  "path": "/areas/mobile-al/spring-hill/garage-cleanouts/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "garage-cleanouts",
+    "neighborhoodId": "spring-hill",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Garage Cleanouts in Spring Hill | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Garage Cleanouts in Spring Hill",
+    "primaryKeyword": "garage cleanout Spring Hill Mobile",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Garage Cleanouts in Spring Hill",
+    "parentId": "nb-spring-hill"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Service + neighborhood candidate. Must contain genuinely local information that the main service page does not; otherwise strengthen the service page instead.",
+    "ownerVerification": [
+      "Confirm demand and real jobs in this neighborhood.",
+      "Supply first-party local evidence."
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+import { business } from '../lib/data.ts';
+import type { PageRecord } from '../lib/types.ts';
+
+interface Props {
+  related: PageRecord[];
+}
+const { related } = Astro.props;
+---
+
+<aside class="content-aside" aria-label="Request a pickup">
+  <div class="cta-card">
+    <h2>Get it picked up</h2>
+    <p>Call or text with a description or photos. We confirm details and an estimate before anything is scheduled.</p>
+    <a class="cta-card__phone" href={business.phoneHref} data-track="call" data-track-location="aside">{business.phoneDisplay}</a>
+    <a class="btn btn--primary" href={business.phoneHref} data-track="call" data-track-location="aside-btn"><Icon name="call" /> Call Now</a>
+    <a class="btn btn--ghost" href="/request-pickup/" data-track="cta" data-track-location="aside">Request Online</a>
+  </div>
+  {
+    related.length > 0 && (
+      <div class="aside-links">
+        <h2>Related</h2>
+        <ul>
+          {related.map((r) => (
+            <li>
+              <a href={r.path}>{r.breadcrumb.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+</aside>

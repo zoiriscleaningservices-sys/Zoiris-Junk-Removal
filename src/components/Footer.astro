@@ -1,0 +1,69 @@
+---
+import Logo from './Logo.astro';
+import { business, liveServicePages, getPage } from '../lib/data.ts';
+
+const junk = liveServicePages('junk').filter((x) => x.service.id !== 'junk-removal');
+const ewaste = liveServicePages('ewaste');
+const flagship = getPage('svc-junk-removal-mobile-al');
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <Logo />
+        <p>{business.shortDescription}</p>
+        <a class="footer-phone" href={business.phoneHref} data-track="call" data-track-location="footer">{business.phoneDisplay}</a>
+        <p style="margin-top:0.5rem">Serving the City of Mobile, Alabama. <a href="/areas/">See service areas</a>.</p>
+      </div>
+
+      <div>
+        <h2>Junk Removal</h2>
+        <ul>
+          <li><a href={flagship.path}>Junk Removal in Mobile</a></li>
+          {junk.slice(0, 9).map(({ service, page }) => <li><a href={page.path}>{service.name}</a></li>)}
+          <li><a href="/services/">All services</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Electronics</h2>
+        <ul>
+          {ewaste.map(({ service, page }) => <li><a href={page.path}>{service.name}</a></li>)}
+          <li><a href="/accepted-items/">Accepted Items</a></li>
+          <li><a href="/restricted-items/">Restricted Items</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>More Services</h2>
+        <ul>
+          {junk.slice(9).map(({ service, page }) => <li><a href={page.path}>{service.name}</a></li>)}
+        </ul>
+      </div>
+
+      <div>
+        <h2>Company</h2>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/how-it-works/">How It Works</a></li>
+          <li><a href="/pricing/">Pricing &amp; Estimates</a></li>
+          <li><a href="/responsible-disposal/">Responsible Disposal</a></li>
+          <li><a href="/guides/">Guides</a></li>
+          <li><a href="/faq/">FAQs</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/request-pickup/">Request a Pickup</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p style="margin:0">© {year} {business.name}. Zoiris is a private pickup service, not a government recycling program.</p>
+      <ul>
+        <li><a href="/privacy-policy/">Privacy Policy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

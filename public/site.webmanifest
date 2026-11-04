@@ -1,0 +1,13 @@
+{
+  "name": "Zoiris Junk Removal",
+  "short_name": "Zoiris",
+  "description": "Junk removal and electronics pickup in Mobile, Alabama.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#fbf8f2",
+  "theme_color": "#0e1a2b",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/brand/zoiris-logo-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "id": "item-refrigerator-removal",
+  "type": "item",
+  "path": "/items/refrigerator-removal/",
+  "status": "published",
+  "refs": { "serviceId": "refrigerator-removal", "itemIds": ["refrigerators"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Refrigerator Removal in Mobile, AL | Freezer Pickup | Zoiris",
+    "description": "Need an old fridge or freezer gone in Mobile, AL? Zoiris confirms each unit first, carries it out intact, and never cuts refrigerant lines. See how to prep.",
+    "h1": "Refrigerator & Freezer Removal in Mobile, AL",
+    "primaryKeyword": "refrigerator removal Mobile AL",
+    "secondaryKeywords": ["fridge removal Mobile AL", "old refrigerator pickup Mobile", "freezer removal Mobile", "refrigerator disposal Mobile Alabama", "how to get rid of an old refrigerator"],
+    "intent": "transactional",
+    "ogTitle": "Refrigerator & Freezer Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Old refrigerators and freezers confirmed, carried out intact, and hauled away from homes and businesses in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Refrigerator Removal", "parentId": "core-accepted-items" },
+  "purpose": "Serve people in Mobile getting rid of a refrigerator or freezer: explain why each unit is confirmed before scheduling, what federal refrigerant rules mean in plain terms (and that our crew never cuts lines or vents refrigerant), and exactly how to prepare the unit.",
+  "content": {
+    "eyebrow": "Appliance Pickup",
+    "lead": "Zoiris Junk Removal picks up old refrigerators and freezers from homes and businesses in Mobile, Alabama, after we confirm each one. Refrigerators contain refrigerant, so we check the unit and its handling before scheduling, and our crew moves it out whole — we never cut lines or release refrigerant. Empty it, defrost it, and dry it out before pickup day, and we do the heavy lifting from the kitchen, garage, or back porch.",
+    "quickAnswer": {
+      "question": "How do I get rid of an old refrigerator in Mobile, AL?",
+      "answer": "Contact us with the fridge's type, rough size, and where it sits. We confirm the unit and an estimate before scheduling. Before pickup day, empty it, unplug it to defrost, wipe it dry, and tape the doors shut. Our crew carries it out intact and hauls it away."
+    },
+    "includes": {
+      "heading": "What refrigerator removal includes",
+      "intro": "Refrigerators are heavy, awkward, and easy to damage on the way out. Here is what we handle:",
+      "points": [
+        "Moving the unit out from a kitchen, utility room, garage, or porch, keeping it upright where practical.",
+        "Protecting the cooling system: no cutting of tubing, no draining, and no venting of refrigerant.",
+        "Loading the refrigerator whole so it reaches its next stop intact.",
+        "Routing the unit to an outlet that handles refrigerant-containing appliances, confirmed before we schedule."
+      ]
+    },
+    "items": {
+      "heading": "Refrigerators and freezers we pick up",
+      "intro": "Each one is confirmed before scheduling. Describe yours when you call:",
+      "list": [
+        "Top-freezer, bottom-freezer, side-by-side, and French-door refrigerators",
+        "Upright freezers and chest freezers",
+        "Garage and second refrigerators",
+        "Mini fridges, dorm fridges, and beverage coolers",
+        "Compact under-counter refrigerators that are already disconnected"
+      ],
+      "itemIds": ["refrigerators"]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Most calls come from homeowners replacing a kitchen refrigerator when the delivery company will not take the old one, and from people retiring a garage fridge or chest freezer that has finally given out.",
+        "Landlords and property managers use the service during unit turnovers, and families clearing a home often have a second fridge or freezer to deal with. If the refrigerator is one of several appliances going, see [appliance removal](/services/appliance-removal/)."
+      ]
+    },
+    "process": {
+      "heading": "How refrigerator pickup works",
+      "steps": [
+        { "title": "Describe the unit", "body": "Tell us the type (side-by-side, chest freezer, mini fridge), rough size, whether it still holds refrigerant or has been damaged, and the path out: steps, doorway widths, and tight turns." },
+        { "title": "We confirm handling", "body": "Because the unit contains refrigerant, we confirm it and its handling before giving you an estimate and a pickup window." },
+        { "title": "Prep a day ahead", "body": "Empty the fridge, unplug it so the freezer can fully defrost, wipe out the water, and tape the doors closed." },
+        { "title": "Careful removal", "body": "Our crew moves the refrigerator out intact and loads it without opening or damaging the sealed cooling system." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of refrigerator removal",
+      "intro": "We quote each refrigerator individually. The main factors are:",
+      "factors": [
+        "Size and type — a French-door or side-by-side unit is heavier than a mini fridge",
+        "Access: steps, narrow doorways, tight kitchen layouts, or a long carry from the garage",
+        "Handling requirements for refrigerant-containing appliances",
+        "Whether other appliances or junk are picked up in the same visit"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare a refrigerator for pickup",
+      "tips": [
+        "Remove all food and drinks — spoiled food cannot go in the load.",
+        "Unplug the unit at least a day before pickup so the freezer and ice maker fully defrost.",
+        "Mop up meltwater, empty the drip pan if you can reach it, and wipe the inside dry.",
+        "Shut off the water valve and disconnect the ice-maker or dispenser line, or have a plumber do it.",
+        "Take out loose glass shelves and drawers, or secure them so they do not slide.",
+        "Tape the doors shut and coil the power cord to the back of the unit."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few situations need a conversation before we schedule:",
+      "list": [
+        "Every refrigerator and freezer is accepted after confirmation, not automatically.",
+        "Our crew does not recover, drain, or vent refrigerant, and does not cut refrigerant lines or take appliances apart.",
+        "Walk-in coolers, built-in commercial refrigeration, and systems that must be dismantled on site are not part of this service.",
+        "Units still full of spoiled food or standing water need to be emptied and dried before pickup.",
+        "Refrigerators still plumbed to a water line need to be disconnected first."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Refrigerant rules, in plain terms",
+        "body": [
+          "Refrigerators and freezers hold refrigerant in a sealed system. Under Section 608 of the Clean Air Act, EPA prohibits intentionally venting refrigerants while maintaining, servicing, repairing, or disposing of air-conditioning and refrigeration equipment ([EPA: Section 608](https://www.epa.gov/section608)).",
+          "Household refrigerators and freezers usually enter the waste stream with their refrigerant still inside. For these appliances, EPA's safe disposal rules make the final person in the disposal chain — such as a scrap metal recycler or landfill — responsible for ensuring the refrigerant is recovered before final disposal, and the recovery equipment used must meet EPA's standards ([EPA: Stationary Refrigeration Safe Disposal Requirements](https://www.epa.gov/section608/stationary-refrigeration-safe-disposal-requirements))."
+        ],
+        "bullets": [
+          "What that means for our crew: we keep the sealed system intact. We never cut lines, puncture tubing, or release refrigerant.",
+          "What it means for you: do not try to drain or cut anything yourself, and tell us if the unit has already been damaged or partly taken apart.",
+          "Why we confirm first: so each unit goes to an outlet that handles refrigerant-containing appliances."
+        ]
+      },
+      {
+        "heading": "Refrigerators and City of Mobile trash pickup",
+        "body": [
+          "The City of Mobile's trash collection rules say the City will not pick up refrigerators, freezers, air conditioners, and similar items that contain hazardous material such as Freon, and appliances should not be placed on a regular trash pile ([City of Mobile Trash Collection Rules](https://www.cityofmobile.gov/public-works/trash-collection-rules/)). If you are replacing a fridge, check whether the retailer delivering the new one offers haul-away; if not, a private pickup is an option."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Do you drain the refrigerant before taking the fridge?", "a": "No. Our crew does not recover, drain, or vent refrigerant, and never cuts refrigerant lines. We move the refrigerator out intact, and it goes to an outlet that handles refrigerant-containing appliances, which is why each unit is confirmed before scheduling." },
+      { "q": "Why do you need to confirm a refrigerator first?", "a": "Refrigerators contain refrigerant, and federal rules require it to be recovered before the appliance reaches final disposal. Confirming the unit ahead of time lets us make sure its handling is lined up before we book the pickup." },
+      { "q": "Will the City of Mobile pick up my old refrigerator?", "a": "According to the City's trash collection rules, the City will not pick up refrigerators, freezers, or air conditioners that contain Freon, and appliances should not go on a regular trash pile. A retailer haul-away or a private pickup are the usual alternatives." },
+      { "q": "How far ahead should I defrost the refrigerator?", "a": "Unplug it at least a day before pickup so the freezer and ice maker fully melt. Leave the doors open with towels underneath, then wipe it dry and tape the doors closed before we arrive." },
+      { "q": "Do you take chest freezers and mini fridges?", "a": "Yes, after confirmation, just like full-size refrigerators. Chest freezers should be emptied, defrosted, and dried, with the lid taped shut. Mini fridges are often added to a larger pickup." },
+      { "q": "Can you take a fridge that's still connected to a water line?", "a": "Please have the water line shut off and disconnected before pickup day, by you or a plumber. Our crew does not disconnect plumbing." },
+      { "q": "What if the refrigerator smells or still has food inside?", "a": "Empty all food first and clean out anything spoiled — we cannot haul food waste. A wipe-down with the doors propped open for a day helps with odors before pickup." }
+    ],
+    "areaNote": "Refrigerator and freezer removal is available throughout the City of Mobile, after confirmation. If your address is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "residential"
+  },
+  "related": ["svc-appliance-removal", "item-washer-dryer-removal", "guide-appliance-pickup-prep", "core-restricted-items", "svc-estate-cleanouts", "core-responsible-disposal"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Accepted after confirmation per items.json. EPA facts verified 2026-11-04: Section 608 venting prohibition (https://www.epa.gov/section608); for household fridges/freezers entering the waste stream intact, the final person in the disposal chain is responsible for ensuring refrigerant recovery, using equipment meeting EPA standards (https://www.epa.gov/section608/stationary-refrigeration-safe-disposal-requirements). NOTE: EPA states individuals recovering refrigerant from small appliances for disposal are not required to be certified technicians, so the page does NOT say recovery must be done by certified technicians. City rule (no pickup of Freon appliances) verified at https://www.cityofmobile.gov/public-works/trash-collection-rules/.",
+    "ownerVerification": [
+      "Confirm the downstream outlet that recovers refrigerant (scrap recycler or other) for refrigerators and freezers.",
+      "Confirm whether the crew will remove refrigerator doors to fit through tight doorways (page does not promise it).",
+      "Confirm whether mini fridges and beverage coolers are accepted on their own.",
+      "Confirm whether commercial reach-in units (not built-in systems) are ever accepted.",
+      "Confirm whether units that have been damaged or have lost their refrigerant charge are accepted, and what statement is needed."
+    ]
+  }
+}

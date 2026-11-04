@@ -1,0 +1,68 @@
+{
+  "id": "nb-midtown-mobile",
+  "type": "neighborhood",
+  "path": "/areas/mobile-al/midtown-mobile/",
+  "status": "research",
+  "refs": {
+    "neighborhoodId": "midtown-mobile",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Junk Removal & E-Waste Pickup in Midtown Mobile | Zoiris",
+    "description": "Planning for residential cleanouts, furniture hauling, and appliance/electronics pickup in Midtown Mobile (36604, 36606, 36607).",
+    "h1": "Junk Removal & Electronics Pickup in Midtown Mobile",
+    "primaryKeyword": "junk removal Midtown Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Midtown Mobile",
+    "parentId": "loc-mobile-al"
+  },
+  "purpose": "District hub for Midtown Mobile: address narrow historic driveways, detached garage/shed access, and City of Mobile 2 cu yd curbside rules.",
+  "related": [
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Neighborhood page requires at least two pieces of first-party local evidence (completed jobs with permission, photos, access notes) before drafting. No invented local details.",
+    "ownerVerification": [
+      "Supply real completed jobs or photos from Midtown Mobile (with customer permission)."
+    ]
+  },
+  "content": {
+    "eyebrow": "Mobile Neighborhood Research Draft",
+    "lead": "Running between Broad St and I-65 along Government St, Dauphin St, Old Shell Rd, and Airport Blvd, Midtown Mobile encompasses historic bungalows, narrow driveways, detached carriage houses, and small medical and professional offices.",
+    "quickAnswer": {
+      "question": "Is Midtown Mobile inside Zoiris Junk Removal's service area?",
+      "answer": "Addresses inside City of Mobile corporate limits in Midtown Mobile are served by Zoiris Junk Removal; this dedicated neighborhood page remains unindexed until first-party neighborhood project notes are finalized."
+    },
+    "faqs": [
+      {
+        "q": "How do I verify whether my Midtown Mobile street address is inside Mobile city limits?",
+        "a": "Share your street address and ZIP code when requesting a pickup or calling 251-930-8621 and we will confirm coverage before scheduling."
+      },
+      {
+        "q": "Do City of Mobile trash rules apply in Midtown Mobile?",
+        "a": "Inside corporate limits, City residential trash runs every other week up to 2 cubic yards and excludes electronics, TVs, Freon appliances, and commercial business materials."
+      },
+      {
+        "q": "What should I mention when requesting a pickup here?",
+        "a": "Let us know about narrow driveways, low oak limbs, stairs, alleys, or building loading rules so the crew plans truck staging accurately."
+      }
+    ],
+    "areaNote": "Research draft — excluded from search indexing until owner verification and 2+ first-party local evidence entries are recorded."
+  }
+}

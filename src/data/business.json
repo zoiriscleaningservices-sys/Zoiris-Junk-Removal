@@ -1,0 +1,44 @@
+{
+  "name": "Zoiris Junk Removal",
+  "legalName": null,
+  "phoneDisplay": "251-930-8621",
+  "phoneE164": "+12519308621",
+  "phoneHref": "tel:+12519308621",
+  "email": null,
+  "website": "https://www.zoirisjunkremoval.com",
+  "websiteVerified": false,
+  "serviceAreaBusiness": true,
+  "address": null,
+  "primaryCity": "Mobile",
+  "primaryRegion": "AL",
+  "hours": null,
+  "hoursDisplay": null,
+  "tagline": "Junk Gone. Electronics Handled Responsibly.",
+  "shortDescription": "Zoiris Junk Removal provides junk hauling, cleanouts, and electronics and e-waste pickup for homes and businesses in Mobile, Alabama.",
+  "disposalStatement": "After pickup, we sort loads so that usable items, recyclable materials, and electronics can be routed to appropriate reuse, recycling, or disposal outlets where practical options exist. Ask us where a specific item is likely to go — we will tell you plainly.",
+  "social": {
+    "googleBusinessProfile": null,
+    "facebook": null,
+    "instagram": null,
+    "yelp": null
+  },
+  "claims": {
+    "licensed": false,
+    "insured": false,
+    "bonded": false,
+    "certifiedRecycler": false,
+    "sameDayService": false,
+    "emergencyService": false,
+    "dataDestruction": false
+  },
+  "ownerVerification": [
+    "Confirm the production domain (currently configured as https://www.zoirisjunkremoval.com; override with the SITE_URL environment variable).",
+    "Confirm whether the business operates from a public storefront. The site is configured as a service-area business with no published street address.",
+    "Confirm business hours before any hours are displayed or added to structured data.",
+    "Confirm a public contact email address, if one should be listed.",
+    "Confirm downstream handling for electronics (which recyclers or outlets are used) before strengthening the disposal statement.",
+    "Confirm licensing, insurance, and bonding status. No such claims are displayed until confirmed and documented.",
+    "Provide Google Business Profile, Facebook, and other official profile URLs.",
+    "Provide authentic photographs (truck, team, completed jobs with customer permission)."
+  ]
+}

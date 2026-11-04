@@ -1,0 +1,36 @@
+{
+  "id": "core-areas",
+  "type": "core",
+  "path": "/areas/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Service Areas | Zoiris Junk Removal in Mobile, Alabama",
+    "description": "Where Zoiris Junk Removal provides pickup: the City of Mobile, Alabama. See how coverage works and how to check an address outside city limits.",
+    "h1": "Where We Pick Up",
+    "primaryKeyword": "Zoiris service area",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Service Areas",
+    "parentId": "core-home"
+  },
+  "purpose": "Explains verified coverage (City of Mobile) honestly and how to check addresses outside it.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

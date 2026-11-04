@@ -1,0 +1,42 @@
+{
+  "id": "combo-office-electronics-pickup-fairhope-al",
+  "type": "combo",
+  "path": "/areas/fairhope-al/office-electronics-pickup/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "office-electronics-pickup",
+    "locationId": "fairhope-al",
+    "countyId": "baldwin-county-al"
+  },
+  "seo": {
+    "title": "Office & IT Equipment Pickup in Fairhope, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Office & IT Equipment Pickup in Fairhope, AL",
+    "primaryKeyword": "office electronics pickup Fairhope AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Office & IT Equipment Pickup in Fairhope, AL",
+    "parentId": "loc-fairhope-al"
+  },
+  "purpose": "Commercial IT equipment and workstation pickup candidate for Fairhope professional offices.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Commercial IT equipment and workstation pickup candidate for Fairhope professional offices. Blocked from publishing until parent Baldwin County city coverage is activated by owner.",
+    "ownerVerification": [
+      "Activate coverage for this municipality in Zoiris Command Center.",
+      "Author page-specific local copy and FAQs before editorial approval."
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "zoiris-junk-removal",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Zoiris Junk Removal — static Astro regional SEO website, 5-step Pickup Request Wizard, Private Owner Command Center, and Built-In CRM.",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run validate:content && astro build && node scripts/postbuild.mjs && npm run validate:dist",
+    "build:astro": "astro build",
+    "build:preview-drafts": "node scripts/build-preview.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "crm": "node server/index.mjs",
+    "owner:provision": "node scripts/provision-owner.mjs",
+    "admin": "node admin/server.mjs",
+    "validate:content": "node scripts/validate-content.mjs",
+    "validate:dist": "node scripts/validate-dist.mjs",
+    "validate:links": "node scripts/validate-dist.mjs --only=links",
+    "duplicate-check": "node scripts/duplicate-check.mjs",
+    "sync-keywords": "node scripts/sync-keywords.mjs",
+    "report": "node scripts/report.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:crm": "node --test tests/crm-security.test.mjs tests/workflow-e2e.test.mjs",
+    "test:responsive": "node tests/responsive/responsive.mjs",
+    "test:lighthouse": "node tests/lighthouse/run-lighthouse.mjs",
+    "verify": "npm run check && npm run build && npm test"
+  },
+  "dependencies": {
+    "astro": "~6.4.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/node": "^26.6.6",
+    "lighthouse": "^13.6.0",
+    "playwright-core": "^1.64.1",
+    "typescript": "^6.0.3"
+  }
+}

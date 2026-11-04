@@ -1,0 +1,154 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTABand from '../../components/CTABand.astro';
+import FAQ from '../../components/FAQ.astro';
+import Icon from '../../components/Icon.astro';
+import { business, data, getPage } from '../../lib/data.ts';
+import { isBuilt } from '../../lib/page-quality.ts';
+import { CLASSIFICATION_LABELS, COVERAGE_LABELS } from '../../lib/labels.ts';
+
+const page = getPage('core-areas');
+const activeLocations = data.locations.filter((l) => l.coverage === 'active');
+const conditionalLocations = data.locations.filter((l) => l.coverage === 'available-on-confirmation' || l.coverage === 'limited');
+const activeNeighborhoods = data.neighborhoods.filter((n) => n.coverage === 'active');
+
+const livePage = (id: string | null) => {
+  const p = id ? data.pages.find((x) => x.id === id) : undefined;
+  return p && isBuilt(p) ? p : null;
+};
+
+const faqs = [
+  {
+    q: 'Do you serve areas outside the City of Mobile or across Mobile Bay?',
+    a: `Our confirmed active service area is the City of Mobile. We only advertise additional Mobile County or Baldwin County communities on the website once coverage is activated by our team. If your address is outside Mobile city limits or on the Eastern Shore, call ${business.phoneDisplay} with your address and item list so we can check availability before anything is scheduled.`
+  },
+  {
+    q: 'Why does a Mobile mailing address not always mean inside city limits?',
+    a: 'Several unincorporated Mobile County areas share 36608, 36695, or 36619 postal ZIP codes with the City of Mobile even though they sit outside corporate limits and outside City of Mobile public-works trash routes. Tell us your street address and ZIP code and we will confirm right away.'
+  },
+  {
+    q: 'Do you have a storefront or public drop-off location?',
+    a: 'No. Zoiris Junk Removal is a full-service pickup crew — we come to your home, apartment, office, or commercial property. There is no public drop-off yard.'
+  },
+  {
+    q: 'Can I use City of Mobile curbside services instead?',
+    a: 'City of Mobile residents inside corporate limits have biweekly bulk trash rules (up to 2 cubic yards) and three resident-only recycling drop-off centers with strict limits. See our guides on [electronics drop-off in Mobile](/guides/electronics-drop-off-mobile-al/) and [getting rid of old furniture](/guides/get-rid-of-old-furniture-mobile-al/).'
+  }
+];
+---
+
+<MainLayout page={page} localBusiness>
+  <PageHero
+    page={page}
+    eyebrow="Service areas"
+    lead="Zoiris Junk Removal comes to your property. Active pickup service covers the City of Mobile, Alabama, for homes, apartments, offices, and commercial spaces — with address-by-address confirmation available when you call about surrounding areas."
+    illustration={null}
+  />
+
+  <section class="section">
+    <div class="container split" style="align-items:start">
+      <div>
+        <h2>Confirmed active service areas</h2>
+        <div class="grid" style="gap:1rem">
+          {
+            activeLocations.map((l) => {
+              const p = livePage(l.pageId);
+              return (
+                <div class="card">
+                  <div style="display:flex;gap:.75rem;align-items:center">
+                    <span class="card__icon">
+                      <Icon name="pin" />
+                    </span>
+                    <div>
+                      <h3 style="margin:0">
+                        {p ? <a class="card__link" href={p.path}>{l.name}, {l.state}</a> : `${l.name}, ${l.state}`}
+                      </h3>
+                      <p style="margin:0;font-size:.9rem">
+                        {l.county} &middot; {CLASSIFICATION_LABELS[l.classification]}
+                      </p>
+                    </div>
+                  </div>
+                  <p style="margin-top:.75rem">{l.pickupNotes}</p>
+                  {l.zipCodes?.length > 0 && (
+                    <p class="meta-line" style="margin-top:.5rem">
+                      <strong>Verified ZIPs:</strong> {l.zipCodes.join(', ')}
+                    </p>
+                  )}
+                  {p && (
+                    <a class="text-link" href={p.path}>
+                      Services &amp; local rules in {l.name} <Icon name="arrow-right" />
+                    </a>
+                  )}
+                </div>
+              );
+            })
+          }
+        </div>
+
+        {activeNeighborhoods.length > 0 && (
+          <div style="margin-top:2rem">
+            <h3>Active Mobile neighborhoods &amp; districts</h3>
+            <div class="grid grid--2" style="gap:.85rem">
+              {activeNeighborhoods.map((n) => {
+                const np = livePage(n.pageId);
+                return (
+                  <div class="card">
+                    <h4 style="margin:0 0 .35rem">{np ? <a class="card__link" href={np.path}>{n.name}</a> : n.name}</h4>
+                    <p class="meta-line" style="margin:0">{CLASSIFICATION_LABELS[n.classification]}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {conditionalLocations.length > 0 && (
+          <div style="margin-top:2rem">
+            <h3>Available upon address confirmation</h3>
+            <div class="grid" style="gap:.85rem">
+              {conditionalLocations.map((l) => {
+                const lp = livePage(l.pageId);
+                return (
+                  <div class="card">
+                    <strong>{lp ? <a href={lp.path}>{l.name}, {l.state}</a> : `${l.name}, ${l.state}`}</strong>
+                    <span class="badge badge--accepted-after-confirmation" style="margin-left:.5rem">
+                      {COVERAGE_LABELS[l.coverage]}
+                    </span>
+                    <p style="margin:.4rem 0 0">{l.pickupNotes}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h2>How regional coverage works</h2>
+        <ul class="checklist">
+          <li>We publish a municipality, community, or neighborhood as an active area only after our team confirms reliable crew dispatch there.</li>
+          <li>Surrounding Mobile County and Baldwin County communities are researched with official county, municipal, and USPS records before any local page goes live.</li>
+          <li>Submitting our <a href="/request-pickup/">online pickup request</a> or calling with your street address lets us check borderline or nearby jobs right away.</li>
+        </ul>
+        <div class="notice notice--teal">
+          <Icon name="call" />
+          <p>
+            Checking an address outside Mobile city limits? Call{' '}
+            <a href={business.phoneHref} data-track="call" data-track-location="areas">{business.phoneDisplay}</a>{' '}
+            or <a href="/request-pickup/">send your pickup details online</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="areas-faq">
+    <div class="container--narrow">
+      <h2 id="areas-faq">Service area questions</h2>
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+
+  <CTABand location="areas" />
+</MainLayout>

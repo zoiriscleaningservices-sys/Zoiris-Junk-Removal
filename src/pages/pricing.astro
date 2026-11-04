@@ -1,0 +1,95 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CTABand from '../components/CTABand.astro';
+import FAQ from '../components/FAQ.astro';
+import Icon from '../components/Icon.astro';
+import pricing from '../data/pricing.json';
+import { getPage } from '../lib/data.ts';
+
+const page = getPage('core-pricing');
+type Tier = { name: string; description: string; price: string };
+const tiers = (pricing.tiers ?? []) as Tier[];
+const showPrices = pricing.publishPrices && tiers.length > 0;
+const factorIcons = ['boxes', 'truck', 'hammer', 'appliance', 'apartment', 'route', 'apartment', 'pin', 'recycle', 'hand'];
+const faqs = [
+  { q: 'Why don\'t you list flat prices?', a: 'Two jobs that look similar can be very different in volume, weight, and access. Rather than publish a number that may not fit your situation, we give you an estimate based on what you actually have.' },
+  { q: 'How can I get the most accurate estimate?', a: 'Send photos of the items, mention approximate sizes, and tell us about stairs, long carries, or tight spaces. The more we know up front, the closer the estimate will be.' },
+  { q: 'Will the price change on pickup day?', a: 'Only if the job is different from what was described — for example, more items or harder access. If that happens, we go over it with you before loading anything extra.' },
+  { q: 'Do electronics cost extra?', a: 'Some items have their own handling or disposal requirements, which can affect the estimate. We will tell you about any item-specific considerations before you agree to anything.' }
+];
+---
+
+<MainLayout page={page}>
+  <PageHero page={page} eyebrow="Pricing & estimates" lead="Every pickup is quoted individually so you pay for your job — not an average. Here's what goes into an estimate and how to get an accurate one quickly." illustration={null} />
+
+  {
+    showPrices && (
+      <section class="section">
+        <div class="container grid grid--3">
+          {tiers.map((t) => (
+            <div class="card">
+              <h2 style="font-size:var(--step-2)">{t.name}</h2>
+              <p>{t.description}</p>
+              <p style="font-size:1.6rem;font-weight:900">{t.price}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section" aria-labelledby="factors">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="factors">What affects your estimate</h2>
+        <p>These are the factors we look at for every job.</p>
+      </div>
+      <div class="grid grid--3">
+        {
+          pricing.factors.map((f, i) => (
+            <div class="card">
+              <span class="card__icon"><Icon name={factorIcons[i] ?? 'info'} /></span>
+              <h3>{f.title}</h3>
+              <p>{f.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sand" aria-labelledby="accurate">
+    <div class="container split">
+      <div>
+        <h2 id="accurate">How to get an accurate estimate fast</h2>
+        <ul class="checklist">
+          <li>Take a few photos that show the items and how much space they take up.</li>
+          <li>List anything heavy or unusual — appliances, exercise machines, copiers, large TVs.</li>
+          <li>Describe access: floor level, stairs, elevator, or a long walk to the truck.</li>
+          <li>Mention electronics, batteries, or appliances with refrigerant.</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/request-pickup/">Request an estimate</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Our pricing promises are simple</h3>
+        <ul class="checklist">
+          <li>You get an estimate before anything is scheduled.</li>
+          <li>If the job changes on site, we talk it through with you before loading extra items.</li>
+          <li>No made-up "limited time" discounts.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="pricing-faq">
+    <div class="container--narrow">
+      <h2 id="pricing-faq">Pricing questions</h2>
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+
+  <CTABand title="Get your estimate" location="pricing" />
+</MainLayout>

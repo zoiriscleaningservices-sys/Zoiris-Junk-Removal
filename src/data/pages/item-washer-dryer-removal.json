@@ -1,0 +1,138 @@
+{
+  "id": "item-washer-dryer-removal",
+  "type": "item",
+  "path": "/items/washer-dryer-removal/",
+  "status": "published",
+  "refs": { "serviceId": "washer-dryer-removal", "itemIds": ["washer-dryer"], "locationId": "mobile-al", "customerType": "both" },
+  "seo": {
+    "title": "Washer and Dryer Removal in Mobile, AL | Zoiris Junk Removal",
+    "description": "Zoiris hauls away old washing machines and dryers from homes, apartments, and rentals in Mobile, AL — stacked units too. Learn how to drain and disconnect.",
+    "h1": "Washer & Dryer Removal in Mobile, AL",
+    "primaryKeyword": "washer and dryer removal Mobile AL",
+    "secondaryKeywords": ["washer removal Mobile AL", "dryer removal Mobile", "old washing machine pickup Mobile", "stackable washer dryer removal", "how to get rid of an old washer and dryer"],
+    "intent": "transactional",
+    "ogTitle": "Washer & Dryer Removal in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Old washing machines and dryers, including stacked units, carried out and hauled away in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": ["Service", "BreadcrumbList"]
+  },
+  "breadcrumb": { "label": "Washer & Dryer Removal", "parentId": "core-accepted-items" },
+  "purpose": "Serve people in Mobile getting rid of a washing machine, a dryer, or a stacked laundry pair, with the practical steps unique to laundry appliances: draining the washer, shutting off water, and having a gas dryer disconnected and capped by a qualified person.",
+  "content": {
+    "eyebrow": "Appliance Pickup",
+    "lead": "Zoiris Junk Removal picks up old washing machines and clothes dryers from homes, apartments, and rental properties in Mobile, Alabama — a single machine, a matched pair, or a stacked unit out of a laundry closet. Before pickup day, shut off the water, unhook and drain the washer, and unplug the dryer. If your dryer runs on gas, have a qualified person disconnect and cap the gas line first. Then our crew carries the machines out and hauls them away.",
+    "quickAnswer": {
+      "question": "How do I get rid of an old washer and dryer in Mobile, AL?",
+      "answer": "Disconnect them first: turn off the water valves, unhook and drain the washer hoses, and unplug the dryer — gas dryers must be disconnected and capped by a qualified person. Then request a pickup. We confirm an estimate and a pickup window, and our crew carries both machines out."
+    },
+    "includes": {
+      "heading": "What washer and dryer removal includes",
+      "intro": "Laundry machines are heavy and often stuck in tight spaces. Here is what we take care of:",
+      "points": [
+        "Moving disconnected machines out of laundry rooms, closets, garages, and upstairs utility rooms.",
+        "Handling stacked washer-dryer pairs and all-in-one laundry centers — mention them when you book.",
+        "Taking pedestals, loose drain hoses, and dryer vent duct you have already disconnected.",
+        "Separating metal appliances for recycling where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "Laundry appliances we pick up",
+      "intro": "Washers and dryers of any brand and age, working or not:",
+      "list": [
+        "Top-load and front-load washing machines",
+        "Electric clothes dryers",
+        "Gas clothes dryers, once the gas line is disconnected and capped by a qualified person",
+        "Stacked washer-dryer pairs and one-piece laundry centers",
+        "Laundry pedestals and stands"
+      ],
+      "itemIds": ["washer-dryer"]
+    },
+    "audience": {
+      "heading": "Who this is for",
+      "body": [
+        "Homeowners call when a new set is on the way and the retailer will not take the old one, or when a broken machine has been sitting in the garage. Renters moving out sometimes need a machine they own removed before handing back the keys.",
+        "Landlords and property managers use the service between tenants, often alongside other turnover work. For bigger rental clear-outs, see [property cleanouts](/services/property-cleanouts/) or [apartment cleanouts](/services/apartment-cleanouts/)."
+      ]
+    },
+    "process": {
+      "heading": "How washer and dryer pickup works",
+      "steps": [
+        { "title": "Tell us the setup", "body": "Side-by-side or stacked? Gas or electric dryer? Which floor, and how tight is the laundry closet? A photo of the space helps us plan." },
+        { "title": "Disconnect before pickup day", "body": "Shut the water valves, unhook and drain the washer, and unplug the dryer. For a gas dryer, a qualified person must disconnect and cap the gas line." },
+        { "title": "Confirm the estimate and window", "body": "We confirm an estimate and a pickup window with you. Nothing is scheduled until you agree to it." },
+        { "title": "We carry them out", "body": "Our crew moves the machines out, protects floors and doorways where needed, and loads them on the truck." }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of washer and dryer removal",
+      "intro": "We quote each job individually. The main factors are:",
+      "factors": [
+        "One machine or a pair",
+        "Stacked units in tight closets, which take more care to move",
+        "Stairs, narrow halls, or a long carry from the laundry area",
+        "Whether other appliances or junk are picked up in the same visit"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare a washer and dryer for pickup",
+      "tips": [
+        "Turn off the hot and cold water valves behind the washer, then unscrew the fill hoses over a bucket.",
+        "Drain the washer: lower the drain hose into a bucket or floor drain. On many front-loaders, there is also a small drain filter behind a panel near the bottom.",
+        "Leave the washer door or lid open for a day so it dries out and does not drip during the carry.",
+        "Unplug the dryer and pull the vent duct off the back. Clean out the lint trap.",
+        "Gas dryer? Have a qualified person shut off, disconnect, and cap the gas line before pickup day.",
+        "Check both drums for forgotten clothes, and clear a path through the laundry room."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few situations need attention before pickup:",
+      "list": [
+        "Gas dryers must be disconnected and capped by a qualified person before pickup. Our crew does not disconnect gas lines.",
+        "Our crew does not disconnect plumbing or electrical connections. Machines should be unhooked before we arrive.",
+        "Washers still full of water need to be drained first so they do not leak during the carry.",
+        "Coin-operated or commercial laundry equipment should be described when you call so we can confirm."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "Stacked units and tight laundry closets",
+        "body": [
+          "Stacked washer-dryer pairs are common in apartments, condos, and newer homes with small laundry closets. Many stacked sets are two separate machines held together with a stacking kit, while one-piece laundry centers are a single frame that cannot be separated.",
+          "When you book, tell us which kind you have, the closet's door width, and whether the unit has to come down stairs. That lets us plan the carry and confirm the job before scheduling."
+        ]
+      },
+      {
+        "heading": "Washers, dryers, and City of Mobile trash collection",
+        "body": [
+          "If you live in the City of Mobile, do not put a washer or dryer on your regular trash pile. The City's trash collection rules say appliances and other prohibited items should not go on the pile — if they do, the entire pile will not be picked up. Residents can call 311 to place a work order for an appliance pickup ([City of Mobile Trash Collection Rules](https://www.cityofmobile.gov/public-works/trash-collection-rules/)). A private pickup is the alternative when you want the machines carried out from inside the house."
+        ]
+      }
+    ],
+    "faqs": [
+      { "q": "Will you disconnect my gas dryer?", "a": "No. A gas dryer must be shut off, disconnected, and capped by a qualified person before pickup day. Once that is done, our crew can move it out like any other dryer." },
+      { "q": "Do I need to drain the washing machine?", "a": "Yes, please. Lower the drain hose into a bucket or floor drain and, on front-loaders, check the drain filter near the bottom. Leave the door open for a day so it does not drip during the carry." },
+      { "q": "Can you take a stacked washer and dryer?", "a": "Yes. Tell us whether it is two machines on a stacking kit or a one-piece laundry center, plus the closet width and any stairs, so we can plan the removal." },
+      { "q": "Can you take just the dryer and leave the washer?", "a": "Yes. Single-machine pickups are common. Point out which one is going when we arrive, and make sure it is unhooked." },
+      { "q": "Can I leave my old washer at the curb with my City trash?", "a": "No. City of Mobile trash rules say appliances should not go on a regular trash pile, or the whole pile will be skipped. Residents can request an appliance pickup through 311, or have a private crew carry it out." },
+      { "q": "Can you get a washer out of an upstairs laundry room?", "a": "Usually, yes. Mention the stairs and any tight turns when you call so we can plan the carry and include it in the estimate." }
+    ],
+    "areaNote": "Washer and dryer removal is available throughout the City of Mobile. If your address is outside Mobile city limits, call us to confirm before booking.",
+    "illustration": "residential"
+  },
+  "related": ["svc-appliance-removal", "item-refrigerator-removal", "guide-appliance-pickup-prep", "svc-apartment-cleanouts", "svc-moving-cleanouts", "svc-property-cleanouts"],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Washers and dryers are 'accepted' in items.json. Gas disconnection by a qualified person per items.json publicNote. City rule (appliances not on trash pile; 311 appliance pickup work order) verified 2026-11-04 at https://www.cityofmobile.gov/public-works/trash-collection-rules/.",
+    "ownerVerification": [
+      "Confirm whether the crew will separate stacked washer-dryer pairs on site, or only move them as delivered.",
+      "Confirm whether the crew ever unhooks water hoses or unplugs units on arrival (page currently says customer disconnects first).",
+      "Confirm policy for coin-operated and commercial laundry equipment.",
+      "Confirm downstream outlet for laundry appliances (metal recycling)."
+    ]
+  }
+}

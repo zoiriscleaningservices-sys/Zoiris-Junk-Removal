@@ -1,0 +1,79 @@
+{
+  "id": "loc-mobile-county-al",
+  "type": "county",
+  "path": "/areas/mobile-county-al/",
+  "status": "research",
+  "refs": {
+    "countyId": "mobile-county-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Mobile County, AL Junk Removal & Coverage Guide | Zoiris",
+    "description": "Regional guide to Zoiris Junk Removal coverage across Mobile County, AL — active City of Mobile service, unincorporated ZIP boundaries, and local disposal rules.",
+    "h1": "Junk Removal & E-Waste Coverage Across Mobile County, AL",
+    "primaryKeyword": "junk removal Mobile County AL",
+    "secondaryKeywords": [
+      "Mobile County bulk trash rules",
+      "unincorporated Mobile County junk hauling",
+      "electronics pickup Mobile County"
+    ],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Mobile County, AL",
+    "parentId": "core-areas"
+  },
+  "purpose": "County-level regional hub distinguishing City of Mobile corporate limits (active service) from surrounding Mobile County municipalities and unincorporated areas.",
+  "content": {
+    "eyebrow": "County Overview (Draft)",
+    "lead": "Mobile County includes 11 incorporated municipalities — led by the [City of Mobile](/areas/mobile-al/) — alongside unincorporated communities from Semmes and Eight Mile to Theodore, Tillman’s Corner, and Grand Bay. Active Zoiris pickup currently covers the City of Mobile, while surrounding Mobile County addresses require confirmation before scheduling.",
+    "quickAnswer": {
+      "question": "Does Zoiris serve all of Mobile County?",
+      "answer": "Active coverage currently covers the City of Mobile. Surrounding Mobile County municipalities and unincorporated addresses are checked individually when you call 251-930-8621 or submit an online pickup request."
+    },
+    "sections": [
+      {
+        "heading": "How waste rules differ across Mobile County",
+        "body": [
+          "City of Mobile biweekly bulk trash collection (up to 2 cubic yards) and the three resident-only recycling centers apply strictly inside Mobile corporate limits. Unincorporated Mobile County has no county-run curbside garbage or bulk trash route — households contract individually with private haulers, and County Commission programs focus on the Hitt Road Recycling Center and periodic Operation Clean Sweep events."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Why do some 36695 and 36608 addresses fall outside City of Mobile trash pickup?",
+        "a": "USPS postal ZIP codes cross municipal boundaries. Large parts of West Mobile and Tillman’s Corner carry Mobile mailing addresses while sitting in unincorporated Mobile County."
+      },
+      {
+        "q": "Can I request a quote for an address outside Mobile city limits?",
+        "a": "Yes — submit your street address through our pickup request form or call 251-930-8621 so we can confirm whether our crew can dispatch to your location."
+      },
+      {
+        "q": "Do you handle commercial cleanouts and office electronics in Mobile?",
+        "a": "Yes. Commercial junk removal, office cleanouts, and qualifying IT e-waste pickup are available across our active Mobile service area."
+      }
+    ],
+    "areaNote": "Research draft — unindexed until county-wide coverage tiers are finalized by the owner."
+  },
+  "related": [
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "County-level hub created in research status (robotsIndex: false) to organize Mobile County municipalities and unincorporated communities.",
+    "ownerVerification": [
+      "Confirm which surrounding Mobile County municipalities or ZIP codes should move from research-only to active or available-on-confirmation."
+    ]
+  }
+}

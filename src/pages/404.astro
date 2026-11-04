@@ -1,0 +1,52 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../lib/data.ts';
+import type { PageRecord } from '../lib/types.ts';
+
+// The 404 page is not part of the page registry and is never in the sitemap.
+const page: PageRecord = {
+  id: 'error-404',
+  type: 'core',
+  path: '/404/',
+  status: 'noindex',
+  refs: {},
+  seo: {
+    title: 'Page Not Found | Zoiris Junk Removal',
+    description: 'The page you were looking for could not be found. Find junk removal and electronics pickup services in Mobile, AL, or call Zoiris.',
+    h1: 'Page not found',
+    primaryKeyword: '',
+    secondaryKeywords: [],
+    intent: 'navigational',
+    robotsIndex: false,
+    robotsFollow: true,
+    schemaTypes: []
+  },
+  breadcrumb: { label: 'Not found', parentId: 'core-home' },
+  purpose: 'Error page',
+  related: [],
+  workflow: { createdAt: '2026-11-04', updatedAt: '2026-11-04', approvedBy: null, approvedAt: null, reviewNotes: '', ownerVerification: [] }
+};
+---
+
+<MainLayout page={page} robots="noindex, follow">
+  <section class="page-hero">
+    <div class="container page-hero__inner">
+      <div>
+        <p class="eyebrow">Error 404</p>
+        <h1>We couldn't find that page</h1>
+        <p class="lead">It may have moved, or the link may be mistyped. These pages are a good place to start:</p>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container grid grid--3">
+      <a class="chip" href="/junk-removal-mobile-al/"><Icon name="truck" /><span>Junk removal in Mobile<small>Main service page</small></span></a>
+      <a class="chip" href="/e-waste/"><Icon name="chip" /><span>Electronics pickup<small>Computers, TVs, printers</small></span></a>
+      <a class="chip" href="/accepted-items/"><Icon name="check-circle" /><span>Accepted items<small>Check an item</small></span></a>
+      <a class="chip" href="/services/"><Icon name="boxes" /><span>All services<small>Cleanouts and more</small></span></a>
+      <a class="chip" href="/request-pickup/"><Icon name="calendar" /><span>Request a pickup<small>Online form</small></span></a>
+      <a class="chip" href={business.phoneHref} data-track="call" data-track-location="404"><Icon name="call" /><span>Call {business.phoneDisplay}<small>Talk to us</small></span></a>
+    </div>
+  </section>
+</MainLayout>

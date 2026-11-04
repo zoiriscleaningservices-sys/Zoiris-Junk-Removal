@@ -1,0 +1,247 @@
+{
+  "id": "loc-mobile-al",
+  "type": "location",
+  "path": "/areas/mobile-al/",
+  "status": "published",
+  "refs": {
+    "itemIds": [
+      "couch",
+      "mattress",
+      "washer-dryer",
+      "refrigerators",
+      "boxes-clutter",
+      "office-furniture",
+      "drywall-lumber",
+      "desktop-computers",
+      "flat-monitors",
+      "flat-tvs"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Mobile, AL Junk Removal & Electronics Pickup | Zoiris",
+    "description": "Zoiris serves the City of Mobile, AL with junk hauling, cleanouts, and electronics pickup. Plus the City trash, recycling, and e-waste rules worth knowing.",
+    "h1": "Junk Removal & Electronics Pickup Across Mobile, AL",
+    "primaryKeyword": "junk removal service area Mobile Alabama",
+    "secondaryKeywords": [
+      "junk pickup service Mobile AL",
+      "City of Mobile bulky trash pickup",
+      "City of Mobile electronics drop-off",
+      "haul away service Mobile Alabama",
+      "does junk removal serve my area Mobile"
+    ],
+    "intent": "local",
+    "ogTitle": "Junk Removal & Electronics Pickup Across Mobile, AL — Zoiris",
+    "ogDescription": "What Zoiris offers across the City of Mobile, how pickups work at homes, apartments, and offices, and the City resources worth knowing.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Mobile, AL",
+    "parentId": "core-areas"
+  },
+  "purpose": "The local service-area hub for the City of Mobile: confirm coverage, map everything Zoiris offers in Mobile (junk and e-waste) to the right pages, explain how pickups work at homes, apartments, and businesses in general terms, and point residents to verified City of Mobile trash, recycling, and electronics resources. Deliberately does not repeat the flagship junk removal service page.",
+  "content": {
+    "eyebrow": "Service Area",
+    "lead": "Zoiris Junk Removal serves homes and businesses inside the City of Mobile, Alabama. Across the city, you can book [junk removal](/junk-removal-mobile-al/) for furniture, appliances, and clutter, full cleanouts of houses, apartments, garages, and offices, and [electronics and e-waste pickup](/e-waste/) for computers, monitors, printers, and more. This page covers how pickups work around Mobile, the City services that may also help you, and what to do if you are not sure your address is inside city limits.",
+    "quickAnswer": {
+      "question": "Does Zoiris serve my address in Mobile, AL?",
+      "answer": "Zoiris serves addresses inside the City of Mobile. If you are near the edge of town, outside city limits, or simply not sure, call before booking and we will confirm whether we can reach you."
+    },
+    "includes": {
+      "heading": "What is available across Mobile",
+      "intro": "Everything below is offered throughout the City of Mobile. Pick the page that matches your job:",
+      "points": [
+        "**Single items and loads of junk** — [junk removal in Mobile](/junk-removal-mobile-al/), [furniture removal](/services/furniture-removal/), [mattress removal](/services/mattress-removal/), and [appliance removal](/services/appliance-removal/).",
+        "**Cleanouts** — [house](/services/house-cleanouts/), [garage](/services/garage-cleanouts/), [estate](/services/estate-cleanouts/), [apartment](/services/apartment-cleanouts/), and [storage unit](/services/storage-unit-cleanouts/) cleanouts.",
+        "**Business jobs** — [commercial junk removal](/services/commercial-junk-removal/), [office cleanouts](/services/office-cleanouts/), and [property cleanouts](/services/property-cleanouts/) for landlords and managers.",
+        "**Electronics and e-waste** — [computers](/e-waste/computer-recycling/), [TVs and monitors](/e-waste/tv-monitor-pickup/), [printers and copiers](/e-waste/printer-copier-removal/), [phones and tablets](/e-waste/phone-tablet-pickup/), and [office IT equipment](/e-waste/office-electronics-pickup/).",
+        "**Remodel leftovers** — [construction debris removal](/services/construction-debris-removal/) for non-hazardous materials."
+      ]
+    },
+    "items": {
+      "heading": "Common pickups around Mobile",
+      "intro": "A sample of what Mobile customers ask us to haul. The full list is on [accepted items](/accepted-items/).",
+      "list": [
+        "Couches, mattresses, and bedroom furniture",
+        "Washers and dryers",
+        "Refrigerators and freezers — call to confirm",
+        "Boxes, bags, and general household clutter",
+        "Office desks, chairs, and cubicles",
+        "Drywall, lumber, and trim from small remodels",
+        "Desktop computers and flat-panel monitors",
+        "Flat-screen TVs — call to confirm the type and size"
+      ],
+      "itemIds": [
+        "couch",
+        "mattress",
+        "washer-dryer",
+        "refrigerators",
+        "boxes-clutter",
+        "office-furniture",
+        "drywall-lumber",
+        "desktop-computers",
+        "flat-monitors",
+        "flat-tvs"
+      ]
+    },
+    "audience": {
+      "heading": "Who we work with in Mobile",
+      "body": [
+        "Homeowners and renters clearing a room, a garage, or a whole house; families handling a relative's home; and people moving in or out who would rather not haul things themselves.",
+        "Landlords and property managers turning over units, and offices, shops, and other businesses retiring furniture and equipment. Business materials are a common reason to call, since the City does not collect materials from commercial businesses as household trash."
+      ]
+    },
+    "process": {
+      "heading": "How pickup works at Mobile homes and businesses",
+      "steps": [
+        {
+          "title": "Confirm the address",
+          "body": "Tell us the address up front. If it is inside the City of Mobile, we move on to the details; if it is near or outside city limits, we confirm before anything else."
+        },
+        {
+          "title": "Describe the job and the access",
+          "body": "Let us know what is going and how to reach it: a driveway or street parking at a house, a parking lot, gate, stairs, or elevator at an apartment complex, or loading rules at an office building."
+        },
+        {
+          "title": "Estimate and pickup window",
+          "body": "We confirm an estimate and a pickup window with you before anything is scheduled. You can [request a pickup](/request-pickup/) online or call."
+        },
+        {
+          "title": "We load from where things are",
+          "body": "Our crew does the lifting and carrying from inside the home, unit, or suite. Nothing needs to be dragged to the curb or left out for days."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost in Mobile",
+      "intro": "Every job is quoted individually. See [pricing](/pricing/) for how estimates work. The main factors are:",
+      "factors": [
+        "How much is going and how much truck space it fills",
+        "Heavy or special items such as appliances, TVs, and office equipment",
+        "Access: stairs, elevators, long walks from parking, or building rules",
+        "Items that need extra handling or confirmation before pickup"
+      ]
+    },
+    "prepare": {
+      "heading": "Local tips before your pickup",
+      "tips": [
+        "At an apartment or condo, check with the property office about parking, elevator use, or moving hours.",
+        "At an office building, ask building management whether the freight elevator or loading area needs to be reserved.",
+        "If some items are going out with City trash and others with us, keep them in separate piles — a City trash pile mixed with electronics or appliances will not be picked up.",
+        "Make sure the truck can reach your driveway or a nearby spot, and move vehicles if needed.",
+        "Point out anything that is staying, especially in garages, sheds, and storage rooms."
+      ]
+    },
+    "restrictions": {
+      "heading": "Good to know",
+      "body": "A few limits apply everywhere we work:",
+      "list": [
+        "Coverage is the City of Mobile. Addresses outside city limits must be confirmed by phone before booking.",
+        "Chemicals, paint, fuel, propane tanks, asbestos, and medical waste are not accepted. See [restricted items](/restricted-items/).",
+        "Refrigerators, flat-screen TVs, and several other items are accepted only after confirmation.",
+        "Tube (CRT) TVs and projection TVs need owner approval before pickup."
+      ]
+    },
+    "sections": [
+      {
+        "heading": "City of Mobile resources worth knowing",
+        "body": [
+          "Some jobs can be handled through City services, and it is worth knowing the rules either way. The details below come from the City of Mobile's own pages; check them for current schedules and updates."
+        ],
+        "subsections": [
+          {
+            "heading": "Residential trash collection",
+            "body": [
+              "The City collects residential trash — defined as tree limbs, yard debris, discarded furniture, and bedding — on an every-other-week schedule ([City of Mobile Residential Trash Pickup](https://www.cityofmobile.gov/public-works/residential-trash-pickup/)). Piles have a 2 cubic yard limit (about 3 by 3 by 6 feet, or 15 bags); the City removes larger piles for a charge through a work order. Piles should not go to the curb more than 48 hours before your scheduled day ([City of Mobile Trash Collection Rules](https://www.cityofmobile.gov/public-works/trash-collection-rules/))."
+            ]
+          },
+          {
+            "heading": "Electronics, appliances, and items the City will not collect",
+            "body": [
+              "Electronics, appliances, paint, tires, and glass should not be placed on a regular trash pile — if they are, the entire pile will not be picked up. Residents can call 311 to place a work order for an electronics or appliance pickup. The City will not pick up refrigerators, freezers, or air conditioners that contain Freon, materials from commercial projects, commercial businesses, and evictions are not collected as household trash, and debris from work by a hired contractor is the contractor's responsibility ([City of Mobile Trash Collection Rules](https://www.cityofmobile.gov/public-works/trash-collection-rules/))."
+            ]
+          },
+          {
+            "heading": "Recycling and electronics drop-off",
+            "body": [
+              "The City runs three single-stream recycling drop-off centers for City of Mobile residents only; residents may be asked for proof of residence, and recyclables from businesses or non-residents are not accepted. Household electronics such as computers, phones, game consoles, and small electronics can go in the marked bins there, but TVs of any kind are not accepted ([City of Mobile Recycling](https://www.cityofmobile.gov/public-works/recycling/)). Our [electronics drop-off guide](/guides/electronics-drop-off-mobile-al/) explains how it compares with a pickup."
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "When a private pickup is the better fit",
+        "body": [
+          "City services work well for a modest curbside pile on your scheduled week. A private pickup tends to make more sense in situations the City rules do not cover:"
+        ],
+        "bullets": [
+          "More than the 2 cubic yard pile limit, or items you cannot get to the curb yourself.",
+          "Business furniture and equipment, which the City does not collect as household trash and which cannot go to its resident-only drop-off centers.",
+          "TVs, which the City's electronics drop-off does not accept.",
+          "Mixed loads of furniture, appliances, and electronics that would otherwise need separate City arrangements.",
+          "Upstairs apartments, offices, and storage areas where the hard part is the carrying."
+        ]
+      },
+      {
+        "heading": "Outside Mobile city limits?",
+        "body": [
+          "Our confirmed service area is the City of Mobile. Addresses in the surrounding area are not automatically covered, and some addresses with a Mobile mailing address sit outside city limits. If you are unsure, call before booking — we will tell you plainly whether we can schedule your pickup. The [service areas](/areas/) page is updated when coverage is confirmed."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "How do I know if my address is inside your service area?",
+        "a": "If your address is inside the City of Mobile, we serve it. A Mobile mailing address does not always mean city limits, so if you are unsure, call before booking and we will confirm."
+      },
+      {
+        "q": "Does the City of Mobile pick up old furniture?",
+        "a": "Yes. The City's residential trash collection, which runs every other week, includes discarded furniture and bedding, up to a 2 cubic yard pile. Larger piles can be removed by the City for a charge through a work order, or you can book a private pickup."
+      },
+      {
+        "q": "Can I put electronics out with my trash in Mobile?",
+        "a": "No. City rules say electronics and appliances should not be placed on a regular trash pile; if they are, the whole pile will not be collected. Residents can call 311 for an electronics or appliance pickup work order, use the City's resident electronics drop-off (no TVs), or book a private pickup."
+      },
+      {
+        "q": "Where can Mobile residents drop off electronics?",
+        "a": "City of Mobile residents can drop off household electronics at the City's three recycling centers. Proof of residence may be requested and TVs are not accepted. Locations and hours are on the [City of Mobile recycling page](https://www.cityofmobile.gov/public-works/recycling/)."
+      },
+      {
+        "q": "Can businesses use City trash or recycling services for a cleanout?",
+        "a": "Generally not. The City does not collect materials from commercial businesses as household trash, and its recycling drop-off centers do not accept recyclables from businesses. Businesses in Mobile typically hire a private hauler for furniture, equipment, and electronics."
+      },
+      {
+        "q": "Do you work at apartments and office buildings in Mobile?",
+        "a": "Yes. Tell us about parking, gates, stairs, elevators, and any building rules when you book, so the crew arrives prepared and the estimate reflects the carry."
+      }
+    ],
+    "areaNote": "Zoiris Junk Removal serves the City of Mobile, Alabama. If your address is outside Mobile city limits, call to confirm before booking.",
+    "illustration": "hero"
+  },
+  "related": [
+    "svc-junk-removal-mobile-al",
+    "ew-electronics-pickup",
+    "svc-residential-junk-removal",
+    "svc-commercial-junk-removal",
+    "guide-electronics-drop-off-mobile",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Local service-area hub; intentionally does not repeat the flagship /junk-removal-mobile-al/ content. No other cities listed or linked; no neighborhood details. City facts verified 2026-11-04: every-other-week residential trash (https://www.cityofmobile.gov/public-works/residential-trash-pickup/); trash definition, 2 cu yd limit, 48-hour rule, no electronics/appliances on piles, 311 work orders, no Freon appliances, commercial/eviction/contractor materials excluded (https://www.cityofmobile.gov/public-works/trash-collection-rules/); three resident-only recycling drop-offs, proof of residence, electronics bins, no TVs, businesses not accepted (https://www.cityofmobile.gov/public-works/recycling/).",
+    "ownerVerification": [
+      "Confirm the service area is the entire City of Mobile and how addresses just outside city limits are handled.",
+      "Confirm the crew works at apartment complexes and multi-story office buildings (stairs/elevators) as described.",
+      "Re-check City of Mobile trash and recycling rules periodically; City details can change.",
+      "Confirm any local first-party evidence (completed jobs, photos with permission) before adding neighborhood-level content."
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "id": "loc-baldwin-county-al",
+  "type": "county",
+  "path": "/areas/baldwin-county-al/",
+  "status": "research",
+  "refs": {
+    "countyId": "baldwin-county-al",
+    "customerType": "both"
+  },
+  "seo": {
+    "title": "Baldwin County, AL Regional Junk & E-Waste Research | Zoiris",
+    "description": "Baldwin County, AL regional expansion hub covering Eastern Shore, North Baldwin, Central Baldwin, and South Baldwin municipal bulk and SWDA rules.",
+    "h1": "Baldwin County, AL Junk Removal & E-Waste Regional Overview",
+    "primaryKeyword": "junk removal Baldwin County AL",
+    "secondaryKeywords": [
+      "Eastern Shore AL junk hauling",
+      "Baldwin County SWDA bulk pickup",
+      "electronics pickup Baldwin County"
+    ],
+    "intent": "local",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Baldwin County, AL",
+    "parentId": "core-areas"
+  },
+  "purpose": "County-level regional hub for Baldwin County (14 municipalities + unincorporated Eastern Shore and coastal communities), held in non-indexable research status until owner activates Eastern Shore/Baldwin routes.",
+  "content": {
+    "eyebrow": "Regional Expansion Research",
+    "lead": "Spanning east of Mobile Bay across the I-10 Bayway and US-90/98 Causeway, Baldwin County includes 14 incorporated municipalities — including Spanish Fort, Daphne, Fairhope, Bay Minette, Loxley, Robertsdale, Foley, Gulf Shores, and Orange Beach — plus unincorporated communities served by the Solid Waste Disposal Authority of Baldwin County (SWDA).",
+    "quickAnswer": {
+      "question": "Does Zoiris currently dispatch to Baldwin County?",
+      "answer": "Baldwin County municipalities are currently in research-only status while Eastern Shore dispatch schedules are finalized. Call 251-930-8621 with your address and item list to ask about case-by-case availability."
+    },
+    "sections": [
+      {
+        "heading": "SWDA vs. municipal public works in Baldwin County",
+        "body": [
+          "Unlike single-city setups, Baldwin County splits solid-waste handling between SWDA (which serves unincorporated Baldwin County plus Bay Minette, Summerdale, Magnolia Springs, and Perdido Beach and runs Magnolia Landfill and three CHaRM drop-off centers) and 10 independent municipal sanitation departments or contracts across the Eastern Shore and South Baldwin."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Which Baldwin County areas are closest to Mobile?",
+        "a": "Spanish Fort, Daphne, Montrose, Fairhope, Point Clear, and Belforest sit immediately east of Mobile Bay along I-10, US-98, and Scenic Hwy 98."
+      },
+      {
+        "q": "Where does Baldwin County accept household electronics drop-offs?",
+        "a": "SWDA operates CHaRM drop-off locations in Summerdale, Fairhope (Bishop Rd), and Orange Beach for Baldwin County residents; rules and accepted items vary by facility."
+      },
+      {
+        "q": "When will Baldwin County city pages become active?",
+        "a": "Individual Baldwin County city pages remain non-indexable until Zoiris activates confirmed crew coverage in the Command Center."
+      }
+    ],
+    "areaNote": "Research-only status — never indexed until owner approves Baldwin County dispatch."
+  },
+  "related": [
+    "core-areas",
+    "loc-mobile-al",
+    "svc-junk-removal-mobile-al",
+    "core-request-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Baldwin County regional hub held in research status (robotsIndex: false) per coverage truth rules.",
+    "ownerVerification": [
+      "Confirm Eastern Shore / Baldwin County dispatch availability and Bayway travel minimums before activating coverage."
+    ]
+  }
+}

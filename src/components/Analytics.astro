@@ -1,0 +1,130 @@
+---
+/**
+ * Privacy-conscious analytics & conversion tracking.
+ * - Pushes click-to-call, CTA, form, and upload events to `window.dataLayer`.
+ * - Sends lightweight, non-blocking first-party telemetry (`page_view`, `click_to_call`,
+ *   `cta_click`, `form_start`, `upload_complete`, `form_complete`) to `/api/public/events`
+ *   when the Zoiris backend is reachable — storing ZERO raw IPs or cross-site fingerprints.
+ * - Loads GA4 (`PUBLIC_GA4_ID`) only when configured, deferred after load for 100/100 performance.
+ */
+import { integrations } from '../config/integrations.ts';
+const ga4 = integrations.analytics.ga4Id;
+const eventsEndpoint = integrations.analytics.eventsEndpoint;
+---
+
+<script is:inline define:vars={{ ga4, eventsEndpoint }}>
+  window.dataLayer = window.dataLayer || [];
+  (function () {
+    var sessionHint = '';
+    var landingPath = window.location.pathname;
+    var utm = { source: '', medium: '', campaign: '' };
+    try {
+      sessionHint = sessionStorage.getItem('zoiris_sh') || '';
+      if (!sessionHint) {
+        sessionHint = Math.random().toString(36).slice(2) + Date.now().toString(36);
+        sessionStorage.setItem('zoiris_sh', sessionHint);
+      }
+      var storedLanding = sessionStorage.getItem('zoiris_lp');
+      if (storedLanding) landingPath = storedLanding;
+      else sessionStorage.setItem('zoiris_lp', landingPath);
+
+      var sp = new URLSearchParams(window.location.search);
+      if (sp.get('utm_source') || sp.get('utm_medium') || sp.get('utm_campaign')) {
+        utm = {
+          source: sp.get('utm_source') || '',
+          medium: sp.get('utm_medium') || '',
+          campaign: sp.get('utm_campaign') || ''
+        };
+        sessionStorage.setItem('zoiris_utm', JSON.stringify(utm));
+      } else {
+        var savedUtm = sessionStorage.getItem('zoiris_utm');
+        if (savedUtm) utm = JSON.parse(savedUtm);
+      }
+    } catch (_e) {}
+
+    function deviceType() {
+      var w = window.innerWidth || 1024;
+      if (w < 768) return 'mobile';
+      if (w < 1024) return 'tablet';
+      return 'desktop';
+    }
+
+    function sendBeaconEvent(eventType, extra) {
+      if (!eventsEndpoint) return;
+      var payload = Object.assign(
+        {
+          eventType: eventType,
+          sessionHint: sessionHint,
+          pagePath: window.location.pathname,
+          landingPath: landingPath,
+          referrer: document.referrer || '',
+          utmSource: utm.source || '',
+          utmMedium: utm.medium || '',
+          utmCampaign: utm.campaign || '',
+          deviceCategory: deviceType()
+        },
+        extra || {}
+      );
+      try {
+        fetch(eventsEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(function () {});
+      } catch (_e) {}
+    }
+
+    window.zoirisEmitEvent = sendBeaconEvent;
+
+    function zTrack(name, params) {
+      window.dataLayer.push(Object.assign({ event: name }, params || {}));
+      if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+    }
+
+    if (document.readyState === 'complete') {
+      setTimeout(function () { sendBeaconEvent('page_view'); }, 150);
+    } else {
+      window.addEventListener('load', function () {
+        setTimeout(function () { sendBeaconEvent('page_view'); }, 150);
+      });
+    }
+
+    document.addEventListener('click', function (e) {
+      var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+      if (!el) return;
+      var isCall = el.getAttribute('data-track') === 'call';
+      var evName = isCall ? 'click_to_call' : 'cta_click';
+      zTrack(evName, {
+        link_location: el.getAttribute('data-track-location') || 'unknown',
+        link_url: el.getAttribute('href') || ''
+      });
+      sendBeaconEvent(evName);
+    });
+
+    window.addEventListener('zoiris:lead', function (e) {
+      zTrack('generate_lead', {
+        form_name: 'pickup_request',
+        provider: (e.detail && e.detail.provider) || 'zoiris-crm',
+        lead_number: (e.detail && e.detail.leadNumber) || ''
+      });
+      sendBeaconEvent('form_complete');
+    });
+
+    if (ga4) {
+      window.gtag = function () {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag('js', new Date());
+      window.gtag('config', ga4);
+      var load = function () {
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4);
+        document.head.appendChild(s);
+      };
+      if (document.readyState === 'complete') setTimeout(load, 1500);
+      else window.addEventListener('load', function () { setTimeout(load, 1500); });
+    }
+  })();
+</script>

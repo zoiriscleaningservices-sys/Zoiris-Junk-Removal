@@ -1,0 +1,40 @@
+{
+  "id": "svc-shed-removal",
+  "type": "service",
+  "path": "/services/shed-removal/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "shed-removal",
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Shed Removal in Mobile, AL | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Shed Removal in Mobile, AL",
+    "primaryKeyword": "shed removal Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Shed Removal",
+    "parentId": "core-services"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Shed teardown is demolition-adjacent work. Do not draft until the owner confirms the service, equipment, and any permit considerations.",
+    "ownerVerification": [
+      "Confirm whether Zoiris offers shed removal."
+    ]
+  }
+}

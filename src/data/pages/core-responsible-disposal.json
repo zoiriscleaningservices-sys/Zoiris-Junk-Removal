@@ -1,0 +1,36 @@
+{
+  "id": "core-responsible-disposal",
+  "type": "core",
+  "path": "/responsible-disposal/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "What Happens After Pickup: Responsible Disposal | Zoiris",
+    "description": "How Zoiris handles items after pickup in Mobile, AL: sorting, reuse and recycling where practical, electronics, refrigerant appliances, and what we never claim.",
+    "h1": "What Happens After Pickup",
+    "primaryKeyword": "what happens to junk after pickup",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Responsible Disposal",
+    "parentId": "core-home"
+  },
+  "purpose": "Honest explanation of downstream handling, limited to what the business can stand behind.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

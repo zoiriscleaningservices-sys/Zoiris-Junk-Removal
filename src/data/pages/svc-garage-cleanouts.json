@@ -1,0 +1,196 @@
+{
+  "id": "svc-garage-cleanouts",
+  "type": "service",
+  "path": "/services/garage-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "garage-cleanouts",
+    "itemIds": [
+      "bicycles-tools",
+      "grills-patio",
+      "lawn-mowers",
+      "boxes-clutter",
+      "exercise-equipment",
+      "tables-chairs",
+      "toys-decor",
+      "refrigerators"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "residential"
+  },
+  "seo": {
+    "title": "Garage & Shed Cleanouts in Mobile, AL | Zoiris",
+    "description": "Garage too full to park in? Zoiris clears garages, carports, and backyard sheds in Mobile, AL: old boxes, bikes, shelving, tools, and patio furniture.",
+    "h1": "Garage Cleanouts in Mobile, AL",
+    "primaryKeyword": "garage cleanout Mobile AL",
+    "secondaryKeywords": [
+      "shed cleanout Mobile AL",
+      "garage junk removal Mobile",
+      "carport cleanout Mobile",
+      "clean out garage near me",
+      "storage shed clearing Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Garage & Shed Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "You point out what stays. We haul off the boxes, bikes, shelving, tools, and outdoor clutter from your garage or shed in Mobile, Alabama.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Garage Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve Mobile homeowners whose garage, carport, or backyard shed has filled up with years of stored items and who want the contents hauled away. Shed cleanout searches are consolidated here because the job (emptying an outbuilding of contents) is the same; removing the shed structure itself is not covered.",
+  "content": {
+    "eyebrow": "Cleanouts",
+    "lead": "Zoiris Junk Removal empties garages, carports, and backyard sheds in Mobile, Alabama. You tell us what stays, and we haul off the rest: stacked boxes, broken shelving, bikes nobody rides, faded patio sets, and the tools and equipment that have piled up over the years. The goal is simple — a garage you can park in again, or a shed you can actually walk into.",
+    "quickAnswer": {
+      "question": "Do I need to sort through my garage before you come?",
+      "answer": "No. Set aside or mark the things you are keeping, and pull out anything we cannot take, such as propane tanks, gas cans, and paint. Everything else can stay where it is. On the day, walk the crew through what stays, and we load the rest and leave your keepers in place."
+    },
+    "includes": {
+      "heading": "What a garage or shed cleanout covers",
+      "intro": "Most garages fill up slowly, so the job usually mixes a little of everything. Here is what we handle:",
+      "points": [
+        "Pulling items off floors, overhead racks, and free-standing shelves, then carrying them out to the truck.",
+        "Emptying backyard sheds, carports, and workshop corners the same way, including dusty bins that have not been opened in years.",
+        "Working around the things you keep — the car, the tool chest, the holiday bins — so they stay put.",
+        "Separating usable and recyclable pieces, like metal shelving and bikes, from items headed for disposal where practical options exist."
+      ]
+    },
+    "items": {
+      "heading": "What usually comes out of a garage",
+      "intro": "These are the items we see most often. Anything marked \"call to confirm\" needs a quick conversation first.",
+      "list": [
+        "Bicycles, hand tools, workbenches, and metal or plastic shelving units",
+        "Grills and patio furniture (with the propane tank removed)",
+        "Boxes, bins, and bags of stored household items",
+        "Old dining chairs, side tables, and furniture moved out to the garage",
+        "Toys, sports gear, holiday decorations, and kids' play equipment that is already taken apart",
+        "Lawn mowers, trimmers, and other gas-powered equipment — call to confirm, and drain fuel and oil first",
+        "Treadmills, weight benches, and other exercise equipment — call to confirm",
+        "Garage refrigerators and chest freezers — call to confirm"
+      ],
+      "itemIds": [
+        "bicycles-tools",
+        "grills-patio",
+        "boxes-clutter",
+        "tables-chairs",
+        "toys-decor",
+        "lawn-mowers",
+        "exercise-equipment",
+        "refrigerators"
+      ]
+    },
+    "audience": {
+      "heading": "Who books a garage cleanout",
+      "body": [
+        "Usually it is a homeowner who has run out of room — the car has been living in the driveway, or a project is waiting for floor space. Other common triggers are getting a house ready to list, inheriting a relative's packed workshop, or finally clearing out a shed after a storm season.",
+        "If the garage is only one part of a bigger job, our [house cleanouts](/services/house-cleanouts/) page covers whole-home clearing, and [moving junk removal](/services/moving-cleanouts/) covers leftovers around a move."
+      ]
+    },
+    "process": {
+      "heading": "How a garage cleanout goes",
+      "steps": [
+        {
+          "title": "Describe the space",
+          "body": "Send a [pickup request](/request-pickup/) with a few photos of the garage or shed, taken from the door. Photos of the back corners and overhead storage help us judge volume."
+        },
+        {
+          "title": "Agree on a plan",
+          "body": "We confirm an estimate and a pickup window with you, and flag anything in the photos — a mower, a fridge, paint cans — that needs special attention before the day."
+        },
+        {
+          "title": "Clear and load",
+          "body": "On the day, show the crew what stays. We work from the door inward, loading as we go, so you can see the floor coming back and change your mind about anything before it goes on the truck."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of a garage cleanout",
+      "intro": "Every garage is different, so we quote each one individually. The biggest factors are:",
+      "factors": [
+        "Overall volume — a one-car garage with a few shelves is a different job from a packed two-car garage and a shed",
+        "Heavy pieces such as solid workbenches, exercise machines, or chest freezers",
+        "Whether items are boxed and stackable or loose and mixed",
+        "How far the truck can get to the garage or shed, especially for sheds at the back of a lot",
+        "Items that need confirmation or special handling before they can be included"
+      ]
+    },
+    "prepare": {
+      "heading": "How to get your garage ready",
+      "tips": [
+        "Move propane tanks, gas cans, motor oil, paint, pesticides, and pool chemicals to one side — these stay with you.",
+        "Run gas-powered equipment dry or drain the fuel and oil ahead of time.",
+        "Put a strip of tape or a tarp over anything that stays, so it is obvious at a glance.",
+        "Open a few old boxes before the day — garages often hide photos, tax papers, and keepsakes.",
+        "Pull the car out to the street or driveway so the crew has room to work.",
+        "Tell us about wasp nests, ant mounds, or critters you have spotted in the shed."
+      ]
+    },
+    "restrictions": {
+      "heading": "What we cannot take from a garage or shed",
+      "body": "Garages are where most restricted items hide. These are not accepted, or need a call first:",
+      "list": [
+        "Propane tanks, camping fuel cylinders, and helium tanks — not accepted.",
+        "Gasoline, oil, and fuel containers, full or partly full — not accepted.",
+        "Paint, solvents, pesticides, pool chemicals, and automotive fluids — not accepted.",
+        "Car batteries and tires — call to check before including them.",
+        "Yard waste and branches — call to check; see our [restricted items](/restricted-items/) page for the full list."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Can you empty a backyard shed at the same visit?",
+        "a": "Yes. Shed and carport contents are handled the same way as garage contents, and doing both in one visit is common. This service covers emptying the shed. Taking down the shed structure itself is a separate job, so ask us before assuming it is included."
+      },
+      {
+        "q": "Will you take my old lawn mower?",
+        "a": "Call to confirm first. Mowers, trimmers, and pressure washers have to be drained of fuel and oil before pickup, because we cannot load equipment that still has gas in it."
+      },
+      {
+        "q": "What should I do with leftover paint and garden chemicals?",
+        "a": "Keep them out of the cleanout. We do not take paint, solvents, pesticides, or fuel. Look for a household hazardous waste collection option through your local government, and check our [restricted items](/restricted-items/) page for more guidance."
+      },
+      {
+        "q": "Can you take the old fridge or freezer in the garage?",
+        "a": "Call to confirm. Refrigerators and freezers contain refrigerant, so we confirm handling before scheduling. Empty and defrost it first. Our [refrigerator removal](/items/refrigerator-removal/) page explains what is involved."
+      },
+      {
+        "q": "What about wall shelving and a workbench?",
+        "a": "Free-standing shelves and workbenches are routine. If shelving is bolted to the wall or a bench is built in, mention it when you book so we can confirm how it will come down."
+      },
+      {
+        "q": "Can we do half the garage now and the rest later?",
+        "a": "Yes. Some people clear the obvious junk first and tackle the boxes they need to go through on a second visit. Tell us that is your plan and we will scope the first visit accordingly."
+      }
+    ],
+    "areaNote": "Garage and shed cleanouts are offered throughout the City of Mobile. If your home is outside city limits, check with us before you book.",
+    "illustration": "residential"
+  },
+  "related": [
+    "guide-garage-cleanout-prep",
+    "core-restricted-items",
+    "svc-house-cleanouts",
+    "svc-moving-cleanouts",
+    "svc-appliance-removal",
+    "svc-bulk-item-pickup"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Shed cleanout intent consolidated here (contents only; shed teardown is an unverified separate service and is not advertised). Restricted garage items (propane, fuel, chemicals) called out; gas equipment and refrigerators phrased as call to confirm.",
+    "ownerVerification": [
+      "Confirm whether the crew detaches wall-mounted shelving or built-in workbenches.",
+      "Confirm policy for gas-powered equipment (lawn mowers, trimmers) once drained.",
+      "Confirm handling of garage refrigerators and freezers (refrigerant outlet).",
+      "Confirm whether the crew will open and sort through unopened boxes on site, or only load items the customer has released."
+    ]
+  }
+}

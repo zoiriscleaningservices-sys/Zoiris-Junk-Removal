@@ -1,0 +1,36 @@
+{
+  "id": "core-about",
+  "type": "core",
+  "path": "/about/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "About Zoiris Junk Removal | Mobile, Alabama",
+    "description": "Zoiris Junk Removal is a Mobile, Alabama pickup service for unwanted household items, business cleanouts, and qualifying electronics. Learn how we work.",
+    "h1": "About Zoiris Junk Removal",
+    "primaryKeyword": "about Zoiris Junk Removal",
+    "secondaryKeywords": [],
+    "intent": "navigational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "About",
+    "parentId": "core-home"
+  },
+  "purpose": "Introduces the business, how it operates, and what it does and does not claim.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

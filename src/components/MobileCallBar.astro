@@ -1,0 +1,13 @@
+---
+import Icon from './Icon.astro';
+import { business } from '../lib/data.ts';
+---
+
+<div class="callbar" role="region" aria-label="Quick contact">
+  <a class="btn btn--primary" href={business.phoneHref} data-track="call" data-track-location="callbar">
+    <Icon name="call" /> Call Now
+  </a>
+  <a class="btn btn--ghost" href="/request-pickup/" data-track="cta" data-track-location="callbar">
+    <Icon name="calendar" /> Request Pickup
+  </a>
+</div>

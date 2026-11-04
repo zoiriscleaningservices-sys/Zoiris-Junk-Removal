@@ -1,0 +1,36 @@
+{
+  "id": "core-request-pickup",
+  "type": "core",
+  "path": "/request-pickup/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Request a Junk or Electronics Pickup in Mobile, AL | Zoiris",
+    "description": "Tell us what needs to go and where. Zoiris reviews your request and contacts you to confirm details and an estimate before scheduling a pickup.",
+    "h1": "Request a Pickup",
+    "primaryKeyword": "request junk pickup Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Request a Pickup",
+    "parentId": "core-home"
+  },
+  "purpose": "Conversion page with the pickup request form and a clear explanation of what happens next.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

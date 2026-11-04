@@ -1,0 +1,192 @@
+{
+  "id": "svc-office-cleanouts",
+  "type": "service",
+  "path": "/services/office-cleanouts/",
+  "status": "published",
+  "refs": {
+    "serviceId": "office-cleanouts",
+    "itemIds": [
+      "office-furniture",
+      "file-cabinets",
+      "tables-chairs",
+      "dressers",
+      "boxes-clutter",
+      "microwaves",
+      "carpet",
+      "refrigerators"
+    ],
+    "locationId": "mobile-al",
+    "customerType": "commercial"
+  },
+  "seo": {
+    "title": "Office Cleanouts & Furniture Removal, Mobile AL | Zoiris",
+    "description": "Vacating or downsizing an office in Mobile, AL? Zoiris removes desks, chairs, cubicles, file cabinets, and break-room clutter so you can hand back the space.",
+    "h1": "Office Cleanouts in Mobile, AL",
+    "primaryKeyword": "office cleanout Mobile AL",
+    "secondaryKeywords": [
+      "office furniture removal Mobile",
+      "cubicle removal Mobile AL",
+      "office junk removal Mobile",
+      "file cabinet removal Mobile",
+      "office move-out cleanout Mobile"
+    ],
+    "intent": "transactional",
+    "ogTitle": "Office Cleanouts in Mobile, AL — Zoiris Junk Removal",
+    "ogDescription": "Desks, cubicles, file cabinets, and break-room furniture removed from offices in Mobile, Alabama, so you can hand back the suite.",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Office Cleanouts",
+    "parentId": "core-services"
+  },
+  "purpose": "Serve Mobile businesses vacating, downsizing, or refurnishing an office that need furniture, cubicle systems, file cabinets, and general contents removed. The page states clearly that document shredding is not offered and routes electronics to the office electronics pickup page.",
+  "content": {
+    "eyebrow": "Commercial Cleanouts",
+    "lead": "Zoiris Junk Removal clears offices in Mobile, Alabama when a lease is ending, a team is downsizing, or old furniture is being replaced. We remove desks, chairs, cubicle panels, file cabinets, conference tables, and break-room clutter, and we plan around your building's loading rules so the suite is ready to hand back. Computers and other IT equipment are handled through our [office electronics pickup](/e-waste/office-electronics-pickup/).",
+    "quickAnswer": {
+      "question": "Can you remove our cubicles and file cabinets when we move out?",
+      "answer": "Yes. Cubicle systems can take time to break down, so tell us how many workstations there are and what type of panels they have. File cabinets must be emptied before pickup. We do not offer document shredding, so arrange that separately for any confidential paperwork."
+    },
+    "includes": {
+      "heading": "What an office cleanout covers",
+      "intro": "Office jobs mix bulky furniture with building logistics. Our part includes:",
+      "points": [
+        "Removing desks, task chairs, conference tables, reception furniture, and bookcases.",
+        "Taking down cubicle panels and work surfaces so they can be carried out. Mention the system when you book.",
+        "Carrying out empty file cabinets, storage cabinets, and lockers.",
+        "Clearing break rooms, supply closets, and storage rooms of unwanted items.",
+        "Working with your building's freight elevator, loading dock, or approved entrance."
+      ]
+    },
+    "items": {
+      "heading": "What we remove from offices",
+      "intro": "Most office furniture and fixtures qualify. Electronics are handled on a separate page.",
+      "list": [
+        "Desks, task chairs, cubicle panels, and work surfaces",
+        "Vertical and lateral file cabinets, emptied of files",
+        "Conference tables, guest chairs, and reception furniture",
+        "Bookcases, storage cabinets, and credenzas",
+        "Boxes of supplies, binders, and general office clutter",
+        "Break-room tables, chairs, and microwaves",
+        "Area rugs and loose carpet tiles",
+        "Break-room refrigerators — call to confirm"
+      ],
+      "itemIds": [
+        "office-furniture",
+        "file-cabinets",
+        "tables-chairs",
+        "dressers",
+        "boxes-clutter",
+        "microwaves",
+        "carpet",
+        "refrigerators"
+      ]
+    },
+    "audience": {
+      "heading": "Who books an office cleanout",
+      "body": [
+        "Office managers and business owners usually call when a lease is ending and the space has to be returned empty, when a company moves into a smaller suite and cannot take everything, or when new furniture is arriving and the old pieces need to go first.",
+        "Property managers also call to clear furniture a former tenant left in a commercial suite. For general business hauling that is not a full cleanout, see [commercial junk removal](/services/commercial-junk-removal/)."
+      ]
+    },
+    "process": {
+      "heading": "How an office cleanout works",
+      "steps": [
+        {
+          "title": "Inventory and building rules",
+          "body": "Tell us roughly how many workstations, cabinets, and tables are going, the floor you are on, and any building rules about elevators, docks, or hours. A floor plan or a few photos helps."
+        },
+        {
+          "title": "Estimate and timing",
+          "body": "We confirm an estimate and a pickup window that fits your building's requirements and your move-out date. Larger offices may be split into more than one visit."
+        },
+        {
+          "title": "Break down and remove",
+          "body": "The crew takes down cubicles, moves furniture to the loading area, and hauls it away. Items tagged to stay with the landlord or move to your new location are left in place."
+        }
+      ]
+    },
+    "pricingFactors": {
+      "heading": "What affects the cost of an office cleanout",
+      "intro": "Each office is quoted individually. The main factors are:",
+      "factors": [
+        "Number of workstations and how much cubicle disassembly is involved",
+        "Total volume of furniture, cabinets, and boxed contents",
+        "Floor level, elevator availability, and distance to the dock or truck",
+        "Building restrictions on when moving work can happen",
+        "Whether the job is done in one visit or in phases as departments move"
+      ]
+    },
+    "prepare": {
+      "heading": "How to prepare your office",
+      "tips": [
+        "Empty file cabinets and desk drawers. Arrange shredding for confidential records with a document destruction provider before we arrive.",
+        "Tag items that are staying with the landlord or moving to your new office so the crew does not take them.",
+        "Reserve the freight elevator or loading dock with building management for the pickup window we confirm.",
+        "Ask employees to take personal items home before the cleanout day.",
+        "Coordinate with your IT team on computers and servers, and see [office electronics pickup](/e-waste/office-electronics-pickup/) for how those are handled.",
+        "Check copier and printer leases. Leased equipment usually goes back to the leasing company."
+      ]
+    },
+    "restrictions": {
+      "heading": "What office cleanouts do not include",
+      "body": "A few things are outside the scope of an office cleanout:",
+      "list": [
+        "We do not provide document shredding or any other destruction of paper records.",
+        "We do not provide data destruction for computers or drives. Back up and wipe devices, or remove drives, before pickup.",
+        "Built-in millwork, fixed partitions, and wall-mounted fixtures that need demolition are not included.",
+        "Cleaning chemicals, toner spills, and other hazardous materials are not accepted."
+      ]
+    },
+    "faqs": [
+      {
+        "q": "Do you shred documents?",
+        "a": "No. We do not offer document shredding. Remove all paper files from cabinets and use a shredding provider for anything confidential. Once the cabinets are empty, we take them."
+      },
+      {
+        "q": "Can you work around our business hours?",
+        "a": "Tell us when your building allows moving work and when your team needs the space to stay usable. We will confirm a pickup window that fits if one is available."
+      },
+      {
+        "q": "What about our computers, monitors, and printers?",
+        "a": "Those are handled through [office electronics pickup](/e-waste/office-electronics-pickup/), and can usually be scheduled alongside the furniture. Large printers and copiers are covered on the [printer and copier removal](/e-waste/printer-copier-removal/) page."
+      },
+      {
+        "q": "Some buildings ask vendors for paperwork. Can you provide it?",
+        "a": "Ask your property manager what documents they require, and tell us when you book. We will confirm what we can provide before the job is scheduled."
+      },
+      {
+        "q": "Can you take part of the office now and the rest later?",
+        "a": "Yes. Phased cleanouts are common when departments move at different times. Tell us the sequence and we will plan each visit separately."
+      }
+    ],
+    "areaNote": "Office cleanouts are available for businesses located in the City of Mobile. Commercial sites outside the city should call to confirm first.",
+    "illustration": "commercial"
+  },
+  "related": [
+    "svc-commercial-junk-removal",
+    "ew-office-electronics-pickup",
+    "ew-printer-copier-removal",
+    "ew-computer-recycling",
+    "svc-furniture-removal",
+    "core-contact"
+  ],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "No document shredding or data destruction offered (stated plainly). Electronics routed to /e-waste/office-electronics-pickup/. Vendor paperwork phrased without any insurance claim.",
+    "ownerVerification": [
+      "Confirm the crew disassembles cubicle systems, and whether that is included in the standard quote.",
+      "Confirm what vendor documentation (for example, a certificate of insurance) can be provided to commercial buildings. Do not publish insurance claims until documented.",
+      "Confirm availability for work outside normal business hours, if buildings require it.",
+      "Confirm break-room refrigerator handling (refrigerant outlet)."
+    ]
+  }
+}

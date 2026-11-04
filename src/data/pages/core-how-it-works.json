@@ -1,0 +1,36 @@
+{
+  "id": "core-how-it-works",
+  "type": "core",
+  "path": "/how-it-works/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "How Junk Removal Works | Zoiris Junk Removal, Mobile AL",
+    "description": "From your first call to an empty room: how Zoiris confirms what you have, provides an estimate, carries items out, and handles them after pickup.",
+    "h1": "How Zoiris Pickup Works",
+    "primaryKeyword": "how junk removal works",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "How It Works",
+    "parentId": "core-home"
+  },
+  "purpose": "Step-by-step explanation of the pickup process to reduce uncertainty before calling.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}

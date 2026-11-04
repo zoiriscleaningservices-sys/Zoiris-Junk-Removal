@@ -1,0 +1,43 @@
+{
+  "id": "combo-furniture-removal-west-mobile",
+  "type": "combo",
+  "path": "/areas/mobile-al/west-mobile/furniture-removal/",
+  "status": "idea",
+  "refs": {
+    "serviceId": "furniture-removal",
+    "neighborhoodId": "west-mobile",
+    "locationId": "mobile-al",
+    "countyId": "mobile-county-al"
+  },
+  "seo": {
+    "title": "Furniture Removal in West Mobile | Zoiris Junk Removal",
+    "description": "",
+    "h1": "Furniture Removal in West Mobile",
+    "primaryKeyword": "furniture removal West Mobile",
+    "secondaryKeywords": [],
+    "intent": "transactional",
+    "robotsIndex": false,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "Service",
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "Furniture Removal in West Mobile",
+    "parentId": "nb-west-mobile"
+  },
+  "purpose": "",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": null,
+    "approvedAt": null,
+    "reviewNotes": "Service + neighborhood candidate. Must contain genuinely local information that the main service page does not; otherwise strengthen the service page instead.",
+    "ownerVerification": [
+      "Confirm demand and real jobs in this neighborhood.",
+      "Supply first-party local evidence."
+    ]
+  }
+}

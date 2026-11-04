@@ -1,0 +1,1711 @@
+---
+/**
+ * Pickup Request Flow (`QuoteForm.astro`) — mobile-first, 4 simple steps.
+ *
+ *  1. What needs to go?   Big tap tiles + item chips + a "how much" truck meter
+ *  2. Show us             Optional photos / videos straight from the phone camera
+ *  3. Where's the pickup? Real-address search (OpenStreetMap suggestions + U.S. Census
+ *                         verification, "use my location"), map preview, access + timing
+ *  4. Your details        Name, phone, contact preference, review ticket, consent, send
+ *
+ * Protection: honeypot, human-timing signal, server-side phone/email/spam screening and
+ * address verification (see server/spam-guard.mjs + server/geo.mjs). Nothing is ever
+ * shown as booked — the owner confirms every pickup personally.
+ */
+import Icon from './Icon.astro';
+import { integrations } from '../config/integrations.ts';
+
+interface Props {
+  id?: string;
+  compact?: boolean;
+}
+const { id = 'pickup-form', compact = false } = Astro.props;
+const f = integrations.form;
+
+const CATEGORIES = [
+  { key: 'Furniture', label: 'Furniture', hint: 'Couches, beds, tables', icon: 'sofa', items: ['Couches', 'Chairs', 'Tables', 'Mattresses', 'Bed frames', 'Desks', 'Dressers', 'Cabinets'] },
+  { key: 'Appliances', label: 'Appliances', hint: 'Fridges, washers, stoves', icon: 'fridge', items: ['Refrigerators', 'Washers', 'Dryers', 'Stoves', 'Dishwashers', 'Other appliances'] },
+  {
+    key: 'Electronics',
+    label: 'Electronics',
+    hint: 'TVs, computers, e-waste',
+    icon: 'laptop',
+    items: ['Televisions', 'Monitors', 'Desktop computers', 'Laptops', 'Printers', 'Copiers', 'Phones', 'Tablets', 'Servers', 'Networking equipment', 'Gaming equipment', 'Cables', 'Batteries or battery-containing devices (confirmation required)']
+  },
+  { key: 'Cleanout', label: 'Cleanout', hint: 'Garage, house, estate', icon: 'garage', items: ['Garage contents', 'Whole house', 'Apartment', 'Estate', 'Office equipment', 'Storage unit'] },
+  { key: 'Household', label: 'Household junk', hint: 'Boxes, bags, clutter', icon: 'boxes', items: ['Household junk', 'Boxes and bags', 'Exercise equipment', 'Toys and decor', 'Grills and patio items', 'Construction-related debris (subject to acceptance)'] },
+  { key: 'Other', label: 'Something else', hint: 'Tell us in your words', icon: 'sparkle', items: [] as string[] }
+];
+
+const LOADS = [
+  { value: '1–2 items', label: '1–2 items', sub: 'A single piece or two', load: 0.14 },
+  { value: '3–5 items', label: 'A few items', sub: 'About 3–5 pieces', load: 0.3 },
+  { value: 'Pickup-truck load', label: 'Pickup-truck load', sub: 'Fills a pickup bed', load: 0.5 },
+  { value: 'Half truck', label: 'Half our truck', sub: 'A room or garage corner', load: 0.72 },
+  { value: 'Full truck or more', label: 'Full truck +', sub: 'Whole garage or house', load: 1 },
+  { value: 'Not sure', label: 'Not sure', sub: "We'll estimate from photos", load: 0.4 }
+];
+
+const WHERE = ['Curbside / driveway', 'Garage / carport', 'Inside – ground floor', 'Inside – upstairs', 'Backyard / shed', 'Storage unit'];
+const STEPS = [
+  { n: 1, short: 'Items', title: 'What needs to go?', sub: 'Tap everything that applies — you can pick more than one.' },
+  { n: 2, short: 'Photos', title: 'Show us (optional)', sub: 'Photos or a quick video help us give you a faster, more accurate estimate.' },
+  { n: 3, short: 'Address', title: 'Where is the pickup?', sub: 'Start typing and choose your address. We check every address is real.' },
+  { n: 4, short: 'You', title: 'How do we reach you?', sub: 'Last step. We will call or text to confirm — nothing is booked yet.' }
+];
+---
+
+<div class:list={['pf', compact && 'pf--compact']} data-pf={id}>
+  <div class="pf-top" data-pf-top>
+    <ol class="pf-progress" aria-label="Pickup request progress">
+      {
+        STEPS.map((s) => (
+          <li class="pf-progress__seg" data-pf-seg={s.n} aria-current={s.n === 1 ? 'step' : undefined}>
+            <span class="pf-progress__bar" aria-hidden="true">
+              <span />
+            </span>
+            <span class="pf-progress__label">{s.short}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <p class="pf-restored" data-pf-restored hidden>
+    <Icon name="check-circle" /> We saved your progress.
+    <button type="button" class="pf-link" data-pf-reset>Start over</button>
+  </p>
+
+  <form
+    class="pf-form"
+    id={id}
+    novalidate
+    method="post"
+    action={f.endpoint ?? undefined}
+    data-quote-form
+    data-provider={f.provider}
+    data-endpoint={f.endpoint ?? ''}
+    data-upload-config-endpoint={f.uploadConfigEndpoint}
+    data-upload-endpoint={f.uploadEndpoint}
+    data-upload-complete-endpoint={f.uploadCompleteEndpoint}
+    data-suggest-endpoint={f.addressSuggestEndpoint}
+    data-verify-endpoint={f.addressVerifyEndpoint}
+    data-reverse-endpoint={f.addressReverseEndpoint}
+  >
+    <div class="hp-field" aria-hidden="true">
+      <label for={`${id}-gotcha`}>Leave this field empty</label>
+      <input id={`${id}-gotcha`} name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="requestedService" value="Junk Removal" />
+
+    {/* ================= STEP 1 — ITEMS ================= */}
+    <section class="pf-pane" data-step-pane="1" aria-labelledby={`${id}-h1`}>
+      <header class="pf-pane__head">
+        <span class="pf-eyebrow">Step 1 of 4</span>
+        <h2 id={`${id}-h1`} tabindex="-1">{STEPS[0].title}</h2>
+        <p>{STEPS[0].sub}</p>
+      </header>
+
+      <fieldset class="pf-tiles">
+        <legend class="sr-only">Type of items</legend>
+        {
+          CATEGORIES.map((c) => (
+            <div class="pf-tile">
+              <input type="checkbox" id={`${id}-cat-${c.key}`} name="category" value={c.key} />
+              <label for={`${id}-cat-${c.key}`}>
+                <span class="pf-tile__icon">
+                  <Icon name={c.icon} />
+                </span>
+                <span class="pf-tile__label">{c.label}</span>
+                <span class="pf-tile__hint">{c.hint}</span>
+                <span class="pf-tile__check" aria-hidden="true">
+                  <Icon name="check" />
+                </span>
+              </label>
+            </div>
+          ))
+        }
+      </fieldset>
+
+      {
+        CATEGORIES.filter((c) => c.items.length).map((c) => (
+          <fieldset class="pf-chips" data-chips-for={c.key} hidden>
+            <legend>
+              {c.label}: <span>which ones?</span>
+            </legend>
+            <div class="pf-chips__row">
+              {c.items.map((item, i) => (
+                <span class="pf-chip">
+                  <input type="checkbox" id={`${id}-item-${c.key}-${i}`} name="selectedItem" value={item} data-category={c.key === 'Cleanout' || c.key === 'Household' ? 'Other' : c.key} />
+                  <label for={`${id}-item-${c.key}-${i}`}>{item.replace(' (confirmation required)', ' — we confirm first').replace(' (subject to acceptance)', ' — we confirm first')}</label>
+                </span>
+              ))}
+            </div>
+          </fieldset>
+        ))
+      }
+
+      <div class="pf-field" data-other-wrap>
+        <label for={`${id}-otherItemDescription`}>Anything else? <span class="pf-opt">optional</span></label>
+        <input id={`${id}-otherItemDescription`} name="otherItemDescription" type="text" maxlength="300" placeholder="e.g. old piano, hot tub, swing set" autocomplete="off" />
+      </div>
+      <p class="pf-error" id={`${id}-items-err`} role="alert"></p>
+
+      <fieldset class="pf-load">
+        <legend>About how much is there?</legend>
+        <div class="pf-truck" aria-hidden="true" style="--load: 0">
+          <svg viewBox="0 0 220 96" focusable="false">
+            <defs>
+              <clipPath id={`${id}-cargo`}>
+                <rect x="8" y="10" width="132" height="58" rx="6"></rect>
+              </clipPath>
+            </defs>
+            <rect x="8" y="10" width="132" height="58" rx="6" class="pf-truck__box"></rect>
+            <g clip-path={`url(#${id}-cargo)`}>
+              <rect x="8" y="10" width="132" height="58" class="pf-truck__fill"></rect>
+            </g>
+            <path d="M144 30h34l22 20v18h-56z" class="pf-truck__cab"></path>
+            <path d="M152 36h22l14 13h-36z" class="pf-truck__glass"></path>
+            <rect x="4" y="66" width="204" height="6" rx="3" class="pf-truck__base"></rect>
+            <circle cx="42" cy="78" r="11" class="pf-truck__wheel"></circle>
+            <circle cx="172" cy="78" r="11" class="pf-truck__wheel"></circle>
+            <circle cx="42" cy="78" r="4" class="pf-truck__hub"></circle>
+            <circle cx="172" cy="78" r="4" class="pf-truck__hub"></circle>
+            <path d="M28 24h50M28 34h34" class="pf-truck__logo"></path>
+          </svg>
+          <span class="pf-truck__label" data-truck-label>Pick a size</span>
+        </div>
+        <div class="pf-load__opts">
+          {
+            LOADS.map((l, i) => (
+              <span class="pf-load__opt">
+                <input type="radio" id={`${id}-load-${i}`} name="estimatedQuantity" value={l.value} data-load={l.load} />
+                <label for={`${id}-load-${i}`}>
+                  <strong>{l.label}</strong>
+                  <small>{l.sub}</small>
+                </label>
+              </span>
+            ))
+          }
+        </div>
+        <p class="pf-error" id={`${id}-estimatedQuantity-err`} role="alert"></p>
+      </fieldset>
+    </section>
+
+    {/* ================= STEP 2 — PHOTOS ================= */}
+    <section class="pf-pane" data-step-pane="2" aria-labelledby={`${id}-h2`} hidden>
+      <header class="pf-pane__head">
+        <span class="pf-eyebrow">Step 2 of 4</span>
+        <h2 id={`${id}-h2`} tabindex="-1">{STEPS[1].title}</h2>
+        <p>{STEPS[1].sub}</p>
+      </header>
+
+      <div class="pf-media" data-dropzone>
+        <div class="pf-media__buttons">
+          <label class="pf-bigbtn pf-bigbtn--primary" for={`${id}-camera`}>
+            <Icon name="camera" />
+            <span><strong>Take photo or video</strong><small>Opens your camera</small></span>
+          </label>
+          <label class="pf-bigbtn" for={`${id}-media-picker`}>
+            <Icon name="boxes" />
+            <span><strong>Choose from phone</strong><small>Photos &amp; videos</small></span>
+          </label>
+        </div>
+        <input class="sr-only" id={`${id}-camera`} type="file" accept="image/*,video/*" capture="environment" data-media-input tabindex="-1" />
+        <input class="sr-only" id={`${id}-media-picker`} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,video/mp4,video/quicktime,video/webm" multiple data-media-input tabindex="-1" />
+        <p class="pf-media__drop">or drag &amp; drop files here</p>
+        <p class="pf-media__counts">
+          <span><strong data-photo-count>0</strong> photo(s)</span>
+          <span><strong data-video-count>0</strong> video(s)</span>
+          <span class="pf-media__limits" data-media-limits>Up to 12 photos &amp; 3 videos</span>
+        </p>
+        <ul class="pf-media__grid" data-media-grid aria-live="polite"></ul>
+        <p class="pf-error" data-media-error role="alert"></p>
+      </div>
+
+      <div class="pf-tips">
+        <Icon name="sparkle" />
+        <p><strong>Tip:</strong> one wide shot of everything, plus close-ups of big or heavy items. A 10-second walk-through video works great.</p>
+      </div>
+
+      <div class="pf-field">
+        <label for={`${id}-itemDescription`}>Anything we should know about the items? <span class="pf-opt">optional</span></label>
+        <textarea id={`${id}-itemDescription`} name="itemDescription" rows="3" maxlength="1500" placeholder="e.g. sectional couch comes apart in 3 pieces, fridge is still plugged in"></textarea>
+      </div>
+    </section>
+
+    {/* ================= STEP 3 — ADDRESS ================= */}
+    <section class="pf-pane" data-step-pane="3" aria-labelledby={`${id}-h3`} hidden>
+      <header class="pf-pane__head">
+        <span class="pf-eyebrow">Step 3 of 4</span>
+        <h2 id={`${id}-h3`} tabindex="-1">{STEPS[2].title}</h2>
+        <p>{STEPS[2].sub}</p>
+      </header>
+
+      <div class="pf-addr" data-address-search>
+        <label class="pf-addr__label" for={`${id}-address`}>Pickup address</label>
+        <div class="pf-addr__box">
+          <Icon name="pin" />
+          <input
+            id={`${id}-address`}
+            name="addressSearch"
+            type="text"
+            inputmode="text"
+            autocomplete="street-address"
+            placeholder="Start typing: 1450 Government St…"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls={`${id}-address-list`}
+            aria-describedby={`${id}-pickupAddress-err`}
+          />
+          <span class="pf-spinner" data-address-spinner hidden aria-hidden="true"></span>
+        </div>
+        <ul class="pf-addr__list" id={`${id}-address-list`} role="listbox" aria-label="Matching addresses" data-address-list hidden></ul>
+        <div class="pf-addr__actions">
+          <button type="button" class="pf-pill" data-address-locate><Icon name="pin" /> Use my current location</button>
+          <button type="button" class="pf-pill" data-address-check><Icon name="check" /> Check this address</button>
+        </div>
+        <p class="pf-addr__note"><Icon name="shield" /> Addresses are checked against the U.S. Census Bureau address database. We serve Mobile &amp; Baldwin counties.</p>
+      </div>
+
+      <div class="pf-verified" data-address-card hidden>
+        <div class="pf-map" data-map>
+          <div class="pf-map__tiles" data-map-tiles></div>
+          <span class="pf-map__pin" aria-hidden="true"><Icon name="pin" /></span>
+          <div class="pf-map__toggle" role="group" aria-label="Map style">
+            <button type="button" data-map-layer="street" aria-pressed="true">Map</button>
+            <button type="button" data-map-layer="satellite" aria-pressed="false">Satellite</button>
+          </div>
+          <span class="pf-map__attr" data-map-attr>© OpenStreetMap contributors</span>
+        </div>
+        <div class="pf-verified__body">
+          <span class="pf-badge"><Icon name="check-circle" /> <span data-verified-badge>Verified address</span></span>
+          <p class="pf-verified__addr" data-verified-text></p>
+          <p class="pf-verified__county" data-verified-county></p>
+          <button type="button" class="pf-link" data-address-change>Not right? Change address</button>
+        </div>
+      </div>
+
+      <div class="pf-manual" data-manual-address hidden>
+        <p class="pf-manual__note" data-manual-note>Type your address below.</p>
+        <div class="pf-field">
+          <label for={`${id}-pickupAddress`}>Street address</label>
+          <input id={`${id}-pickupAddress`} name="pickupAddress" type="text" autocomplete="address-line1" maxlength="200" aria-describedby={`${id}-pickupAddress-err`} />
+        </div>
+        <div class="pf-grid2">
+          <div class="pf-field">
+            <label for={`${id}-city`}>City</label>
+            <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" value="Mobile" maxlength="80" />
+            <p class="pf-error" id={`${id}-city-err`} role="alert"></p>
+          </div>
+          <div class="pf-field">
+            <label for={`${id}-zipCode`}>ZIP code</label>
+            <input id={`${id}-zipCode`} name="zipCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" />
+            <p class="pf-error" id={`${id}-zipCode-err`} role="alert"></p>
+          </div>
+        </div>
+        <input type="hidden" name="state" value="AL" />
+      </div>
+      <p class="pf-error" id={`${id}-pickupAddress-err`} role="alert"></p>
+
+      <div class="pf-field">
+        <label for={`${id}-addressUnit`}>Apt, suite, or gate # <span class="pf-opt">optional</span></label>
+        <input id={`${id}-addressUnit`} name="addressUnit" type="text" autocomplete="address-line2" maxlength="40" />
+      </div>
+
+      <fieldset class="pf-choice">
+        <legend>Where are the items?</legend>
+        <div class="pf-choice__row">
+          {
+            WHERE.map((w, i) => (
+              <span class="pf-chip pf-chip--radio">
+                <input type="radio" id={`${id}-where-${i}`} name="indoorsOrOutdoors" value={w} />
+                <label for={`${id}-where-${i}`}>{w}</label>
+              </span>
+            ))
+          }
+        </div>
+        <p class="pf-error" id={`${id}-indoorsOrOutdoors-err`} role="alert"></p>
+      </fieldset>
+
+      <fieldset class="pf-choice" data-stairs-wrap hidden>
+        <legend>Is there an elevator?</legend>
+        <div class="pf-choice__row">
+          <span class="pf-chip pf-chip--radio">
+            <input type="radio" id={`${id}-stairs-0`} name="hasStairs" value="Stairs only" />
+            <label for={`${id}-stairs-0`}>Stairs only</label>
+          </span>
+          <span class="pf-chip pf-chip--radio">
+            <input type="radio" id={`${id}-stairs-1`} name="hasStairs" value="Elevator available" />
+            <label for={`${id}-stairs-1`}>Elevator available</label>
+          </span>
+        </div>
+      </fieldset>
+
+      <fieldset class="pf-choice">
+        <legend>When works for you?</legend>
+        <div class="pf-choice__row">
+          {
+            ['As soon as possible', 'This week', 'Pick a date'].map((t, i) => (
+              <span class="pf-chip pf-chip--radio">
+                <input type="radio" id={`${id}-timing-${i}`} name="timing" value={t} checked={i === 0} />
+                <label for={`${id}-timing-${i}`}>{t}</label>
+              </span>
+            ))
+          }
+        </div>
+        <div class="pf-field" data-date-wrap hidden>
+          <label for={`${id}-preferredDate`}>Preferred date</label>
+          <input id={`${id}-preferredDate`} name="preferredDate" type="date" />
+        </div>
+        <div class="pf-choice__row pf-choice__row--small">
+          {
+            ['Morning', 'Afternoon', 'Flexible'].map((w, i) => (
+              <span class="pf-chip pf-chip--radio">
+                <input type="radio" id={`${id}-window-${i}`} name="preferredWindow" value={w} checked={i === 2} />
+                <label for={`${id}-window-${i}`}>{w}</label>
+              </span>
+            ))
+          }
+        </div>
+      </fieldset>
+
+      <div class="pf-field">
+        <label for={`${id}-accessInstructions`}>Gate code, parking or access notes <span class="pf-opt">optional</span></label>
+        <textarea id={`${id}-accessInstructions`} name="accessInstructions" rows="2" maxlength="600" placeholder="e.g. side gate is unlocked, park in the driveway"></textarea>
+      </div>
+    </section>
+
+    {/* ================= STEP 4 — YOU + REVIEW ================= */}
+    <section class="pf-pane" data-step-pane="4" aria-labelledby={`${id}-h4`} hidden>
+      <header class="pf-pane__head">
+        <span class="pf-eyebrow">Step 4 of 4</span>
+        <h2 id={`${id}-h4`} tabindex="-1">{STEPS[3].title}</h2>
+        <p>{STEPS[3].sub}</p>
+      </header>
+
+      <div class="pf-seg" role="radiogroup" aria-label="Pickup is for">
+        <span>
+          <input type="radio" id={`${id}-type-res`} name="customerType" value="residential" checked />
+          <label for={`${id}-type-res`}><Icon name="home" /> My home</label>
+        </span>
+        <span>
+          <input type="radio" id={`${id}-type-com`} name="customerType" value="commercial" />
+          <label for={`${id}-type-com`}><Icon name="building" /> A business</label>
+        </span>
+      </div>
+
+      <div class="pf-grid2">
+        <div class="pf-field">
+          <label for={`${id}-firstName`}>First name</label>
+          <input id={`${id}-firstName`} name="firstName" type="text" autocomplete="given-name" maxlength="80" aria-describedby={`${id}-firstName-err`} />
+          <p class="pf-error" id={`${id}-firstName-err`} role="alert"></p>
+        </div>
+        <div class="pf-field">
+          <label for={`${id}-lastName`}>Last name</label>
+          <input id={`${id}-lastName`} name="lastName" type="text" autocomplete="family-name" maxlength="80" aria-describedby={`${id}-lastName-err`} />
+          <p class="pf-error" id={`${id}-lastName-err`} role="alert"></p>
+        </div>
+      </div>
+      <div class="pf-field">
+        <label for={`${id}-phone`}>Mobile phone</label>
+        <input id={`${id}-phone`} name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(251) 555-0123" maxlength="20" aria-describedby={`${id}-phone-err`} />
+        <p class="pf-error" id={`${id}-phone-err`} role="alert"></p>
+      </div>
+      <div class="pf-field">
+        <label for={`${id}-email`}>Email <span class="pf-opt">optional</span></label>
+        <input id={`${id}-email`} name="email" type="email" inputmode="email" autocomplete="email" maxlength="160" aria-describedby={`${id}-email-err`} />
+        <p class="pf-error" id={`${id}-email-err`} role="alert"></p>
+      </div>
+
+      <fieldset class="pf-choice">
+        <legend>Best way to reach you</legend>
+        <div class="pf-choice__row">
+          <span class="pf-chip pf-chip--radio">
+            <input type="radio" id={`${id}-pc-phone`} name="preferredContact" value="phone" checked />
+            <label for={`${id}-pc-phone`}><Icon name="call" /> Call</label>
+          </span>
+          <span class="pf-chip pf-chip--radio">
+            <input type="radio" id={`${id}-pc-text`} name="preferredContact" value="text" />
+            <label for={`${id}-pc-text`}><Icon name="phone" /> Text</label>
+          </span>
+          <span class="pf-chip pf-chip--radio">
+            <input type="radio" id={`${id}-pc-email`} name="preferredContact" value="email" />
+            <label for={`${id}-pc-email`}><Icon name="mail" /> Email</label>
+          </span>
+        </div>
+      </fieldset>
+
+      <div class="pf-ticket" data-review-summary aria-live="polite"></div>
+
+      <div class="pf-consent">
+        <input type="checkbox" id={`${id}-consentGiven`} name="consentGiven" aria-describedby={`${id}-consentGiven-err`} />
+        <label for={`${id}-consentGiven`}>Zoiris Junk Removal may call or text me about this request. I understand nothing is booked until they confirm with me.</label>
+      </div>
+      <p class="pf-error" id={`${id}-consentGiven-err`} role="alert"></p>
+    </section>
+
+    <div class="form-status" role="status" aria-live="polite" tabindex="-1" hidden data-form-status></div>
+
+    <div class="pf-actions" data-pf-actions>
+      <button type="button" class="pf-btn pf-btn--ghost" data-pf-back hidden>
+        <span aria-hidden="true">←</span> Back
+      </button>
+      <a class="pf-btn pf-btn--call" href="tel:+12519308621" data-track="call" data-track-location="pickup-form" aria-label="Call 251-930-8621 instead">
+        <Icon name="call" />
+      </a>
+      <button type="button" class="pf-btn pf-btn--go" data-pf-next>
+        <span data-pf-next-label>Continue</span> <span aria-hidden="true">→</span>
+      </button>
+      <button type="submit" class="pf-btn pf-btn--go" data-submit hidden>
+        <span data-submit-label>Send my request</span>
+      </button>
+    </div>
+  </form>
+
+  <div class="pf-done" data-confirmation-panel tabindex="-1" hidden></div>
+</div>
+
+<script>
+  type Verified = {
+    line: string;
+    city: string;
+    state: string;
+    zip: string;
+    lat: number | null;
+    lng: number | null;
+    countyName: string;
+    token: string;
+    status: string;
+  };
+  type Suggestion = { label: string; line: string; city: string; state: string; zip: string; lat?: number; lng?: number };
+  type QueuedMedia = {
+    uid: string;
+    file: File;
+    kind: 'photo' | 'video';
+    previewUrl: string;
+    progress: number;
+    state: 'ready' | 'uploading' | 'uploaded' | 'failed';
+    error?: string;
+  };
+
+  const PHONE = '251-930-8621';
+  const TOTAL = 4;
+  const DRAFT_KEY = 'zoiris-pickup-draft-v2';
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const esc = (v: unknown) =>
+    String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
+  const fmtBytes = (n: number) => (n < 1048576 ? `${Math.round(n / 1024)} KB` : `${(n / 1048576).toFixed(1)} MB`);
+
+  async function postJson(url: string, body: unknown): Promise<{ ok: boolean; status: number; data: any }> {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const ct = res.headers.get('content-type') || '';
+    if (!ct.includes('application/json')) return { ok: false, status: res.status, data: null };
+    return { ok: res.ok, status: res.status, data: await res.json() };
+  }
+
+  /* ----------------------------- tile map ----------------------------- */
+  function drawMap(host: HTMLElement, lat: number, lng: number, layer: 'street' | 'satellite', zoom = 17) {
+    const tilesEl = host.querySelector<HTMLElement>('[data-map-tiles]');
+    if (!tilesEl) return;
+    const w = host.clientWidth || 320;
+    const h = host.clientHeight || 200;
+    const maxZ = layer === 'satellite' ? 16 : 19;
+    const tz = Math.min(zoom, maxZ);
+    const ts = 256 * 2 ** (zoom - tz);
+    const n = 2 ** tz;
+    const latR = (lat * Math.PI) / 180;
+    const cx = ((lng + 180) / 360) * n * ts;
+    const cy = ((1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2) * n * ts;
+    const left = cx - w / 2;
+    const top = cy - h / 2;
+    let html = '';
+    for (let tx = Math.floor(left / ts); tx <= Math.floor((left + w) / ts); tx++) {
+      for (let ty = Math.floor(top / ts); ty <= Math.floor((top + h) / ts); ty++) {
+        const x = ((tx % n) + n) % n;
+        const src =
+          layer === 'satellite'
+            ? `https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/${tz}/${ty}/${x}`
+            : `https://tile.openstreetmap.org/${tz}/${x}/${ty}.png`;
+        html += `<img src="${src}" alt="" decoding="async" referrerpolicy="strict-origin-when-cross-origin" style="left:${Math.round(tx * ts - left)}px;top:${Math.round(ty * ts - top)}px;width:${ts}px;height:${ts}px">`;
+      }
+    }
+    tilesEl.innerHTML = html;
+    const attr = host.querySelector<HTMLElement>('[data-map-attr]');
+    if (attr) attr.textContent = layer === 'satellite' ? 'Imagery: USGS The National Map' : '© OpenStreetMap contributors';
+  }
+
+  document.querySelectorAll<HTMLFormElement>('form[data-quote-form]').forEach((form) => {
+    const root = form.closest<HTMLElement>('[data-pf]')!;
+    const id = form.id;
+    const $ = <T extends Element = HTMLElement>(sel: string) => root.querySelector<T>(sel);
+    const $$ = <T extends Element = HTMLElement>(sel: string) => Array.from(root.querySelectorAll<T>(sel));
+    const named = <T extends Element = HTMLInputElement>(name: string) => form.elements.namedItem(name) as T | null;
+    const val = (name: string) => {
+      const el = form.elements.namedItem(name);
+      if (!el) return '';
+      if (el instanceof RadioNodeList) return el.value || '';
+      return ((el as HTMLInputElement).value || '').trim();
+    };
+
+    const statusEl = $('[data-form-status]')!;
+    const nextBtn = $<HTMLButtonElement>('[data-pf-next]')!;
+    const nextLabel = $('[data-pf-next-label]')!;
+    const backBtn = $<HTMLButtonElement>('[data-pf-back]')!;
+    const submitBtn = $<HTMLButtonElement>('[data-submit]')!;
+    const submitLabel = $('[data-submit-label]')!;
+    const confirmPanel = $('[data-confirmation-panel]')!;
+
+    let step = 1;
+    let formStartedAt = 0;
+    let verified: Verified | null = null;
+    let lookupOffline = false;
+    let manualMode = false;
+    let mapLayer: 'street' | 'satellite' = 'street';
+    let savedInquiry: { leadId: string; leadNumber: string; uploadToken: string } | null = null;
+    const idempotencyKey = (crypto as Crypto & { randomUUID?: () => string }).randomUUID?.() || `idem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const queuedMedia: QueuedMedia[] = [];
+    let limits = { maxPhotos: 12, maxVideos: 3, maxPhotoBytes: 15 * 1048576, maxVideoBytes: 100 * 1048576 };
+
+    const markStarted = () => {
+      if (!formStartedAt) formStartedAt = Date.now();
+    };
+    form.addEventListener('focusin', markStarted, { once: true });
+    form.addEventListener('change', markStarted, { once: true });
+
+    /* ---------------------------- status / errors ---------------------------- */
+    const showStatus = (kind: 'info' | 'error' | 'success', html: string) => {
+      statusEl.className = `form-status form-status--${kind}`;
+      statusEl.innerHTML = html;
+      statusEl.hidden = false;
+      statusEl.focus({ preventScroll: true });
+      statusEl.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    };
+    const clearStatus = () => {
+      statusEl.hidden = true;
+      statusEl.innerHTML = '';
+    };
+    const setErr = (name: string, msg: string) => {
+      const errEl = root.querySelector<HTMLElement>(`#${id}-${name}-err`);
+      if (errEl) errEl.textContent = msg;
+      const input = form.querySelector<HTMLInputElement>(`#${id}-${name}`);
+      if (input) {
+        if (msg) input.setAttribute('aria-invalid', 'true');
+        else input.removeAttribute('aria-invalid');
+      }
+      return !msg;
+    };
+
+    /* ------------------------------ navigation ------------------------------ */
+    const updateNextLabel = () => {
+      if (step === 2) nextLabel.textContent = queuedMedia.length ? 'Continue' : 'Skip photos';
+      else if (step === 3) nextLabel.textContent = verified || manualMode ? 'Continue' : 'Continue';
+      else nextLabel.textContent = 'Continue';
+    };
+
+    const goTo = (n: number, focus = true) => {
+      step = Math.max(1, Math.min(TOTAL, n));
+      $$('[data-step-pane]').forEach((p) => {
+        const on = Number(p.dataset.stepPane) === step;
+        p.hidden = !on;
+        if (on && !reduceMotion) {
+          p.classList.remove('pf-pane--in');
+          void p.offsetWidth;
+          p.classList.add('pf-pane--in');
+        }
+      });
+      $$('[data-pf-seg]').forEach((s) => {
+        const sn = Number(s.dataset.pfSeg);
+        s.classList.toggle('is-done', sn < step);
+        if (sn === step) s.setAttribute('aria-current', 'step');
+        else s.removeAttribute('aria-current');
+      });
+      backBtn.hidden = step === 1;
+      nextBtn.hidden = step === TOTAL;
+      submitBtn.hidden = step !== TOTAL;
+      updateNextLabel();
+      if (step === TOTAL) renderReview();
+      if (step === 3 && verified) requestAnimationFrame(() => renderVerified());
+      if (focus) {
+        const h = root.querySelector<HTMLElement>(`#${id}-h${step}`);
+        root.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+        h?.focus({ preventScroll: true });
+      }
+      saveDraft();
+    };
+
+    /* ------------------------------ step 1 ------------------------------ */
+    const syncCategories = () => {
+      $$<HTMLInputElement>('input[name="category"]').forEach((c) => {
+        const panel = root.querySelector<HTMLElement>(`[data-chips-for="${c.value}"]`);
+        if (panel) {
+          panel.hidden = !c.checked;
+          if (!c.checked) panel.querySelectorAll<HTMLInputElement>('input').forEach((i) => (i.checked = false));
+        }
+      });
+      const other = $<HTMLInputElement>(`#${id}-cat-Other`);
+      const otherInput = named<HTMLInputElement>('otherItemDescription');
+      if (otherInput) otherInput.placeholder = other?.checked ? 'Describe what needs to go (required)' : 'e.g. old piano, hot tub, swing set';
+      const cats = selectedCategories();
+      const svc = named<HTMLInputElement>('requestedService');
+      if (svc) {
+        svc.value = cats.includes('Cleanout')
+          ? 'Cleanout Service'
+          : cats.length === 1 && cats[0] === 'Electronics'
+            ? 'Electronics Pickup'
+            : cats.length === 1 && cats[0] === 'Furniture'
+              ? 'Furniture Removal'
+              : cats.length === 1 && cats[0] === 'Appliances'
+                ? 'Appliance Removal'
+                : 'Junk Removal';
+      }
+    };
+    const selectedCategories = () => $$<HTMLInputElement>('input[name="category"]:checked').map((c) => c.value);
+    const selectedItems = () => $$<HTMLInputElement>('input[name="selectedItem"]:checked').map((c) => ({ category: c.dataset.category || 'Other', name: c.value }));
+
+    $$<HTMLInputElement>('input[name="category"]').forEach((c) => c.addEventListener('change', () => {
+      syncCategories();
+      setErr('items', '');
+    }));
+    $$<HTMLInputElement>('input[name="selectedItem"]').forEach((c) => c.addEventListener('change', () => setErr('items', '')));
+
+    const truck = $('.pf-truck');
+    const truckLabel = $('[data-truck-label]');
+    const syncTruck = () => {
+      const sel = form.querySelector<HTMLInputElement>('input[name="estimatedQuantity"]:checked');
+      truck?.style.setProperty('--load', sel ? String(sel.dataset.load || 0) : '0');
+      if (truckLabel) truckLabel.textContent = sel ? sel.value : 'Pick a size';
+    };
+    $$<HTMLInputElement>('input[name="estimatedQuantity"]').forEach((r) => r.addEventListener('change', () => {
+      syncTruck();
+      setErr('estimatedQuantity', '');
+    }));
+
+    /* ------------------------------ step 2: media ------------------------------ */
+    const mediaGrid = $('[data-media-grid]')!;
+    const mediaErr = $('[data-media-error]')!;
+    const cfgUrl = form.dataset.uploadConfigEndpoint || '';
+    if (cfgUrl) {
+      fetch(cfgUrl, { headers: { Accept: 'application/json' } })
+        .then((r) => (r.ok && (r.headers.get('content-type') || '').includes('json') ? r.json() : null))
+        .then((d) => {
+          if (d?.limits) {
+            limits = { ...limits, ...d.limits };
+            const lim = $('[data-media-limits]');
+            if (lim) lim.textContent = `Up to ${limits.maxPhotos} photos & ${limits.maxVideos} videos`;
+          }
+        })
+        .catch(() => {});
+    }
+
+    const renderMedia = () => {
+      const photos = queuedMedia.filter((m) => m.kind === 'photo').length;
+      const videos = queuedMedia.filter((m) => m.kind === 'video').length;
+      $('[data-photo-count]')!.textContent = String(photos);
+      $('[data-video-count]')!.textContent = String(videos);
+      mediaGrid.innerHTML = queuedMedia
+        .map(
+          (m) => `<li class="pf-thumb pf-thumb--${m.state}" data-media-uid="${m.uid}">
+            ${m.kind === 'photo' ? `<img src="${m.previewUrl}" alt="${esc(m.file.name)}">` : `<video src="${m.previewUrl}" muted playsinline preload="metadata"></video><span class="pf-thumb__play" aria-hidden="true">▶</span>`}
+            <span class="pf-thumb__meta">${m.kind === 'photo' ? 'Photo' : 'Video'} · ${fmtBytes(m.file.size)}</span>
+            ${m.state === 'uploading' ? `<span class="pf-thumb__bar"><span data-bar="${m.uid}" style="width:${m.progress}%"></span></span>` : ''}
+            ${m.state === 'uploaded' ? '<span class="pf-thumb__ok" aria-label="Uploaded">✓</span>' : ''}
+            ${m.state === 'failed' ? `<button type="button" class="pf-thumb__retry" data-retry="${m.uid}">Retry</button>` : ''}
+            ${m.state === 'ready' || m.state === 'failed' ? `<button type="button" class="pf-thumb__x" data-remove="${m.uid}" aria-label="Remove ${esc(m.file.name)}">×</button>` : ''}
+          </li>`
+        )
+        .join('');
+      updateNextLabel();
+    };
+
+    mediaGrid.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      const rm = t.closest<HTMLElement>('[data-remove]');
+      if (rm) {
+        const i = queuedMedia.findIndex((m) => m.uid === rm.dataset.remove);
+        if (i >= 0) {
+          URL.revokeObjectURL(queuedMedia[i].previewUrl);
+          queuedMedia.splice(i, 1);
+          renderMedia();
+        }
+      }
+      const rt = t.closest<HTMLElement>('[data-retry]');
+      if (rt && savedInquiry) {
+        const item = queuedMedia.find((m) => m.uid === rt.dataset.retry);
+        if (item)
+          uploadOne(item, savedInquiry.uploadToken).then((ok) => {
+            if (ok && queuedMedia.every((m) => m.state === 'uploaded')) void finalize();
+          });
+      }
+    });
+
+    const addFiles = (files: FileList | File[]) => {
+      const errors: string[] = [];
+      for (const file of Array.from(files)) {
+        const isVideo = file.type.startsWith('video/') || /\.(mp4|mov|webm|m4v)$/i.test(file.name);
+        const isPhoto = file.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name);
+        if (!isVideo && !isPhoto) {
+          errors.push(`"${file.name}" isn't a photo or video.`);
+          continue;
+        }
+        const kind = isVideo ? 'video' : 'photo';
+        const count = queuedMedia.filter((m) => m.kind === kind).length;
+        if (kind === 'photo' && count >= limits.maxPhotos) {
+          errors.push(`You can add up to ${limits.maxPhotos} photos.`);
+          continue;
+        }
+        if (kind === 'video' && count >= limits.maxVideos) {
+          errors.push(`You can add up to ${limits.maxVideos} videos.`);
+          continue;
+        }
+        const max = kind === 'photo' ? limits.maxPhotoBytes : limits.maxVideoBytes;
+        if (file.size > max) {
+          errors.push(`"${file.name}" is ${fmtBytes(file.size)} — the ${kind} limit is ${fmtBytes(max)}.`);
+          continue;
+        }
+        queuedMedia.push({ uid: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, file, kind, previewUrl: URL.createObjectURL(file), progress: 0, state: 'ready' });
+      }
+      mediaErr.textContent = errors.join(' ');
+      renderMedia();
+    };
+    $$<HTMLInputElement>('[data-media-input]').forEach((inp) =>
+      inp.addEventListener('change', () => {
+        if (inp.files?.length) addFiles(inp.files);
+        inp.value = '';
+      })
+    );
+    const drop = $('[data-dropzone]');
+    drop?.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      drop.classList.add('is-over');
+    });
+    drop?.addEventListener('dragleave', () => drop.classList.remove('is-over'));
+    drop?.addEventListener('drop', (e) => {
+      e.preventDefault();
+      drop.classList.remove('is-over');
+      if (e.dataTransfer?.files?.length) addFiles(e.dataTransfer.files);
+    });
+
+    /* ------------------------------ step 3: address ------------------------------ */
+    const addrInput = $<HTMLInputElement>(`#${id}-address`)!;
+    const addrList = $<HTMLUListElement>('[data-address-list]')!;
+    const addrSpinner = $('[data-address-spinner]')!;
+    const searchWrap = $('[data-address-search]')!;
+    const card = $('[data-address-card]')!;
+    const manualWrap = $('[data-manual-address]')!;
+    const mapHost = $('[data-map]')!;
+    let suggestions: Suggestion[] = [];
+    let activeIdx = -1;
+    let suggestTimer = 0;
+    let suggestSeq = 0;
+
+    const busy = (on: boolean) => (addrSpinner.hidden = !on);
+    const closeList = () => {
+      addrList.hidden = true;
+      addrInput.setAttribute('aria-expanded', 'false');
+      addrInput.removeAttribute('aria-activedescendant');
+      activeIdx = -1;
+    };
+    const renderList = (items: Suggestion[], emptyText = '') => {
+      suggestions = items;
+      activeIdx = -1;
+      if (!items.length && !emptyText) return closeList();
+      addrList.innerHTML = items.length
+        ? items
+            .map(
+              (s, i) =>
+                `<li role="option" id="${id}-opt-${i}" data-opt="${i}" aria-selected="false"><span class="pf-opt-pin" aria-hidden="true">📍</span><span><strong>${esc(s.line)}</strong><small>${esc([s.city, `${s.state} ${s.zip}`.trim()].filter(Boolean).join(', '))}</small></span></li>`
+            )
+            .join('')
+        : `<li class="pf-addr__empty" role="option" aria-disabled="true">${esc(emptyText)}</li>`;
+      addrList.hidden = false;
+      addrInput.setAttribute('aria-expanded', 'true');
+    };
+
+    const enterManual = (note: string) => {
+      manualMode = true;
+      manualWrap.hidden = false;
+      const noteEl = $('[data-manual-note]');
+      if (noteEl) noteEl.textContent = note;
+      const street = named<HTMLInputElement>('pickupAddress');
+      if (street && !street.value && addrInput.value) street.value = addrInput.value.split(',')[0].trim();
+      updateNextLabel();
+    };
+
+    const fillAddressFields = (v: { line: string; city: string; zip: string }) => {
+      const street = named<HTMLInputElement>('pickupAddress');
+      const city = named<HTMLInputElement>('city');
+      const zip = named<HTMLInputElement>('zipCode');
+      if (street) street.value = v.line;
+      if (city) city.value = v.city;
+      if (zip) zip.value = v.zip;
+    };
+
+    const renderVerified = () => {
+      if (!verified) return;
+      const t = $('[data-verified-text]');
+      if (t) t.textContent = `${verified.line}, ${verified.city}, ${verified.state} ${verified.zip}`;
+      const cty = $('[data-verified-county]');
+      if (cty) cty.textContent = verified.countyName ? `${verified.countyName}, Alabama` : '';
+      const badge = $('[data-verified-badge]');
+      if (badge) badge.textContent = verified.status === 'verified' ? 'Verified address' : verified.status === 'map-match' ? 'Address found on map' : 'Address saved';
+      if (verified.lat != null && verified.lng != null) {
+        mapHost.hidden = false;
+        drawMap(mapHost, verified.lat, verified.lng, mapLayer);
+      } else {
+        mapHost.hidden = true;
+      }
+    };
+
+    const showVerified = (v: Verified) => {
+      verified = v;
+      fillAddressFields(v);
+      searchWrap.hidden = true;
+      manualWrap.hidden = true;
+      card.hidden = false;
+      card.classList.remove('is-drop');
+      void card.offsetWidth;
+      card.classList.add('is-drop');
+      setErr('pickupAddress', '');
+      renderVerified();
+      updateNextLabel();
+      saveDraft();
+    };
+
+    const resetAddress = () => {
+      verified = null;
+      card.hidden = true;
+      searchWrap.hidden = false;
+      if (manualMode) manualWrap.hidden = false;
+      addrInput.value = '';
+      addrInput.focus();
+      saveDraft();
+    };
+
+    const verifyEndpoint = form.dataset.verifyEndpoint || '';
+    const verifyAddress = async (input: { line: string; city?: string; zip?: string }): Promise<'ok' | 'bad' | 'offline'> => {
+      if (!verifyEndpoint) return 'offline';
+      busy(true);
+      setErr('pickupAddress', '');
+      try {
+        const { data } = await postJson(verifyEndpoint, { line: input.line, city: input.city || '', state: 'AL', zip: input.zip || '' });
+        if (!data) {
+          lookupOffline = true;
+          return 'offline';
+        }
+        if ((data.status === 'verified' || data.status === 'map-match') && data.address) {
+          showVerified({ ...data.address, token: data.token || '', status: data.status, countyName: data.address.countyName || '' });
+          return 'ok';
+        }
+        if (data.status === 'unavailable') return 'offline';
+        setErr('pickupAddress', data.message || data.error || "We couldn't find that address.");
+        return 'bad';
+      } catch {
+        lookupOffline = true;
+        return 'offline';
+      } finally {
+        busy(false);
+      }
+    };
+
+    const choose = async (s: Suggestion) => {
+      closeList();
+      addrInput.value = s.label;
+      const r = await verifyAddress({ line: s.line, city: s.city, zip: s.zip });
+      if (r === 'offline') {
+        fillAddressFields(s);
+        enterManual('We could not double-check this address right now. Confirm it below and we will verify it with you.');
+      }
+    };
+
+    const suggestEndpoint = form.dataset.suggestEndpoint || '';
+    addrInput.addEventListener('input', () => {
+      setErr('pickupAddress', '');
+      window.clearTimeout(suggestTimer);
+      const q = addrInput.value.trim();
+      if (q.length < 4 || lookupOffline || !suggestEndpoint) return closeList();
+      suggestTimer = window.setTimeout(async () => {
+        const seq = ++suggestSeq;
+        busy(true);
+        try {
+          const { data } = await postJson(suggestEndpoint, { q });
+          if (seq !== suggestSeq) return;
+          if (!data) {
+            lookupOffline = true;
+            closeList();
+            enterManual('Address search is unavailable right now — please type your address below.');
+            return;
+          }
+          const items: Suggestion[] = data.suggestions || [];
+          renderList(items, /^\d/.test(q) ? 'No match yet — keep typing, or tap "Check this address".' : 'Start with your house number, e.g. 1450 Government St');
+        } catch {
+          lookupOffline = true;
+          closeList();
+          enterManual('Address search is unavailable right now — please type your address below.');
+        } finally {
+          if (seq === suggestSeq) busy(false);
+        }
+      }, 260);
+    });
+
+    addrInput.addEventListener('keydown', (e) => {
+      const opts = Array.from(addrList.querySelectorAll<HTMLElement>('[data-opt]'));
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        if (!opts.length) return;
+        e.preventDefault();
+        activeIdx = (activeIdx + (e.key === 'ArrowDown' ? 1 : -1) + opts.length) % opts.length;
+        opts.forEach((o, i) => o.setAttribute('aria-selected', String(i === activeIdx)));
+        addrInput.setAttribute('aria-activedescendant', opts[activeIdx].id);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeIdx >= 0 && suggestions[activeIdx]) choose(suggestions[activeIdx]);
+        else if (addrInput.value.trim()) $<HTMLButtonElement>('[data-address-check]')?.click();
+      } else if (e.key === 'Escape') {
+        closeList();
+      }
+    });
+    addrList.addEventListener('mousedown', (e) => e.preventDefault());
+    addrList.addEventListener('click', (e) => {
+      const li = (e.target as HTMLElement).closest<HTMLElement>('[data-opt]');
+      if (li) choose(suggestions[Number(li.dataset.opt)]);
+    });
+    addrInput.addEventListener('blur', () => window.setTimeout(closeList, 150));
+
+    $('[data-address-check]')?.addEventListener('click', async () => {
+      const text = addrInput.value.trim();
+      if (!text) {
+        setErr('pickupAddress', 'Type your street address first.');
+        addrInput.focus();
+        return;
+      }
+      closeList();
+      const r = await verifyAddress({ line: text });
+      if (r === 'offline') enterManual('We could not double-check addresses right now. Type it below and we will confirm it with you.');
+    });
+
+    $('[data-address-locate]')?.addEventListener('click', () => {
+      const reverseUrl = form.dataset.reverseEndpoint || '';
+      if (!('geolocation' in navigator) || !reverseUrl) {
+        setErr('pickupAddress', 'Location is not available on this device — please type your address.');
+        return;
+      }
+      busy(true);
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            const { data } = await postJson(reverseUrl, { lat: pos.coords.latitude, lng: pos.coords.longitude });
+            if (!data) {
+              enterManual('Address lookup is unavailable right now — please type your address below.');
+              return;
+            }
+            if (data.message) setErr('pickupAddress', data.message);
+            const items: Suggestion[] = data.suggestions || [];
+            if (items.length) {
+              addrInput.focus();
+              renderList(items);
+            } else if (!data.message) setErr('pickupAddress', "We couldn't pin down your exact address — please type it.");
+          } catch {
+            setErr('pickupAddress', 'Location lookup failed — please type your address.');
+          } finally {
+            busy(false);
+          }
+        },
+        () => {
+          busy(false);
+          setErr('pickupAddress', 'Location permission was declined — no problem, just type your address.');
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      );
+    });
+
+    $('[data-address-change]')?.addEventListener('click', resetAddress);
+    $$<HTMLButtonElement>('[data-map-layer]').forEach((b) =>
+      b.addEventListener('click', () => {
+        mapLayer = b.dataset.mapLayer === 'satellite' ? 'satellite' : 'street';
+        $$<HTMLButtonElement>('[data-map-layer]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        renderVerified();
+      })
+    );
+    window.addEventListener('resize', () => !card.hidden && renderVerified());
+
+    // Access + timing reveals
+    const syncReveals = () => {
+      const where = val('indoorsOrOutdoors');
+      const stairs = $('[data-stairs-wrap]');
+      if (stairs) stairs.hidden = where !== 'Inside – upstairs';
+      const date = $('[data-date-wrap]');
+      if (date) date.hidden = val('timing') !== 'Pick a date';
+    };
+    form.addEventListener('change', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.name === 'indoorsOrOutdoors' || t.name === 'timing') syncReveals();
+      if (t.name === 'indoorsOrOutdoors') setErr('indoorsOrOutdoors', '');
+      saveDraft();
+    });
+
+    /* ------------------------------ step 4 ------------------------------ */
+    const phoneInput = named<HTMLInputElement>('phone');
+    phoneInput?.addEventListener('input', () => {
+      const d = phoneInput.value.replace(/\D/g, '').replace(/^1(?=\d{10})/, '').slice(0, 10);
+      if (d.length >= 7) phoneInput.value = `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+      else if (d.length >= 4) phoneInput.value = `(${d.slice(0, 3)}) ${d.slice(3)}`;
+      setErr('phone', '');
+    });
+    ['firstName', 'lastName', 'email'].forEach((n) => named<HTMLInputElement>(n)?.addEventListener('input', () => setErr(n, '')));
+    named<HTMLInputElement>('consentGiven')?.addEventListener('change', () => setErr('consentGiven', ''));
+
+    const addressText = () => {
+      const line = val('pickupAddress');
+      const unit = val('addressUnit');
+      return line ? `${line}${unit ? ` ${unit}` : ''}, ${val('city')}, AL ${val('zipCode')}` : '';
+    };
+
+    const renderReview = () => {
+      const items = selectedItems().map((i) => i.name.replace(/ \((confirmation required|subject to acceptance)\)/, ''));
+      const other = val('otherItemDescription');
+      const photos = queuedMedia.filter((m) => m.kind === 'photo').length;
+      const videos = queuedMedia.filter((m) => m.kind === 'video').length;
+      const cats = selectedCategories().filter((c) => c !== 'Other');
+      const timing = val('timing') === 'Pick a date' && val('preferredDate') ? val('preferredDate') : val('timing');
+      const row = (label: string, value: string, goto: number) =>
+        `<div class="pf-ticket__row"><dt>${label}</dt><dd>${value}</dd><button type="button" class="pf-link" data-goto="${goto}" aria-label="Edit ${label}">Edit</button></div>`;
+      $('[data-review-summary]')!.innerHTML = `
+        <div class="pf-ticket__head"><span>Pickup request</span><span class="pf-ticket__stamp">Draft</span></div>
+        <dl>
+          ${row('Name', esc(`${val('firstName')} ${val('lastName')}`.trim() || '—'), 4)}
+          ${row('Items', esc([items.length ? items.join(', ') : cats.join(', '), other].filter(Boolean).join(' · ') || '—'), 1)}
+          ${row('Amount', esc(val('estimatedQuantity') || '—'), 1)}
+          ${row('Photos', `${photos} photo(s), ${videos} video(s) attached`, 2)}
+          ${row('Address', `${esc(addressText() || '—')}${verified ? ' <span class="pf-ok">✓ verified</span>' : ''}`, 3)}
+          ${row('Where', esc([val('indoorsOrOutdoors'), val('hasStairs')].filter(Boolean).join(' · ') || '—'), 3)}
+          ${row('When', esc(`${timing || 'Flexible'} · ${val('preferredWindow') || 'Flexible'}`), 3)}
+        </dl>`;
+    };
+    root.addEventListener('click', (e) => {
+      const g = (e.target as HTMLElement).closest<HTMLElement>('[data-goto]');
+      if (g) goTo(Number(g.dataset.goto));
+    });
+
+    /* ------------------------------ validation ------------------------------ */
+    const validateStep = (n: number): boolean => {
+      if (n === 1) {
+        const items = selectedItems();
+        const cats = selectedCategories();
+        const other = val('otherItemDescription');
+        let ok = true;
+        if (cats.includes('Other') && other.length < 3) {
+          ok = setErr('items', 'Tell us what the "something else" is.') && ok;
+          named<HTMLInputElement>('otherItemDescription')?.focus();
+        } else if (!items.length && other.length < 3 && !cats.some((c) => c !== 'Other')) {
+          ok = setErr('items', 'Tap at least one type of item, or describe what needs to go.') && ok;
+        } else setErr('items', '');
+        if (!val('estimatedQuantity')) ok = setErr('estimatedQuantity', 'Choose about how much there is — "Not sure" is fine.') && ok;
+        return ok;
+      }
+      if (n === 3) {
+        let ok = true;
+        if (!verified) {
+          if (manualMode) {
+            if (val('pickupAddress').length < 4 || !/^\d/.test(val('pickupAddress'))) ok = setErr('pickupAddress', 'Enter the street address with the house number.') && ok;
+            if (val('city').length < 2) ok = setErr('city', 'Enter the city.') && ok;
+            if (!/^\d{5}$/.test(val('zipCode'))) ok = setErr('zipCode', 'Enter the 5-digit ZIP code.') && ok;
+          } else {
+            ok = setErr('pickupAddress', 'Choose your address from the list (or tap "Check this address").') && ok;
+            addrInput.focus();
+          }
+        }
+        if (!val('indoorsOrOutdoors')) ok = setErr('indoorsOrOutdoors', 'Tell us where the items are.') && ok;
+        return ok;
+      }
+      if (n === 4) {
+        let ok = true;
+        if (!val('firstName')) ok = setErr('firstName', 'Please enter your first name.') && ok;
+        if (!val('lastName')) ok = setErr('lastName', 'Please enter your last name.') && ok;
+        const digits = val('phone').replace(/\D/g, '').replace(/^1(?=\d{10})/, '');
+        if (digits.length !== 10 || /^[01]/.test(digits) || /^[01]/.test(digits.slice(3))) ok = setErr('phone', 'Enter a 10-digit US phone number we can reach you at.') && ok;
+        const email = val('email');
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) ok = setErr('email', 'That email looks incomplete — fix it or leave it blank.') && ok;
+        if (!ok) form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+        return ok;
+      }
+      return true;
+    };
+
+    nextBtn.addEventListener('click', async () => {
+      clearStatus();
+      if (!validateStep(step)) return;
+      if (step === 3 && !verified && manualMode && !lookupOffline) {
+        nextBtn.disabled = true;
+        const r = await verifyAddress({ line: val('pickupAddress'), city: val('city'), zip: val('zipCode') });
+        nextBtn.disabled = false;
+        if (r === 'bad') return;
+      }
+      goTo(step + 1);
+    });
+    backBtn.addEventListener('click', () => {
+      clearStatus();
+      goTo(step - 1);
+    });
+    $$<HTMLElement>('[data-pf-seg]').forEach((s) =>
+      s.addEventListener('click', () => {
+        const target = Number(s.dataset.pfSeg);
+        if (target < step) goTo(target);
+      })
+    );
+
+    /* ------------------------------ draft autosave ------------------------------ */
+    function saveDraft() {
+      try {
+        const data: Record<string, string | string[]> = {};
+        for (const el of Array.from(form.elements) as HTMLInputElement[]) {
+          if (!el.name || el.type === 'file' || el.name === '_gotcha' || el.name === 'consentGiven') continue;
+          if (el.type === 'checkbox') {
+            if (el.checked) data[el.name] = [...((data[el.name] as string[]) || []), el.value];
+          } else if (el.type === 'radio') {
+            if (el.checked) data[el.name] = el.value;
+          } else if (el.value) data[el.name] = el.value;
+        }
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: Date.now(), step, data, verified, manualMode }));
+      } catch {}
+    }
+    const restoreDraft = () => {
+      try {
+        const raw = localStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        const d = JSON.parse(raw);
+        if (!d || Date.now() - d.at > 3 * 86400000) return localStorage.removeItem(DRAFT_KEY);
+        let restoredAny = false;
+        for (const el of Array.from(form.elements) as HTMLInputElement[]) {
+          const v = d.data?.[el.name];
+          if (v == null || el.type === 'file' || el.type === 'hidden') continue;
+          if (el.type === 'checkbox') el.checked = Array.isArray(v) && v.includes(el.value);
+          else if (el.type === 'radio') el.checked = el.value === v;
+          else el.value = String(v);
+          restoredAny = true;
+        }
+        manualMode = !!d.manualMode;
+        if (manualMode) manualWrap.hidden = false;
+        syncCategories();
+        syncTruck();
+        syncReveals();
+        if (d.verified?.token) showVerified(d.verified);
+        if (restoredAny) {
+          const note = $('[data-pf-restored]');
+          if (note) note.hidden = false;
+          goTo(Math.min(Number(d.step) || 1, 3), false);
+        }
+      } catch {}
+    };
+    $('[data-pf-reset]')?.addEventListener('click', () => {
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {}
+      window.location.reload();
+    });
+    form.addEventListener('input', () => {
+      if (step === TOTAL) renderReview();
+      saveDraft();
+    });
+
+    /* ------------------------------ submit + uploads ------------------------------ */
+    const uploadOne = (item: QueuedMedia, token: string): Promise<boolean> =>
+      new Promise((resolve) => {
+        item.state = 'uploading';
+        item.progress = 4;
+        item.error = undefined;
+        renderMedia();
+        const fd = new FormData();
+        fd.append('uploadToken', token);
+        fd.append('file', item.file, item.file.name);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', form.dataset.uploadEndpoint || '/api/public/uploads', true);
+        xhr.setRequestHeader('X-Upload-Token', token);
+        xhr.upload.onprogress = (ev) => {
+          if (!ev.lengthComputable) return;
+          item.progress = Math.max(4, Math.min(98, Math.round((ev.loaded / ev.total) * 100)));
+          const bar = mediaGrid.querySelector<HTMLElement>(`[data-bar="${item.uid}"]`);
+          if (bar) bar.style.width = `${item.progress}%`;
+        };
+        xhr.onload = () => {
+          let parsed: { ok?: boolean; error?: string } = {};
+          try {
+            parsed = JSON.parse(xhr.responseText || '{}');
+          } catch {}
+          if (xhr.status >= 200 && xhr.status < 300 && parsed.ok !== false) {
+            item.state = 'uploaded';
+            item.progress = 100;
+            const emit = (window as unknown as { zoirisEmitEvent?: (t: string) => void }).zoirisEmitEvent;
+            if (typeof emit === 'function') emit('upload_complete');
+            renderMedia();
+            resolve(true);
+          } else {
+            item.state = 'failed';
+            item.error = parsed.error || `Upload failed (HTTP ${xhr.status}).`;
+            renderMedia();
+            mediaErr.textContent = item.error;
+            resolve(false);
+          }
+        };
+        xhr.onerror = () => {
+          item.state = 'failed';
+          item.error = 'Connection interrupted during upload.';
+          renderMedia();
+          resolve(false);
+        };
+        xhr.send(fd);
+      });
+
+    async function finalize() {
+      if (!savedInquiry) return;
+      if (queuedMedia.length) {
+        try {
+          await fetch(form.dataset.uploadCompleteEndpoint || '/api/public/uploads/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uploadToken: savedInquiry.uploadToken })
+          });
+        } catch {}
+      }
+      window.dispatchEvent(new CustomEvent('zoiris:lead', { detail: { provider: form.dataset.provider || 'zoiris-crm', leadNumber: savedInquiry.leadNumber } }));
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch {}
+      const uploaded = queuedMedia.filter((m) => m.state === 'uploaded').length;
+      const first = val('firstName');
+      form.hidden = true;
+      $('[data-pf-top]')!.hidden = true;
+      const restored = $('[data-pf-restored]');
+      if (restored) restored.hidden = true;
+      confirmPanel.innerHTML = `
+        <div class="pf-done__check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="23"/><path d="m15 27 7.5 7.5L38 19"/></svg></div>
+        <h2>Got it${first ? `, ${esc(first)}` : ''}!</h2>
+        <p class="pf-done__lead">Your pickup request is in. Keep this reference number:</p>
+        <p class="pf-done__ref"><span data-lead-reference>${esc(savedInquiry.leadNumber)}</span></p>
+        ${uploaded ? `<p class="pf-done__media"><strong>${uploaded} media file(s)</strong> were securely attached to your request.</p>` : ''}
+        <ol class="pf-done__steps">
+          <li><span><strong>We review</strong> your items${uploaded ? ' and photos' : ''}.</span></li>
+          <li><span><strong>We call or text you</strong> with an estimate and open time windows.</span></li>
+          <li><span><strong>You pick a time</strong> — then we confirm the pickup.</span></li>
+        </ol>
+        <p class="pf-done__note">Your pickup is not booked until we confirm it with you directly.</p>
+        <a class="pf-btn pf-btn--go pf-done__call" href="tel:+12519308621" data-track="call" data-track-location="pickup-confirmation">Need us sooner? <span class="pf-nowrap">Call ${PHONE}</span></a>`;
+      confirmPanel.hidden = false;
+      confirmPanel.focus();
+      root.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+
+    const stepForField: Record<string, number> = { items: 1, estimatedQuantity: 1, pickupAddress: 3, city: 3, zipCode: 3, indoorsOrOutdoors: 3, firstName: 4, lastName: 4, phone: 4, email: 4, consentGiven: 4 };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (step !== TOTAL) return;
+      for (const n of [1, 3, 4]) {
+        if (!validateStep(n)) {
+          if (n !== step) goTo(n);
+          return;
+        }
+      }
+      const consent = named<HTMLInputElement>('consentGiven');
+      if (!consent?.checked) {
+        setErr('consentGiven', 'Please check the box so we have permission to contact you about this request.');
+        consent?.focus();
+        return;
+      }
+      if (named<HTMLInputElement>('_gotcha')?.value) return;
+
+      const endpoint = form.dataset.endpoint || '';
+      if (!endpoint || form.dataset.provider === 'none') {
+        showStatus('info', `Online requests are not connected yet, so this request was <strong>not sent</strong>. Please call <a href="tel:+12519308621">${PHONE}</a>.`);
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitLabel.textContent = queuedMedia.length ? 'Sending & uploading…' : 'Sending…';
+      clearStatus();
+      try {
+        if (!savedInquiry) {
+          let utm = { source: '', medium: '', campaign: '' };
+          try {
+            const raw = sessionStorage.getItem('zoiris_utm');
+            if (raw) utm = JSON.parse(raw);
+          } catch {}
+          const where = val('indoorsOrOutdoors');
+          const timing = val('timing');
+          const payload = {
+            idempotencyKey,
+            firstName: val('firstName'),
+            lastName: val('lastName'),
+            name: `${val('firstName')} ${val('lastName')}`.trim(),
+            phone: val('phone'),
+            email: val('email'),
+            preferredContact: val('preferredContact') || 'phone',
+            customerType: val('customerType') || 'residential',
+            pickupAddress: val('pickupAddress'),
+            addressUnit: val('addressUnit'),
+            city: val('city'),
+            state: 'AL',
+            zipCode: val('zipCode'),
+            addressToken: verified?.token || '',
+            requestedService: val('requestedService') || 'Junk Removal',
+            selectedItems: selectedItems().length
+              ? selectedItems()
+              : selectedCategories()
+                  .filter((c) => c !== 'Other')
+                  .map((c) => ({ category: c === 'Cleanout' || c === 'Household' ? 'Other' : c, name: `${c} (type not specified)` })),
+            otherItemDescription: val('otherItemDescription'),
+            estimatedQuantity: val('estimatedQuantity'),
+            itemDescription: val('itemDescription'),
+            indoorsOrOutdoors: where,
+            floorLevel: where === 'Inside – upstairs' ? '2nd floor or higher' : where.startsWith('Inside') ? 'Ground floor' : '',
+            hasStairs: val('hasStairs') === 'Stairs only' ? 'Stairs' : val('hasStairs') ? 'No stairs needed' : '',
+            elevatorAvailable: val('hasStairs') === 'Elevator available' ? 'Elevator available' : val('hasStairs') === 'Stairs only' ? 'No elevator available' : '',
+            accessInstructions: val('accessInstructions'),
+            customerNotes: val('accessInstructions'),
+            preferredDate: timing === 'Pick a date' ? val('preferredDate') : '',
+            preferredWindow: `${timing === 'Pick a date' ? '' : `${timing} · `}${val('preferredWindow') || 'Flexible'}`,
+            consentGiven: true,
+            expectedFiles: queuedMedia.length,
+            formStartedAt: formStartedAt || Date.now(),
+            source: 'zoiris-website',
+            sourceType: 'website_form',
+            sourceUrl: window.location.href,
+            sourcePagePath: window.location.pathname,
+            referrerUrl: document.referrer || '',
+            utmSource: utm.source || '',
+            utmMedium: utm.medium || '',
+            utmCampaign: utm.campaign || '',
+            deviceCategory: window.innerWidth < 768 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop'
+          };
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Idempotency-Key': idempotencyKey },
+            body: JSON.stringify(payload)
+          });
+          const ct = res.headers.get('content-type') || '';
+          if ((res.status === 404 || res.status === 405) && !ct.includes('application/json')) {
+            showStatus('info', `Online requests are offline on this preview, so your request was <strong>not saved</strong>. Please call <a href="tel:+12519308621">${PHONE}</a> and we will take it by phone.`);
+            return;
+          }
+          const data = ct.includes('application/json') ? await res.json() : {};
+          if (!res.ok || data.ok === false) {
+            if (data.fieldErrors && typeof data.fieldErrors === 'object') {
+              let firstStep = TOTAL;
+              for (const [k, msg] of Object.entries(data.fieldErrors as Record<string, string>)) {
+                if (k === 'pickupAddress' && verified) resetAddress();
+                setErr(k, msg);
+                firstStep = Math.min(firstStep, stepForField[k] || TOTAL);
+              }
+              if (firstStep !== step) goTo(firstStep);
+              showStatus('error', `Please fix the highlighted ${firstStep === step ? 'fields' : 'step'} — ${esc(data.error || 'something needs a second look')}.`);
+              return;
+            }
+            throw new Error(data.error || `HTTP ${res.status}`);
+          }
+          savedInquiry = { leadId: data.leadId || 'external', leadNumber: data.leadNumber || 'SUBMITTED', uploadToken: data.uploadToken || '' };
+        }
+
+        const pending = queuedMedia.filter((m) => m.state !== 'uploaded');
+        if (pending.length && savedInquiry.uploadToken) {
+          let all = true;
+          for (const item of pending) if (!(await uploadOne(item, savedInquiry.uploadToken))) all = false;
+          if (!all) {
+            goTo(2);
+            showStatus('error', `Your request <strong>${esc(savedInquiry.leadNumber)}</strong> is saved — but a file didn't upload. Tap <strong>Retry</strong> on it, or call <a href="tel:+12519308621">${PHONE}</a>.`);
+            return;
+          }
+        }
+        await finalize();
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Unable to send request.';
+        showStatus('error', `Sorry, your request could not be sent (${esc(msg)}). Nothing was booked — please try again or call <a href="tel:+12519308621">${PHONE}</a>.`);
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.textContent = 'Send my request';
+      }
+    });
+
+    syncCategories();
+    syncTruck();
+    syncReveals();
+    restoreDraft();
+    if (!verifyEndpoint && !suggestEndpoint) enterManual('Type your address below.');
+  });
+</script>
+
+<style is:global>
+  body:has([data-pf]) .callbar { display: none; }
+  body:has([data-pf]) { --callbar-h: 0px; }
+  .pf [hidden] { display: none !important; }
+
+  .pf {
+    --pf-navy: #0e1a2b;
+    --pf-ink: #0e1a2b;
+    --pf-teal: #0f766e;
+    --pf-teal-soft: #ebf7f4;
+    --pf-orange: #f26b1d;
+    --pf-line: #e3dccd;
+    --pf-radius: 18px;
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--pf-line);
+    border-radius: 24px;
+    box-shadow: 0 30px 60px -30px rgba(11, 21, 34, 0.35), 0 2px 6px rgba(11, 21, 34, 0.05);
+    overflow: clip;
+    scroll-margin-top: calc(var(--header-h, 72px) + 8px);
+  }
+
+  /* progress */
+  .pf-top { padding: 1rem clamp(1rem, 3vw, 1.75rem) 0; background: linear-gradient(180deg, #0e1a2b 0%, #16273d 100%); }
+  .pf-progress { list-style: none; margin: 0; padding: 0 0 .9rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: .45rem; align-items: start; }
+  .pf-progress__seg { display: grid; gap: .35rem; cursor: default; }
+  .pf-progress__seg.is-done { cursor: pointer; }
+  .pf-progress__bar { display: block; height: 6px; border-radius: 99px; background: rgba(255, 255, 255, .14); overflow: hidden; }
+  .pf-progress__bar > span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #5ec4b6, #b8e04a); border-radius: inherit; transition: width .45s cubic-bezier(.2, .8, .2, 1); }
+  .pf-progress__seg.is-done .pf-progress__bar > span { width: 100%; }
+  .pf-progress__seg[aria-current='step'] .pf-progress__bar > span { width: 50%; background: linear-gradient(90deg, #f26b1d, #ff8a45); }
+  .pf-progress__label { font-size: .74rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255, 255, 255, .74); }
+  .pf-progress__seg[aria-current='step'] .pf-progress__label { color: #fff; }
+  .pf-progress__seg.is-done .pf-progress__label { color: #5ec4b6; }
+
+  .pf-restored { margin: 0; padding: .6rem clamp(1rem, 3vw, 1.75rem); background: var(--pf-teal-soft); color: #0b5c56; font-size: .9rem; font-weight: 600; display: flex; align-items: center; gap: .45rem; flex-wrap: wrap; }
+  .pf-restored svg { width: 18px; height: 18px; }
+
+  .pf-form { display: block; }
+  .pf-pane { padding: clamp(1.1rem, 3vw, 1.9rem) clamp(1rem, 3vw, 1.75rem) .5rem; display: grid; gap: 1.15rem; }
+  .pf-pane[hidden] { display: none; }
+  .pf-pane--in { animation: pfIn .38s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes pfIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .pf-pane__head { display: grid; gap: .3rem; }
+  .pf-pane__head h2 { margin: 0; font-size: clamp(1.45rem, 1.2rem + 1.2vw, 2rem); line-height: 1.1; letter-spacing: -.02em; outline: none; }
+  .pf-pane__head p { margin: 0; color: #566476; }
+  .pf-eyebrow { font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #b84509; }
+  .pf-opt { font-weight: 500; color: #566476; font-size: .85em; }
+
+  /* tiles */
+  .pf-tiles { border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+  @media (min-width: 620px) { .pf-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .pf-tile { position: relative; min-width: 0; }
+  .pf-tile input, .pf-chip input, .pf-load__opt input, .pf-seg input, .pf-consent input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+  .pf-consent input { position: static; opacity: 1; width: 22px; height: 22px; pointer-events: auto; accent-color: var(--pf-teal); flex: none; margin-top: .1rem; }
+  .pf-tile label {
+    position: relative; display: grid; gap: .2rem; align-content: start; height: 100%; min-height: 118px; padding: .9rem .85rem;
+    border: 1.5px solid var(--pf-line); border-radius: var(--pf-radius); background: #fbf8f2; cursor: pointer;
+    transition: transform .18s, border-color .18s, background-color .18s, box-shadow .18s; -webkit-tap-highlight-color: transparent;
+  }
+  .pf-tile label:active { transform: scale(.97); }
+  .pf-tile__icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: #fff; border: 1px solid var(--pf-line); color: var(--pf-ink); margin-bottom: .35rem; transition: background-color .18s, color .18s; }
+  .pf-tile__icon svg { width: 26px; height: 26px; }
+  .pf-tile__label { font-weight: 800; font-size: 1rem; line-height: 1.15; }
+  .pf-tile__hint { font-size: .82rem; color: #566476; line-height: 1.3; }
+  .pf-tile__check { position: absolute; top: .6rem; right: .6rem; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--pf-teal); color: #fff; transform: scale(0); transition: transform .22s cubic-bezier(.3, 1.6, .5, 1); }
+  .pf-tile__check svg { width: 14px; height: 14px; stroke-width: 3; }
+  .pf-tile input:checked + label { border-color: var(--pf-teal); background: var(--pf-teal-soft); box-shadow: 0 10px 24px -14px rgba(15, 118, 110, .7); }
+  .pf-tile input:checked + label .pf-tile__icon { background: var(--pf-teal); color: #fff; border-color: var(--pf-teal); }
+  .pf-tile input:checked + label .pf-tile__check { transform: scale(1); }
+  .pf-tile input:focus-visible + label, .pf-chip input:focus-visible + label, .pf-load__opt input:focus-visible + label, .pf-seg input:focus-visible + label { outline: 3px solid #1b74e4; outline-offset: 2px; }
+
+  /* chips */
+  .pf-chips, .pf-choice, .pf-load { border: 0; margin: 0; padding: 0; min-width: 0; display: grid; gap: .55rem; }
+  .pf-chips[hidden], .pf-choice[hidden] { display: none; }
+  .pf-chips legend, .pf-choice legend, .pf-load legend { font-weight: 800; font-size: 1rem; padding: 0; margin-bottom: .5rem; }
+  .pf-chips legend span { font-weight: 500; color: #566476; }
+  .pf-chips { padding: .9rem; border-radius: var(--pf-radius); background: #f7f3eb; animation: pfIn .3s ease; }
+  .pf-chips__row, .pf-choice__row { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .pf-choice__row--small { margin-top: .2rem; }
+  .pf-chip { position: relative; }
+  .pf-chip label {
+    display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .55rem .95rem; border-radius: 99px;
+    border: 1.5px solid #d9cdb6; background: #fff; font-weight: 600; font-size: .92rem; cursor: pointer; line-height: 1.2;
+    transition: background-color .15s, border-color .15s, color .15s, transform .15s; -webkit-tap-highlight-color: transparent;
+  }
+  .pf-chip label svg { width: 18px; height: 18px; }
+  .pf-chip label:active { transform: scale(.96); }
+  .pf-chip input:checked + label { background: var(--pf-navy); border-color: var(--pf-navy); color: #fff; }
+
+  /* load meter */
+  .pf-truck { --load: 0; position: relative; display: grid; justify-items: center; gap: .25rem; padding: .5rem 0 .2rem; }
+  .pf-truck svg { width: min(100%, 260px); height: auto; overflow: visible; }
+  .pf-truck__box { fill: #f5efe4; stroke: #d9cdb6; stroke-width: 2; }
+  .pf-truck__fill { fill: #f26b1d; transform-box: fill-box; transform-origin: left center; transform: scaleX(var(--load)); transition: transform .6s cubic-bezier(.3, 1.3, .5, 1); opacity: .9; }
+  .pf-truck__cab { fill: #0e1a2b; }
+  .pf-truck__glass { fill: #5ec4b6; }
+  .pf-truck__base { fill: #16273d; }
+  .pf-truck__wheel { fill: #0b1522; }
+  .pf-truck__hub { fill: #d9cdb6; }
+  .pf-truck__logo { stroke: rgba(14, 26, 43, .18); stroke-width: 5; stroke-linecap: round; }
+  .pf-truck__label { font-weight: 800; font-size: .9rem; color: #566476; }
+  .pf-load__opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+  @media (min-width: 620px) { .pf-load__opts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .pf-load__opt label { display: grid; gap: .1rem; min-height: 64px; padding: .65rem .8rem; border: 1.5px solid var(--pf-line); border-radius: 14px; background: #fff; cursor: pointer; transition: border-color .15s, background-color .15s; }
+  .pf-load__opt small { color: #566476; font-size: .8rem; }
+  .pf-load__opt input:checked + label { border-color: var(--pf-orange); background: #fff4ec; box-shadow: inset 0 0 0 1px var(--pf-orange); }
+
+  /* fields */
+  .pf-field { display: grid; gap: .4rem; min-width: 0; }
+  .pf-field label, .pf-addr__label { font-weight: 700; font-size: .95rem; }
+  .pf-field input, .pf-field textarea, .pf-addr__box input {
+    width: 100%; min-width: 0; min-height: 54px; padding: .8rem .95rem; border: 1.5px solid #cfc5b1; border-radius: 14px; background: #fff;
+    font: inherit; font-size: 16px; color: var(--pf-ink); transition: border-color .15s, box-shadow .15s;
+  }
+  .pf-field textarea { min-height: 92px; resize: vertical; }
+  .pf-field input:focus, .pf-field textarea:focus, .pf-addr__box input:focus { outline: none; border-color: var(--pf-teal); box-shadow: 0 0 0 4px rgba(15, 118, 110, .18); }
+  .pf-field [aria-invalid='true'], .pf-addr__box input[aria-invalid='true'] { border-color: #a32020; box-shadow: 0 0 0 4px rgba(163, 32, 32, .12); }
+  .pf-grid2 { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .pf-error { margin: 0; color: #a32020; font-weight: 700; font-size: .9rem; }
+  .pf-error:empty { display: none; }
+
+  /* media */
+  .pf-media { display: grid; gap: .75rem; padding: .9rem; border: 2px dashed #d9cdb6; border-radius: 22px; background: #fbf8f2; transition: border-color .2s, background-color .2s; }
+  .pf-media.is-over { border-color: var(--pf-teal); background: var(--pf-teal-soft); }
+  .pf-media__buttons { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); }
+  .pf-bigbtn { display: flex; align-items: center; gap: .75rem; min-height: 72px; padding: .85rem 1rem; border-radius: 18px; border: 1.5px solid var(--pf-line); background: #fff; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+  .pf-bigbtn:active { transform: scale(.98); }
+  .pf-bigbtn svg { width: 30px; height: 30px; flex: none; }
+  .pf-bigbtn span { display: grid; line-height: 1.2; }
+  .pf-bigbtn small { color: #566476; font-size: .82rem; }
+  .pf-bigbtn--primary { background: var(--pf-navy); color: #fff; border-color: var(--pf-navy); }
+  .pf-bigbtn--primary small { color: rgba(255, 255, 255, .7); }
+  .pf-bigbtn--primary svg { color: #ff8a45; }
+  .pf-bigbtn:focus-within, .pf-media:has(input[data-media-input]:focus-visible) .pf-bigbtn--primary { outline: 3px solid #1b74e4; outline-offset: 2px; }
+  .pf-media__drop { margin: 0; text-align: center; color: #8a96a6; font-size: .85rem; }
+  @media (hover: none) { .pf-media__drop { display: none; } }
+  .pf-media__counts { margin: 0; display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .88rem; color: #3b4859; }
+  .pf-media__limits { color: #8a96a6; margin-left: auto; }
+  .pf-media__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .55rem; }
+  .pf-media__grid:empty { display: none; }
+  .pf-thumb { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #0b1522; animation: pfIn .3s ease; }
+  .pf-thumb img, .pf-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pf-thumb__play { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 1.4rem; text-shadow: 0 2px 8px rgba(0, 0, 0, .5); pointer-events: none; }
+  .pf-thumb__meta { position: absolute; left: 0; right: 0; bottom: 0; padding: .9rem .4rem .3rem; font-size: .68rem; font-weight: 700; color: #fff; background: linear-gradient(transparent, rgba(0, 0, 0, .7)); }
+  .pf-thumb__x { position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; border-radius: 50%; border: 0; background: rgba(11, 21, 34, .78); color: #fff; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+  .pf-thumb__bar { position: absolute; left: 6px; right: 6px; bottom: 6px; height: 6px; border-radius: 99px; background: rgba(255, 255, 255, .3); overflow: hidden; }
+  .pf-thumb__bar span { display: block; height: 100%; background: #b8e04a; transition: width .2s; }
+  .pf-thumb__ok { position: absolute; top: 6px; left: 6px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #0f766e; color: #fff; font-weight: 900; }
+  .pf-thumb__retry { position: absolute; inset: auto 6px 6px; min-height: 32px; border: 0; border-radius: 10px; background: #f26b1d; color: #0b1522; font-weight: 800; cursor: pointer; }
+  .pf-thumb--failed { outline: 3px solid #a32020; }
+  .pf-tips { display: flex; gap: .65rem; align-items: flex-start; padding: .8rem .95rem; border-radius: 16px; background: #fff4ec; color: #7a3a0a; font-size: .9rem; }
+  .pf-tips svg { width: 20px; height: 20px; flex: none; margin-top: .1rem; }
+  .pf-tips p { margin: 0; }
+
+  /* address */
+  .pf-addr { position: relative; display: grid; gap: .5rem; }
+  .pf-addr[hidden] { display: none; }
+  .pf-addr__box { position: relative; }
+  .pf-addr__box > svg { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; color: var(--pf-orange); pointer-events: none; }
+  .pf-addr__box input { padding-left: 2.75rem; padding-right: 2.75rem; min-height: 60px; font-weight: 600; }
+  .pf-spinner { position: absolute; right: 1rem; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; border: 3px solid #d2efe9; border-top-color: var(--pf-teal); animation: pfSpin .8s linear infinite; }
+  .pf-spinner[hidden] { display: none; }
+  @keyframes pfSpin { to { transform: rotate(360deg); } }
+  .pf-addr__list { list-style: none; margin: 0; padding: .35rem; background: #fff; border: 1px solid var(--pf-line); border-radius: 18px; box-shadow: 0 18px 40px -22px rgba(11, 21, 34, .45); max-height: 320px; overflow: auto; animation: pfIn .2s ease; }
+  .pf-addr__list[hidden] { display: none; }
+  .pf-addr__list li { display: flex; gap: .65rem; align-items: center; padding: .7rem .75rem; border-radius: 12px; cursor: pointer; min-height: 52px; }
+  .pf-addr__list li span:last-child { display: grid; }
+  .pf-addr__list li small { color: #566476; }
+  .pf-addr__list li[aria-selected='true'], .pf-addr__list li:hover { background: var(--pf-teal-soft); }
+  .pf-addr__empty { color: #566476; cursor: default !important; font-size: .9rem; }
+  .pf-addr__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .pf-pill { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .5rem .9rem; border-radius: 99px; border: 1.5px solid var(--pf-line); background: #fff; font: inherit; font-weight: 700; font-size: .88rem; color: var(--pf-ink); cursor: pointer; }
+  .pf-pill svg { width: 18px; height: 18px; color: var(--pf-teal); }
+  .pf-addr__note { margin: 0; display: flex; gap: .45rem; align-items: flex-start; font-size: .82rem; color: #566476; }
+  .pf-addr__note svg { width: 18px; height: 18px; flex: none; color: var(--pf-teal); }
+
+  .pf-verified { border-radius: 22px; overflow: hidden; border: 1.5px solid var(--pf-teal); background: var(--pf-teal-soft); }
+  .pf-verified[hidden] { display: none; }
+  .pf-verified.is-drop .pf-map__pin { animation: pfDrop .6s cubic-bezier(.3, 1.5, .5, 1); }
+  @keyframes pfDrop { 0% { transform: translate(-50%, -160%); opacity: 0; } 100% { transform: translate(-50%, -100%); opacity: 1; } }
+  .pf-map { position: relative; height: 210px; overflow: hidden; background: #dfe7e4; touch-action: pan-y; }
+  .pf-map[hidden] { display: none; }
+  .pf-map__tiles { position: absolute; inset: 0; }
+  .pf-map__tiles img { position: absolute; max-width: none; user-select: none; -webkit-user-drag: none; }
+  .pf-map__pin { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -100%); color: var(--pf-orange); filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .35)); }
+  .pf-map__pin svg { width: 44px; height: 44px; fill: #f26b1d; stroke: #fff; stroke-width: 1.6; }
+  .pf-map__toggle { position: absolute; top: .6rem; right: .6rem; display: flex; background: rgba(255, 255, 255, .95); border-radius: 99px; padding: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, .15); }
+  .pf-map__toggle button { border: 0; background: transparent; font: inherit; font-weight: 700; font-size: .8rem; padding: .4rem .75rem; border-radius: 99px; cursor: pointer; min-height: 34px; }
+  .pf-map__toggle button[aria-pressed='true'] { background: var(--pf-navy); color: #fff; }
+  .pf-map__attr { position: absolute; right: 0; bottom: 0; padding: 2px 6px; font-size: .65rem; background: rgba(255, 255, 255, .85); color: #3b4859; }
+  .pf-verified__body { padding: .9rem 1rem 1rem; display: grid; gap: .25rem; }
+  .pf-badge { display: inline-flex; align-items: center; gap: .35rem; width: fit-content; padding: .25rem .65rem; border-radius: 99px; background: #0f766e; color: #fff; font-size: .8rem; font-weight: 800; }
+  .pf-badge svg { width: 16px; height: 16px; }
+  .pf-verified__addr { margin: .2rem 0 0; font-weight: 800; font-size: 1.08rem; }
+  .pf-verified__county { margin: 0; color: #0b5c56; font-size: .88rem; }
+  .pf-link { border: 0; background: none; padding: 0; font: inherit; font-weight: 700; color: #0f766e; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; width: fit-content; min-height: 32px; }
+  .pf-manual { display: grid; gap: .8rem; padding: .9rem; border-radius: 18px; background: #f7f3eb; }
+  .pf-manual[hidden] { display: none; }
+  .pf-manual__note { margin: 0; font-size: .9rem; font-weight: 600; color: #4a3200; }
+
+  /* segmented + consent */
+  .pf-seg { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; padding: 4px; border-radius: 18px; background: #f5efe4; }
+  .pf-seg label { display: flex; align-items: center; justify-content: center; gap: .45rem; min-height: 50px; border-radius: 14px; font-weight: 700; cursor: pointer; color: #3b4859; transition: background-color .15s, box-shadow .15s; }
+  .pf-seg label svg { width: 20px; height: 20px; }
+  .pf-seg input:checked + label { background: #fff; color: var(--pf-ink); box-shadow: 0 4px 12px -4px rgba(11, 21, 34, .25); }
+  .pf-consent { display: flex; gap: .7rem; align-items: flex-start; padding: .9rem; border-radius: 16px; background: #fbf8f2; border: 1px solid var(--pf-line); }
+  .pf-consent label { font-size: .92rem; line-height: 1.45; cursor: pointer; }
+
+  /* review ticket */
+  .pf-ticket { position: relative; border-radius: 20px; background: #0e1a2b; color: #fff; padding: 1rem 1.1rem 1.1rem; }
+  .pf-ticket::before, .pf-ticket::after { content: ''; position: absolute; top: 52px; width: 22px; height: 22px; border-radius: 50%; background: #fff; }
+  .pf-ticket::before { left: -11px; }
+  .pf-ticket::after { right: -11px; }
+  .pf-ticket__head { display: flex; justify-content: space-between; align-items: center; padding-bottom: .9rem; margin-bottom: .6rem; border-bottom: 2px dashed rgba(255, 255, 255, .2); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .8rem; color: #5ec4b6; }
+  .pf-ticket__stamp { border: 2px solid #f26b1d; color: #ff8a45; padding: .1rem .5rem; border-radius: 6px; transform: rotate(-4deg); }
+  .pf-ticket dl { margin: 0; display: grid; gap: .1rem; }
+  .pf-ticket__row { display: grid; grid-template-columns: 5.2rem 1fr auto; gap: .6rem; align-items: baseline; padding: .45rem 0; border-bottom: 1px solid rgba(255, 255, 255, .08); }
+  .pf-ticket__row:last-child { border-bottom: 0; }
+  .pf-ticket dt { font-size: .74rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+  .pf-ticket dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .pf-ticket .pf-link { color: #5ec4b6; font-size: .85rem; }
+  .pf-ok { color: #b8e04a; font-weight: 800; white-space: nowrap; }
+
+  /* sticky actions */
+  .pf-actions {
+    position: sticky; bottom: 0; z-index: 15; display: flex; gap: .55rem; align-items: center;
+    padding: .75rem clamp(1rem, 3vw, 1.75rem) calc(.75rem + env(safe-area-inset-bottom));
+    margin-top: 1rem; background: rgba(255, 255, 255, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--pf-line);
+  }
+  .pf-btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; min-height: 54px; padding: .7rem 1.2rem; border-radius: 16px; border: 0; font: inherit; font-weight: 800; font-size: 1.02rem; cursor: pointer; text-decoration: none; transition: transform .15s, box-shadow .15s, background-color .15s; }
+  .pf-btn:active { transform: scale(.97); }
+  .pf-btn[hidden] { display: none; }
+  .pf-btn:disabled { opacity: .6; cursor: progress; }
+  .pf-btn--go { flex: 1; min-width: 0; white-space: nowrap; background: #f26b1d; color: #0b1522; box-shadow: 0 12px 24px -12px rgba(242, 107, 29, .9); }
+  .pf-btn--go:hover { background: #ff8a45; }
+  .pf-btn--ghost { background: #f5efe4; color: var(--pf-ink); padding: .7rem .95rem; white-space: nowrap; flex: none; }
+  @media (max-width: 400px) { .pf-btn--ghost { padding: .7rem .8rem; } .pf-btn--go { padding: .7rem .8rem; font-size: .98rem; } }
+  .pf-btn--call { width: 54px; padding: 0; background: #ebf7f4; color: #0f766e; flex: none; }
+  .pf-btn--call svg { width: 24px; height: 24px; }
+  .pf-form > .form-status { margin: 1rem clamp(1rem, 3vw, 1.75rem) 0; }
+
+  /* confirmation */
+  .pf-done { padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem) 2rem; text-align: center; display: grid; gap: .7rem; justify-items: center; outline: none; }
+  .pf-done[hidden] { display: none; }
+  .pf-done h2 { margin: 0; font-size: clamp(1.7rem, 1.3rem + 1.6vw, 2.4rem); letter-spacing: -.02em; }
+  .pf-done__check svg { width: 88px; height: 88px; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .pf-done__check circle { stroke: #0f766e; stroke-width: 3; stroke-dasharray: 150; stroke-dashoffset: 150; animation: pfDraw .7s ease forwards; fill: #ebf7f4; }
+  .pf-done__check path { stroke: #0f766e; stroke-width: 4.5; stroke-dasharray: 40; stroke-dashoffset: 40; animation: pfDraw .45s .55s ease forwards; }
+  @keyframes pfDraw { to { stroke-dashoffset: 0; } }
+  .pf-done__lead, .pf-done__media, .pf-done__note { margin: 0; color: #3b4859; max-width: 34rem; }
+  .pf-done__ref { margin: .2rem 0; font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.1rem); font-weight: 900; letter-spacing: .04em; padding: .5rem 1.1rem; border-radius: 14px; background: #0e1a2b; color: #fff; border: 2px dashed #5ec4b6; }
+  .pf-done__steps { text-align: left; margin: .5rem 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: .55rem; max-width: 30rem; width: 100%; }
+  .pf-done__steps li { counter-increment: s; display: flex; gap: .7rem; align-items: baseline; padding: .7rem .9rem; border-radius: 14px; background: #fbf8f2; }
+  .pf-done__steps li::before { content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: #f26b1d; color: #0b1522; font-weight: 900; font-size: .85rem; }
+  .pf-done__note { font-weight: 700; color: #0e1a2b; }
+  .pf-done__call { flex: none; width: 100%; max-width: 26rem; flex-wrap: wrap; column-gap: .3rem; white-space: normal; }
+  .pf-nowrap { white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pf *, .pf *::before, .pf *::after { animation: none !important; transition: none !important; }
+    .pf-done__check circle, .pf-done__check path { stroke-dashoffset: 0; }
+  }
+  @media (max-width: 380px) {
+    .pf-tile label { min-height: 108px; padding: .75rem .7rem; }
+    .pf-tile__hint { display: none; }
+    .pf-ticket__row { grid-template-columns: 1fr auto; }
+    .pf-ticket dt { grid-column: 1 / -1; }
+  }
+</style>

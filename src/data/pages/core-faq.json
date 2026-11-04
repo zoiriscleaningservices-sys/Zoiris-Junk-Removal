@@ -1,0 +1,36 @@
+{
+  "id": "core-faq",
+  "type": "core",
+  "path": "/faq/",
+  "status": "published",
+  "refs": {
+    "locationId": "mobile-al"
+  },
+  "seo": {
+    "title": "Junk Removal & Electronics Pickup FAQs | Zoiris, Mobile AL",
+    "description": "Answers to common questions about Zoiris junk removal and electronics pickup in Mobile, AL: what we take, how pickup works, estimates, and preparation.",
+    "h1": "Frequently Asked Questions",
+    "primaryKeyword": "junk removal questions Mobile AL",
+    "secondaryKeywords": [],
+    "intent": "informational",
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "schemaTypes": [
+      "BreadcrumbList"
+    ]
+  },
+  "breadcrumb": {
+    "label": "FAQs",
+    "parentId": "core-home"
+  },
+  "purpose": "Consolidated answers to cross-cutting questions, linking to detailed service pages.",
+  "related": [],
+  "workflow": {
+    "createdAt": "2026-11-04",
+    "updatedAt": "2026-11-04",
+    "approvedBy": "build-editor (pending owner sign-off)",
+    "approvedAt": "2026-11-04",
+    "reviewNotes": "Core page; copy authored in src/pages.",
+    "ownerVerification": []
+  }
+}
