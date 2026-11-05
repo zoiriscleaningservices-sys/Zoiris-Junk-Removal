@@ -20,7 +20,8 @@ import { chromium } from 'playwright-core';
 
 import { ROOT } from '../scripts/lib/load-data.mjs';
 import { createZoirisApp } from '../server/index.mjs';
-import { decryptWebPushPayload } from '../server/webpush.mjs';
+import { decryptWebPushPayload, loadOrCreateVapidKeys } from '../server/webpush.mjs';
+import { createBridgeHandler, hashOwnerPassword } from '../cloud-bridge/api/bridge.mjs';
 
 const CHROME_PATHS = [
   process.env.CHROME_PATH,
@@ -423,12 +424,12 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
           body: ndjson ? ndjson + '\n' : ''
         });
       }
-      if (u.pathname.endsWith('/json')) {
+      if (u.pathname.endsWith('/json') || u.pathname.endsWith('/sse')) {
         return route.fulfill({
           status: 200,
-          contentType: 'text/event-stream',
+          contentType: 'text/event-stream; charset=utf-8',
           headers: { 'Access-Control-Allow-Origin': '*' },
-          body: ': keepalive\n\n'
+          body: 'event: open\ndata: {"event":"open"}\n\n'
         });
       }
       return route.fulfill({ status: 200, body: '{}' });
@@ -457,6 +458,13 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
       const inputId = await page.locator(sel).first().getAttribute('id');
       await page.click(`label[for="${inputId}"]`);
     };
+
+    // Strip data-cloud-bridge on the form HTML in this test so the zero-bridge ntfy fallback path is tested cleanly
+    await context.route(`${staticSrv.origin}/Zoiris-Junk-Removal/request-pickup/`, async (route) => {
+      const resp = await route.fetch();
+      const html = (await resp.text()).replace(/data-cloud-bridge="[^"]*"/g, 'data-cloud-bridge=""');
+      return route.fulfill({ response: resp, body: html });
+    });
 
     /* ---------------- PART 1: Customer Submits Form on Static GitHub Pages ---------------- */
     await page.goto(`${staticSrv.origin}/Zoiris-Junk-Removal/request-pickup/`, { waitUntil: 'domcontentloaded' });
@@ -560,5 +568,292 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
 
     assert.deepEqual(consoleErrors, [], `Unexpected browser errors: ${consoleErrors.join('; ')}`);
     await context.close();
+  });
+
+  it('streams new website leads live in real time to open Owner browsers (zero reload via SSE) AND dispatches background Web Push to installed PWA via Cloud Bridge', async () => {
+    const vapid = loadOrCreateVapidKeys(tempVault);
+    const liveTopic = 'zoiris_live_e2e_stream_test';
+    const bridgePushes = [];
+    const sseClients = new Set();
+    let bridgeOrigin = '';
+
+    const bridgeHandler = createBridgeHandler({
+      memoryMap: new Map(),
+      env: {
+        ZOIRIS_MEMORY_STORE: '1',
+        ZOIRIS_MASTER_KEY: randomBytes(32).toString('base64url'),
+        ZOIRIS_OWNER_EMAIL: ownerEmail,
+        ZOIRIS_OWNER_PW_HASH: hashOwnerPassword(ownerPassword),
+        ZOIRIS_VAPID_SUBJECT: 'mailto:owner@zoirisjunkremoval.com',
+        ZOIRIS_VAPID_PUBLIC_KEY: vapid.publicKey,
+        ZOIRIS_VAPID_PRIVATE_JWK: JSON.stringify(vapid.privateJwk),
+        ZOIRIS_LIVE_TOPIC: liveTopic
+      },
+      fetchImpl: async (targetUrl, init) => {
+        const u = String(targetUrl);
+        if (u.startsWith('https://web.push.apple.com/')) {
+          bridgePushes.push({
+            endpoint: u,
+            headers: init?.headers || {},
+            body: Buffer.from(init?.body || '')
+          });
+          return new Response('', { status: 201 });
+        }
+        if (u.includes(`/${liveTopic}`) && (init?.method || 'GET').toUpperCase() === 'POST') {
+          const msgBody = String(init?.body || '{}');
+          const sseFrame = `data: ${JSON.stringify({ id: 'live_1', event: 'message', topic: liveTopic, message: msgBody })}\n\n`;
+          for (const clientRes of sseClients) {
+            try {
+              clientRes.write(sseFrame);
+            } catch {}
+          }
+          return new Response('{"id":"live_1"}', { status: 200 });
+        }
+        return fetch(targetUrl, init);
+      }
+    });
+
+    const bridgeServer = createServer((req, res) => {
+      const u = new URL(req.url || '/', 'http://127.0.0.1');
+      if (u.pathname === `/${liveTopic}/sse`) {
+        res.writeHead(200, {
+          'Content-Type': 'text/event-stream; charset=utf-8',
+          'Cache-Control': 'no-cache, no-store',
+          Connection: 'keep-alive',
+          'Access-Control-Allow-Origin': '*'
+        });
+        res.write(`event: open\ndata: ${JSON.stringify({ id: 'open_1', event: 'open', topic: liveTopic })}\n\n`);
+        sseClients.add(res);
+        req.on('close', () => sseClients.delete(res));
+        return;
+      }
+      bridgeHandler(req, res);
+    });
+
+    await new Promise((resolve) => {
+      bridgeServer.listen(0, '127.0.0.1', () => {
+        bridgeOrigin = `http://127.0.0.1:${bridgeServer.address().port}`;
+        resolve();
+      });
+    });
+
+    const tinyPng = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      'base64'
+    );
+    const consoleErrors = [];
+
+    const setupGeoRoutes = async (ctx) => {
+      await ctx.route('https://tile.openstreetmap.org/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: tinyPng }));
+      await ctx.route('https://basemap.nationalmap.gov/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: tinyPng }));
+      await ctx.route('https://photon.komoot.io/api/**', (r) =>
+        r.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({
+            features: [
+              {
+                geometry: { coordinates: [-87.9036, 30.5229] },
+                properties: {
+                  housenumber: '312',
+                  street: 'Fairhope Ave',
+                  city: 'Fairhope',
+                  state: 'Alabama',
+                  postcode: '36532',
+                  county: 'Baldwin County'
+                }
+              }
+            ]
+          })
+        })
+      );
+      await ctx.route('https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress**', (r) => {
+        const cb = new URL(r.request().url()).searchParams.get('callback') || 'cb';
+        return r.fulfill({
+          status: 200,
+          contentType: 'application/javascript; charset=utf-8',
+          body: `${cb}(${JSON.stringify({
+            result: {
+              addressMatches: [
+                {
+                  matchedAddress: '312 FAIRHOPE AVE, FAIRHOPE, AL, 36532',
+                  coordinates: { x: -87.9036, y: 30.5229 },
+                  addressComponents: { streetName: 'FAIRHOPE', suffixType: 'AVE', city: 'FAIRHOPE', state: 'AL', zip: '36532' },
+                  geographies: { Counties: [{ GEOID: '01003', NAME: 'Baldwin County' }] }
+                }
+              ]
+            }
+          })});`
+        });
+      });
+      // Route production Cloud Bridge URL to our isolated local Cloud Bridge instance
+      await ctx.route('https://zoiris-cloud-bridge.vercel.app/**', async (route) => {
+        const req = route.request();
+        const target = req.url().replace('https://zoiris-cloud-bridge.vercel.app', bridgeOrigin);
+        const resp = await fetch(target, {
+          method: req.method(),
+          headers: req.headers(),
+          body: req.method() === 'GET' || req.method() === 'HEAD' ? undefined : req.postDataBuffer() || undefined
+        });
+        const buf = Buffer.from(await resp.arrayBuffer());
+        const headers = {};
+        resp.headers.forEach((v, k) => {
+          headers[k] = v;
+        });
+        return route.fulfill({ status: resp.status, headers, body: buf });
+      });
+    };
+
+    const ownerCtx = await browser.newContext({ viewport: { width: 1280, height: 860 } });
+    const customerCtx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    try {
+      await setupGeoRoutes(ownerCtx);
+      await setupGeoRoutes(customerCtx);
+
+      await ownerCtx.addInitScript(
+        ({ bUrl, sseUrl }) => {
+          window.__ZOIRIS_CLOUD_BRIDGE_URL__ = bUrl;
+          window.__ZOIRIS_LIVE_SSE_URL__ = sseUrl;
+        },
+        { bUrl: bridgeOrigin, sseUrl: `${bridgeOrigin}/${liveTopic}/sse` }
+      );
+
+      const ownerPage = await ownerCtx.newPage();
+      ownerPage.on('pageerror', (e) => consoleErrors.push(`owner pageerror: ${e.message}`));
+
+      // 1. Owner signs in at /owner/login/ directly using Cloud Bridge credentials (zero #pair link needed!)
+      await ownerPage.goto(`${staticSrv.origin}/Zoiris-Junk-Removal/owner/login/`, { waitUntil: 'domcontentloaded' });
+      await ownerPage.waitForSelector('#login-form:not([hidden])');
+      await ownerPage.fill('#login-email', ownerEmail);
+      await ownerPage.fill('#login-password', ownerPassword);
+      await ownerPage.click('#login-submit');
+
+      await ownerPage.waitForURL('**/Zoiris-Junk-Removal/owner/command-center/');
+      await ownerPage.waitForFunction(() => window.__ZOIRIS_LIVE_CONNECTED__ === true, null, { timeout: 8000 });
+      assert.equal((await ownerPage.locator('#cc-sse-pill').textContent()).trim(), 'Live 24/7');
+
+      // 2. Register an installed-PWA Apple Web Push subscription via the Owner app's fetch layer
+      const pwaEcdh = createECDH('prime256v1');
+      pwaEcdh.generateKeys();
+      const pwaAuth = randomBytes(16);
+      const subResp = await ownerPage.evaluate(
+        async (sub) => {
+          const r = await fetch('/api/owner/push/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subscription: sub,
+              deviceLabel: 'iPhone · Safari (App)',
+              deviceKind: 'phone'
+            })
+          });
+          return r.json();
+        },
+        {
+          endpoint: 'https://web.push.apple.com/Q_installed_zoiris_pwa_device',
+          keys: {
+            p256dh: pwaEcdh.getPublicKey().toString('base64url'),
+            auth: pwaAuth.toString('base64url')
+          }
+        }
+      );
+      assert.equal(subResp.ok, true);
+      assert.equal(subResp.subscriptionCount, 1);
+      assert.equal(bridgePushes.length, 1, 'Expected immediate welcome confirmation push to installed mobile app');
+      const welcomePush = JSON.parse(decryptWebPushPayload(bridgePushes[0].body, pwaEcdh, pwaAuth));
+      assert.equal(welcomePush.kind, 'welcome');
+
+      bridgePushes.length = 0;
+
+      // 3. While Owner Page stays untouched on /owner/command-center/, a Customer submits a pickup form in a separate browser!
+      const custPage = await customerCtx.newPage();
+      custPage.on('pageerror', (e) => consoleErrors.push(`customer pageerror: ${e.message}`));
+      const pickCust = async (sel) => {
+        const id = await custPage.locator(sel).first().getAttribute('id');
+        await custPage.click(`label[for="${id}"]`);
+      };
+
+      await custPage.goto(`${staticSrv.origin}/Zoiris-Junk-Removal/request-pickup/`, { waitUntil: 'domcontentloaded' });
+      await custPage.waitForTimeout(150);
+      await custPage.click('label[for="pickup-request-cat-Appliances"]');
+      await pickCust('input[name="selectedItem"][value="Refrigerators"]');
+      await pickCust('input[name="estimatedQuantity"][value="1–2 items"]');
+      await custPage.click('[data-pf-next]');
+
+      await custPage.setInputFiles('#pickup-request-media-picker', [photoFixturePath]);
+      await custPage.fill('#pickup-request-itemDescription', 'Stainless garage refrigerator ready by side driveway.');
+      await custPage.click('[data-pf-next]');
+
+      await custPage.fill('#pickup-request-address', '312 Fairhope Ave');
+      await custPage.waitForSelector('[data-address-list] [data-opt="0"]');
+      await custPage.click('[data-address-list] [data-opt="0"]');
+      await custPage.waitForSelector('[data-address-card]:not([hidden])');
+      await pickCust('input[name="indoorsOrOutdoors"][value="Curbside / driveway"]');
+      await custPage.click('[data-pf-next]');
+
+      await custPage.fill('#pickup-request-firstName', 'Devon');
+      await custPage.fill('#pickup-request-lastName', ' Brooks');
+      await custPage.fill('#pickup-request-phone', '251-555-0344');
+      await custPage.fill('#pickup-request-email', 'devon.brooks@zoiris-test.org');
+      await custPage.check('#pickup-request-consentGiven');
+      await custPage.waitForTimeout(3700);
+      await custPage.click('[data-submit]');
+
+      await custPage.waitForSelector('[data-lead-reference]', { timeout: 15000 });
+      const liveLeadRef = (await custPage.locator('[data-lead-reference]').textContent()).trim();
+      assert.match(liveLeadRef, /^ZJ-\d{4}-\d{6}$/);
+
+      // 4. Verify Installed Mobile App received background RFC 8291 Web Push immediately (works even when app is closed!)
+      assert.equal(bridgePushes.length, 1, 'Expected native Web Push dispatched immediately to installed PWA');
+      const leadPush = JSON.parse(decryptWebPushPayload(bridgePushes[0].body, pwaEcdh, pwaAuth));
+      assert.equal(leadPush.kind, 'new_lead');
+      assert.match(leadPush.title, new RegExp(liveLeadRef));
+      assert.match(leadPush.body, /Devon Brooks/);
+      assert.match(leadPush.body, /Fairhope/);
+      assert.equal(leadPush.url, `/owner/leads/${liveLeadRef}`);
+
+      // 5. Verify Owner Browser updated LIVE IN REAL TIME (< 4s) WITHOUT calling ownerPage.reload()!
+      await ownerPage.waitForFunction(
+        (ref) => document.body.textContent.includes(ref) && document.body.textContent.includes('Devon Brooks'),
+        liveLeadRef,
+        { timeout: 5000 }
+      );
+
+      // Open lead detail on Owner Browser and confirm decrypted photo + verified Fairhope address
+      await ownerPage.click(`a[href*="${liveLeadRef}"]`);
+      await ownerPage.waitForSelector('.cc-lead-hero');
+      assert.match(await ownerPage.locator('#cc-workspace').textContent(), /312 Fairhope Ave, Fairhope, AL 36532/);
+      await ownerPage.waitForSelector('.cc-media-preview img');
+      const liveImgW = await ownerPage.locator('.cc-media-preview img').first().evaluate((img) => img.naturalWidth);
+      assert.ok(liveImgW > 100, `Expected decrypted photo rendered live in Owner browser, got width=${liveImgW}`);
+
+      // 6. Delete lead in Owner Browser and confirm Cloud Bridge encrypted vault is purged too
+      ownerPage.once('dialog', (d) => d.accept());
+      await ownerPage.click('#ld-delete-lead');
+      await ownerPage.waitForURL('**/Zoiris-Junk-Removal/owner/leads/');
+      await ownerPage.waitForTimeout(300);
+
+      const syncCheck = await ownerPage.evaluate(async (bOrigin) => {
+        const tok = localStorage.getItem('zoiris.cloudBearerToken.v1');
+        const r = await fetch(`${bOrigin}/api/owner/leads/sync`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
+          body: JSON.stringify({ knownLeadNumbers: [] })
+        });
+        return r.json();
+      }, bridgeOrigin);
+      assert.deepEqual(syncCheck.activeLeadNumbers, [], 'Deleted lead must be permanently removed from Cloud Bridge vault');
+      assert.deepEqual(consoleErrors, [], `Unexpected browser errors: ${consoleErrors.join('; ')}`);
+    } finally {
+      for (const c of sseClients) {
+        try {
+          c.end();
+        } catch {}
+      }
+      await ownerCtx.close();
+      await customerCtx.close();
+      await new Promise((r) => bridgeServer.close(r));
+    }
   });
 });

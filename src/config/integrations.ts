@@ -40,6 +40,7 @@ export const integrations = {
   },
   cloudRelay: {
     enabledByBuild: env.PUBLIC_STATIC_CLOUD_MODE === '1',
+    cloudBridgeUrl: (env.PUBLIC_CLOUD_BRIDGE_URL ?? 'https://zoiris-cloud-bridge.vercel.app').trim().replace(/\/+$/, ''),
     relayUrl: (env.PUBLIC_RELAY_URL ?? 'https://ntfy.sh').trim().replace(/\/+$/, ''),
     topic: (env.PUBLIC_RELAY_TOPIC ?? 'zoiris_pickup_eeaf07c6f04d03eee2').trim(),
     // One-way RSA-OAEP-2048 SPKI Public Key (can ONLY encrypt customer submissions; private key never leaves .zoiris-private)

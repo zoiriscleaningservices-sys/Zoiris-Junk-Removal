@@ -1,7 +1,7 @@
 /* command-center/sw.js
  * Service Worker for Zoiris Command Center PWA (offline + 24/7 standalone app shell + background Web Push).
  */
-const CACHE_NAME = 'zoiris-cc-v3';
+const CACHE_NAME = 'zoiris-cc-v4';
 
 function scopeUrl(rel) {
   return new URL(rel, self.registration.scope).href;
@@ -66,19 +66,31 @@ self.addEventListener('push', (event) => {
   const tag = data.tag || 'zoiris-alert';
 
   event.waitUntil(
-    self.registration.showNotification(title, {
-      body,
-      icon: scopeUrl('./assets/icon-192.png'),
-      badge: scopeUrl('./assets/icon-192.png'),
-      tag,
-      renotify: true,
-      vibrate: [220, 100, 220, 100, 280],
-      requireInteraction: data.kind === 'new_lead',
-      data: {
-        url: targetUrl,
-        leadNumber: data.leadNumber || ''
-      }
-    })
+    Promise.all([
+      self.registration.showNotification(title, {
+        body,
+        icon: scopeUrl('./assets/icon-192.png'),
+        badge: scopeUrl('./assets/icon-192.png'),
+        tag,
+        renotify: true,
+        vibrate: [220, 100, 220, 100, 280],
+        requireInteraction: data.kind === 'new_lead',
+        data: {
+          url: targetUrl,
+          leadNumber: data.leadNumber || ''
+        }
+      }),
+      self.clients
+        .matchAll({ type: 'window', includeUncontrolled: true })
+        .then((windowClients) => {
+          for (const client of windowClients) {
+            try {
+              client.postMessage({ type: 'zoiris:push-arrived', data });
+            } catch {}
+          }
+        })
+        .catch(() => {})
+    ])
   );
 });
 
@@ -128,21 +140,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static /owner/assets/* -> stale-while-revalidate
+  // Static /owner/assets/* -> network-first so installed PWAs always get fresh JS/CSS immediately, fallback to cache offline
   if (url.pathname.includes('/owner/assets/')) {
     event.respondWith(
-      caches.match(req).then((cached) => {
-        const net = fetch(req)
-          .then((res) => {
-            if (res && res.ok) {
-              const copy = res.clone();
-              caches.open(CACHE_NAME).then((c) => c.put(req, copy)).catch(() => {});
-            }
+      fetch(req)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((c) => c.put(req, copy)).catch(() => {});
             return res;
-          })
-          .catch(() => cached);
-        return cached || net;
-      })
+          }
+          return caches.match(req).then((cached) => cached || res);
+        })
+        .catch(() => caches.match(req))
     );
   }
 });

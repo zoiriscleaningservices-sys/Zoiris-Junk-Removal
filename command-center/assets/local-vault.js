@@ -35,11 +35,24 @@
     'Spam'
   ];
 
-  /* Register PWA Service Worker */
+  /* Register PWA Service Worker & Auto-Upgrade Stale Installed Apps */
   if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    const hadControllerAtBoot = Boolean(navigator.serviceWorker.controller);
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadControllerAtBoot) return;
+      try {
+        if (!sessionStorage.getItem('zoiris_sw_upgraded_v4')) {
+          sessionStorage.setItem('zoiris_sw_upgraded_v4', '1');
+          window.location.reload();
+        }
+      } catch {}
+    });
     window.addEventListener('load', () => {
       navigator.serviceWorker
         .register(window.zoirisOwnerUrl('/owner/sw.js'), { scope: window.zoirisOwnerUrl('/owner/') })
+        .then((reg) => {
+          reg.update().catch(() => {});
+        })
         .catch(() => {});
     });
   }
@@ -238,13 +251,79 @@
     });
   }
 
-  /* ---------------- Structured Vault State in localStorage ---------------- */
+  /* ---------------- Structured Vault State & 24/7 Cloud Bridge Config ---------------- */
   const VAULT_KEY = 'zoiris.phoneVault.v1';
   const SESSION_KEY = 'zoiris.phoneSessionId.v1';
   const RELAY_CFG_KEY = 'zoiris.relayConfig.v1';
+  const CLOUD_TOKEN_KEY = 'zoiris.cloudBearerToken.v1';
+  const CLOUD_META_KEY = 'zoiris.cloudBridgeMeta.v1';
+  const DEFAULT_CLOUD_BRIDGE_URL = 'https://zoiris-cloud-bridge.vercel.app';
+  const DEFAULT_VAPID_PUBLIC_KEY = 'BNhJfmQsp87ZvPE3HLTCujkauPXloruounBcYrSQ_5nUVojRBM--FEhaU7mBh1eENsqzXjID5Hq6GxnsTlPBo7U';
+  const DEFAULT_LIVE_TOPIC = 'zoiris_live_eeaf07c6f04d03eee2';
   const DEFAULT_RELAY_URL = 'https://ntfy.sh';
   const DEFAULT_RELAY_TOPIC = 'zoiris_pickup_eeaf07c6f04d03eee2';
   let seedSeoCache = null;
+
+  function isHostedCloudEnv() {
+    const h = window.location.hostname || '';
+    if (h && !/^(localhost|127\.0\.0\.1|\[::1\])$/i.test(h)) return true;
+    try {
+      if (window.__ZOIRIS_CLOUD_BRIDGE_URL__ || localStorage.getItem('zoiris.cloudBridgeUrl')) return true;
+      if (localStorage.getItem(CLOUD_TOKEN_KEY)) return true;
+    } catch {}
+    return false;
+  }
+
+  function getCloudBridgeUrl() {
+    try {
+      const custom = (window.__ZOIRIS_CLOUD_BRIDGE_URL__ || localStorage.getItem('zoiris.cloudBridgeUrl') || '').trim();
+      if (custom) return custom.replace(/\/+$/, '');
+    } catch {}
+    return isHostedCloudEnv() ? DEFAULT_CLOUD_BRIDGE_URL : '';
+  }
+
+  function getCloudToken() {
+    try {
+      return (localStorage.getItem(CLOUD_TOKEN_KEY) || '').trim();
+    } catch {
+      return '';
+    }
+  }
+
+  function setCloudToken(token) {
+    try {
+      if (token) localStorage.setItem(CLOUD_TOKEN_KEY, String(token).trim());
+      else localStorage.removeItem(CLOUD_TOKEN_KEY);
+    } catch {}
+  }
+
+  function readCloudMeta() {
+    try {
+      const raw = localStorage.getItem(CLOUD_META_KEY);
+      if (raw) return JSON.parse(raw) || {};
+    } catch {}
+    return {};
+  }
+
+  function writeCloudMeta(patch) {
+    try {
+      const next = Object.assign({}, readCloudMeta(), patch);
+      localStorage.setItem(CLOUD_META_KEY, JSON.stringify(next));
+      return next;
+    } catch {
+      return patch || {};
+    }
+  }
+
+  function getLiveSseUrl() {
+    try {
+      const custom = (window.__ZOIRIS_LIVE_SSE_URL__ || localStorage.getItem('zoiris.liveSseUrl') || '').trim();
+      if (custom) return custom;
+    } catch {}
+    const meta = readCloudMeta();
+    if (meta.liveSseUrl) return meta.liveSseUrl;
+    return `${DEFAULT_RELAY_URL}/${DEFAULT_LIVE_TOPIC}/sse`;
+  }
 
   function normalizeB64(str) {
     const s = String(str || '').trim().replace(/-/g, '+').replace(/_/g, '/');
@@ -359,24 +438,35 @@
     };
   }
 
-  // Automatically capture 1-tap `#pair=...` phone pairing links at startup and scrub the URL bar immediately
+  // Automatically capture 1-tap `#connect=...` or `#pair=...` links at startup and scrub the URL bar immediately
   (() => {
     const rawHash = window.location.hash || '';
-    if (!rawHash.includes('pair=')) return;
-    const parsed = parsePairingInput(rawHash);
-    if (parsed) {
-      const prev = readRelayConfig();
-      writeRelayConfig({
-        relayUrl: parsed.relayUrl || prev.relayUrl || DEFAULT_RELAY_URL,
-        topic: parsed.topic || prev.topic || DEFAULT_RELAY_TOPIC,
-        privateKeyPkcs8B64Url: parsed.privateKeyPkcs8B64Url,
-        pairedAt: new Date().toISOString(),
-        lastSyncAt: prev.lastSyncAt || null,
-        importedCount: prev.importedCount || 0
-      });
+    if (!rawHash.includes('pair=') && !rawHash.includes('connect=')) return;
+    const sp = new URLSearchParams(rawHash.replace(/^#/, ''));
+    const connectTok = String(sp.get('connect') || '').trim();
+    if (connectTok.startsWith('zbt1.')) {
+      setCloudToken(connectTok);
       try {
-        sessionStorage.setItem('zoiris_just_paired_push', '1');
+        sessionStorage.setItem('zoiris_just_connected_cloud', '1');
+        sessionStorage.setItem('zoiris_auto_session_from_connect', '1');
       } catch {}
+    }
+    if (rawHash.includes('pair=')) {
+      const parsed = parsePairingInput(rawHash);
+      if (parsed) {
+        const prev = readRelayConfig();
+        writeRelayConfig({
+          relayUrl: parsed.relayUrl || prev.relayUrl || DEFAULT_RELAY_URL,
+          topic: parsed.topic || prev.topic || DEFAULT_RELAY_TOPIC,
+          privateKeyPkcs8B64Url: parsed.privateKeyPkcs8B64Url,
+          pairedAt: new Date().toISOString(),
+          lastSyncAt: prev.lastSyncAt || null,
+          importedCount: prev.importedCount || 0
+        });
+        try {
+          sessionStorage.setItem('zoiris_just_paired_push', '1');
+        } catch {}
+      }
     }
     try {
       history.replaceState(null, '', window.location.pathname + window.location.search);
@@ -576,9 +666,372 @@
     return modePromise;
   }
 
-  /* ---------------- 24/7 Encrypted Cloud Relay Sync (WebCrypto) ---------------- */
+  /* ---------------- 24/7 Cloud Bridge & Encrypted Relay Live Sync ---------------- */
+  let bridgeSyncing = false;
+  let bridgeSyncQueued = false;
   let relaySyncing = false;
+  let liveEventSource = null;
   let relayEventSource = null;
+  let livePollTimer = null;
+
+  async function ingestRemoteLeadRecord(v, decrypted, { cloudSynced = false } = {}) {
+    const inq = decrypted.inquiry || decrypted || {};
+    const vGeo = decrypted.verifiedGeo || null;
+    const mediaItems = Array.isArray(decrypted.media) ? decrypted.media : [];
+    const leadNumber =
+      String(decrypted.leadNumber || inq.leadNumber || '').trim() ||
+      `ZJ-${new Date().getFullYear()}-${String(100000 + Math.floor(Math.random() * 900000))}`;
+
+    const existing = v.leads.find(
+      (l) =>
+        String(l.leadNumber || '').toUpperCase() === leadNumber.toUpperCase() ||
+        (inq.idempotencyKey && l.idempotencyKey === inq.idempotencyKey)
+    );
+    if (existing) {
+      if (cloudSynced) existing.cloudSynced = true;
+      return null;
+    }
+
+    const nowIso = String(decrypted.submittedAt || new Date().toISOString());
+    const fullName = String(inq.name || `${inq.firstName || ''} ${inq.lastName || ''}`.trim() || 'Customer').trim();
+    const phone = String(inq.phone || '').trim();
+    const email = String(inq.email || '').trim();
+    const pickupAddress = String(vGeo?.address?.line || inq.pickupAddress || '').trim();
+    const city = String(vGeo?.address?.city || inq.city || 'Mobile').trim();
+    const stateCode = String(vGeo?.address?.state || inq.state || 'AL').trim() || 'AL';
+    const zipCode = String(vGeo?.address?.zip || inq.zipCode || '').trim();
+    const lat = Number.isFinite(Number(vGeo?.address?.lat)) ? Number(vGeo.address.lat) : null;
+    const lng = Number.isFinite(Number(vGeo?.address?.lng)) ? Number(vGeo.address.lng) : null;
+    const addressStatus = vGeo?.status === 'verified' || vGeo?.status === 'map-match' ? vGeo.status : 'unverified';
+    const rawSource = String(vGeo?.source || 'manual');
+    const addressSource = rawSource === 'us-census' ? 'census' : rawSource;
+    const countyName = String(vGeo?.address?.countyName || 'Mobile / Baldwin Area');
+
+    const phoneNorm = phone.replace(/\D/g, '').replace(/^1(\d{10})$/, '$1');
+    let cust = v.customers.find(
+      (c) => String(c.phone || '').replace(/\D/g, '').replace(/^1(\d{10})$/, '$1') === phoneNorm && phoneNorm.length >= 10
+    );
+    if (!cust) {
+      cust = {
+        id: 'cust-' + randHex(6),
+        full_name: fullName,
+        phone,
+        phone_display: phone,
+        email,
+        primary_address: pickupAddress,
+        city,
+        state: stateCode,
+        zip_code: zipCode,
+        customer_type: inq.customerType === 'commercial' ? 'commercial' : 'residential',
+        total_inquiries: 1,
+        completed_pickups: 0,
+        created_at: nowIso,
+        updated_at: nowIso
+      };
+      v.customers.unshift(cust);
+    } else {
+      cust.total_inquiries = Number(cust.total_inquiries || 1) + 1;
+      cust.updated_at = nowIso;
+    }
+
+    const rawItems = Array.isArray(inq.selectedItems) ? inq.selectedItems : [];
+    const mappedItems = rawItems.length
+      ? rawItems.map((it) => {
+          const cat = String(it.category || 'Junk Removal');
+          const itemName = String(it.item_name || it.name || 'Pickup items');
+          return {
+            category: cat,
+            item_name: itemName,
+            is_electronics: Boolean(it.is_electronics || /electronic|e-waste|tv|computer|monitor/i.test(cat + ' ' + itemName)),
+            requires_confirmation: Boolean(it.requires_confirmation)
+          };
+        })
+      : [
+          {
+            category: inq.requestedService || 'Junk Removal',
+            item_name: inq.requestedService || 'Pickup items',
+            is_electronics: /electronic|e-waste/i.test(String(inq.requestedService || '')),
+            requires_confirmation: false
+          }
+        ];
+
+    const itemCategories = [...new Set(mappedItems.map((x) => x.category))];
+    const hasElectronics = mappedItems.some((x) => x.is_electronics) || /electronic|e-waste/i.test(String(inq.requestedService || ''));
+    const leadId = 'lead-' + randHex(6);
+    let photoCount = 0;
+    let videoCount = 0;
+
+    for (const m of mediaItems) {
+      if (!m?.dataB64) continue;
+      const bytes = b64ToBytes(m.dataB64);
+      const isVid = m.kind === 'video' || String(m.mime || '').startsWith('video/');
+      const mimeType = m.mime || (isVid ? 'video/mp4' : 'image/jpeg');
+      const blob = new Blob([bytes], { type: mimeType });
+      const attId = 'att-' + randHex(8);
+      await putMediaBlob(attId, blob);
+      const fname = String(m.filename || (isVid ? 'pickup-video.mp4' : 'pickup-photo.jpg'));
+      v.attachments.unshift({
+        id: attId,
+        lead_id: leadId,
+        lead_number: leadNumber,
+        customer_name: fullName,
+        media_kind: isVid ? 'video' : 'photo',
+        mime_type: mimeType,
+        original_filename: fname,
+        safe_filename: fname,
+        byte_size: bytes.byteLength,
+        created_at: nowIso
+      });
+      if (isVid) videoCount++;
+      else photoCount++;
+    }
+
+    const descParts = [inq.itemDescription, inq.otherItemDescription ? `Other items: ${inq.otherItemDescription}` : ''].filter(Boolean);
+    const spamFlags = Array.isArray(decrypted.spamFlags) && decrypted.spamFlags.length
+      ? decrypted.spamFlags
+      : addressStatus === 'unverified'
+        ? ['Address not auto-verified']
+        : [];
+
+    const lead = {
+      id: leadId,
+      idempotencyKey: inq.idempotencyKey || `remote-${leadNumber}`,
+      leadNumber,
+      customerId: cust.id,
+      fullName,
+      phone,
+      email,
+      preferredContact: inq.preferredContact || 'phone',
+      customerType: inq.customerType === 'commercial' ? 'commercial' : 'residential',
+      pickupAddress,
+      addressUnit: String(inq.addressUnit || '').trim(),
+      city,
+      state: stateCode,
+      zipCode,
+      countyName,
+      lat,
+      lng,
+      addressStatus,
+      addressSource,
+      matchedAddress: pickupAddress,
+      requestedService: inq.requestedService || 'Junk Removal',
+      itemCategories,
+      selectedItems: mappedItems,
+      hasElectronics,
+      estimatedQuantity: inq.estimatedQuantity || 'Pickup-truck load',
+      itemDescription: descParts.join(' · '),
+      indoorsOrOutdoors: inq.indoorsOrOutdoors || '',
+      floorLevel: inq.floorLevel || '',
+      hasStairs: inq.hasStairs || '',
+      elevatorAvailable: inq.elevatorAvailable || '',
+      accessInstructions: String(inq.accessInstructions || inq.customerNotes || '').trim(),
+      preferredDate: inq.preferredDate || '',
+      preferredWindow: inq.preferredWindow || 'Flexible',
+      status: 'New',
+      priority: 'normal',
+      estimateCents: null,
+      estimateNotes: '',
+      isUnread: true,
+      needsReview: addressStatus === 'unverified',
+      spamScore: Number(decrypted.spamScore || 0),
+      spamFlags,
+      photoCount,
+      videoCount,
+      cloudSynced: Boolean(cloudSynced),
+      sourceType: 'website_form',
+      sourcePagePath: inq.sourcePagePath || '/request-pickup/',
+      deviceCategory: inq.deviceCategory || 'mobile',
+      createdAt: nowIso,
+      updatedAt: nowIso
+    };
+
+    v.leads.unshift(lead);
+    v.timeline.unshift({
+      id: randHex(6),
+      lead_id: lead.id,
+      event_type: 'lead.created',
+      summary: `Website pickup request ${leadNumber} received (${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo${photoCount === 1 ? '' : 's'}` : ''})`,
+      actor_label: fullName,
+      created_at: nowIso
+    });
+    v.notifications.unshift({
+      id: randHex(8),
+      title: `New request ${leadNumber} · ${fullName}`,
+      body: `${inq.requestedService || 'Junk Removal'} in ${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo(s)` : ''} · ${phone}`,
+      is_read: 0,
+      created_at: nowIso
+    });
+    return lead;
+  }
+
+  async function syncCloudBridgeLeads({ silent = false } = {}) {
+    const token = getCloudToken();
+    const bridgeUrl = getCloudBridgeUrl();
+    if (!token || !bridgeUrl) {
+      return { ok: false, cloudConnected: false, imported: 0, deleted: 0 };
+    }
+    if (bridgeSyncing) {
+      bridgeSyncQueued = true;
+      return { ok: true, cloudConnected: true, imported: 0, deleted: 0 };
+    }
+    bridgeSyncing = true;
+    let totalImported = 0;
+    let totalDeleted = 0;
+    let latestLead = null;
+
+    try {
+      let page = 0;
+      let serverActiveSet = null;
+
+      while (page < 10) {
+        page++;
+        const vNow = readVault();
+        const knownLeadNumbers = vNow.leads.map((l) => l.leadNumber).filter(Boolean);
+        const res = await nativeFetch(`${bridgeUrl}/api/owner/leads/sync`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ knownLeadNumbers })
+        });
+        if (res.status === 401) {
+          setCloudToken('');
+          return { ok: false, cloudConnected: false, imported: totalImported, deleted: 0 };
+        }
+        if (!res.ok) break;
+        const data = await res.json();
+        if (Array.isArray(data.activeLeadNumbers)) {
+          serverActiveSet = new Set(data.activeLeadNumbers.map((x) => String(x).toUpperCase()));
+        }
+
+        const batch = Array.isArray(data.leads) ? data.leads.slice() : [];
+        if (batch.length) {
+          // Sort oldest-to-newest so unshifting places newest at top
+          batch.sort((a, b) => String(a.submittedAt || '').localeCompare(String(b.submittedAt || '')));
+          const v = readVault();
+          let batchAdded = 0;
+          for (const rec of batch) {
+            const added = await ingestRemoteLeadRecord(v, rec, { cloudSynced: true });
+            if (added) {
+              latestLead = added;
+              totalImported++;
+              batchAdded++;
+            }
+          }
+          if (batchAdded > 0) writeVault(v);
+        }
+
+        if (!data.hasMore || !batch.length) break;
+      }
+
+      // Reconcile cloud deletions across open browsers/apps
+      if (serverActiveSet) {
+        const v = readVault();
+        const cutoff = Date.now() - 15000;
+        const removedLeads = v.leads.filter(
+          (l) =>
+            l.cloudSynced &&
+            !serverActiveSet.has(String(l.leadNumber || '').toUpperCase()) &&
+            (Date.parse(l.createdAt || '') || 0) < cutoff
+        );
+        if (removedLeads.length) {
+          const dropIds = new Set(removedLeads.map((l) => l.id));
+          for (const a of v.attachments.filter((x) => dropIds.has(x.lead_id))) {
+            await deleteMediaBlob(a.id);
+          }
+          v.attachments = v.attachments.filter((x) => !dropIds.has(x.lead_id));
+          v.notes = v.notes.filter((x) => !dropIds.has(x.lead_id));
+          v.followUps = v.followUps.filter((x) => !dropIds.has(x.lead_id));
+          v.appointments = v.appointments.filter((x) => !dropIds.has(x.lead_id));
+          v.timeline = v.timeline.filter((x) => !dropIds.has(x.lead_id));
+          v.leads = v.leads.filter((l) => !dropIds.has(l.id));
+          totalDeleted = removedLeads.length;
+          writeVault(v);
+        }
+      }
+
+      const prevMeta = readCloudMeta();
+      writeCloudMeta({
+        lastSyncAt: new Date().toISOString(),
+        importedCount: Number(prevMeta.importedCount || 0) + totalImported
+      });
+
+      if (!silent && totalImported > 0) {
+        window.dispatchEvent(new CustomEvent('zoiris:vault-lead-synced', { detail: { imported: totalImported, latestLead } }));
+      }
+      if (totalDeleted > 0) {
+        window.dispatchEvent(new CustomEvent('zoiris:vault-lead-deleted', { detail: { deleted: totalDeleted } }));
+      }
+
+      return { ok: true, cloudConnected: true, imported: totalImported, deleted: totalDeleted };
+    } catch {
+      return { ok: false, cloudConnected: true, imported: totalImported, deleted: totalDeleted };
+    } finally {
+      bridgeSyncing = false;
+      if (bridgeSyncQueued) {
+        bridgeSyncQueued = false;
+        setTimeout(() => {
+          syncCloudBridgeLeads({ silent }).catch(() => {});
+        }, 120);
+      }
+    }
+  }
+
+  async function deleteLeadsFromCloudBridge({ all = false, leadNumbers = [] } = {}) {
+    const token = getCloudToken();
+    const bridgeUrl = getCloudBridgeUrl();
+    if (!token || !bridgeUrl) return;
+    try {
+      if (!all && leadNumbers.length === 1) {
+        await nativeFetch(`${bridgeUrl}/api/owner/leads/${encodeURIComponent(leadNumbers[0])}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      } else if (all || leadNumbers.length > 0) {
+        await nativeFetch(`${bridgeUrl}/api/owner/leads/bulk-delete`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ all: Boolean(all), leadNumbers })
+        });
+      }
+    } catch {}
+  }
+
+  async function authenticateWithCloudBridge(email, password) {
+    const bridgeUrl = getCloudBridgeUrl();
+    if (!bridgeUrl) return { reachable: false };
+    try {
+      const res = await nativeFetch(`${bridgeUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const ct = res.headers.get('content-type') || '';
+      const data = ct.includes('application/json') ? await res.json() : {};
+      if (res.ok && data.ok && data.bearerToken) {
+        setCloudToken(data.bearerToken);
+        writeCloudMeta({
+          vapidPublicKey: data.vapidPublicKey || DEFAULT_VAPID_PUBLIC_KEY,
+          liveTopic: data.liveTopic || DEFAULT_LIVE_TOPIC,
+          liveSseUrl: data.liveSseUrl || ''
+        });
+        return {
+          reachable: true,
+          ok: true,
+          owner: data.owner || { email, displayName: 'Zoiris Owner' },
+          vapidPublicKey: data.vapidPublicKey || DEFAULT_VAPID_PUBLIC_KEY
+        };
+      }
+      return { reachable: true, ok: false, status: res.status, error: data.error || 'Invalid email or password.' };
+    } catch {
+      return { reachable: false };
+    }
+  }
 
   async function syncCloudRelayLeads() {
     const cfg = readRelayConfig();
@@ -647,182 +1100,11 @@
 
         try {
           const decrypted = await decryptRelayEnvelope(envelope, cfg.privateKeyPkcs8B64Url);
-          const inq = decrypted.inquiry || decrypted || {};
-          const vGeo = decrypted.verifiedGeo || null;
-          const mediaItems = Array.isArray(decrypted.media) ? decrypted.media : [];
-          const leadNumber =
-            String(decrypted.leadNumber || inq.leadNumber || '').trim() ||
-            `ZJ-${new Date().getFullYear()}-${String(100000 + Math.floor(Math.random() * 900000))}`;
-
-          if (v.leads.some((l) => l.leadNumber === leadNumber || (inq.idempotencyKey && l.idempotencyKey === inq.idempotencyKey))) {
-            seen.add(msg.id);
-            dirty = true;
-            continue;
+          const added = await ingestRemoteLeadRecord(v, decrypted, { cloudSynced: false });
+          if (added) {
+            latestLead = added;
+            imported++;
           }
-
-          const nowIso = String(decrypted.submittedAt || new Date().toISOString());
-          const fullName = String(inq.name || `${inq.firstName || ''} ${inq.lastName || ''}`.trim() || 'Customer').trim();
-          const phone = String(inq.phone || '').trim();
-          const email = String(inq.email || '').trim();
-          const pickupAddress = String(vGeo?.address?.line || inq.pickupAddress || '').trim();
-          const city = String(vGeo?.address?.city || inq.city || 'Mobile').trim();
-          const stateCode = String(vGeo?.address?.state || inq.state || 'AL').trim() || 'AL';
-          const zipCode = String(vGeo?.address?.zip || inq.zipCode || '').trim();
-          const lat = Number.isFinite(Number(vGeo?.address?.lat)) ? Number(vGeo.address.lat) : null;
-          const lng = Number.isFinite(Number(vGeo?.address?.lng)) ? Number(vGeo.address.lng) : null;
-          const addressStatus = vGeo?.status === 'verified' || vGeo?.status === 'map-match' ? vGeo.status : 'unverified';
-          const rawSource = String(vGeo?.source || 'manual');
-          const addressSource = rawSource === 'us-census' ? 'census' : rawSource;
-          const countyName = String(vGeo?.address?.countyName || 'Mobile / Baldwin Area');
-
-          const phoneNorm = phone.replace(/\D/g, '').replace(/^1(\d{10})$/, '$1');
-          let cust = v.customers.find((c) => String(c.phone || '').replace(/\D/g, '').replace(/^1(\d{10})$/, '$1') === phoneNorm && phoneNorm.length >= 10);
-          if (!cust) {
-            cust = {
-              id: 'cust-' + randHex(6),
-              full_name: fullName,
-              phone,
-              phone_display: phone,
-              email,
-              primary_address: pickupAddress,
-              city,
-              state: stateCode,
-              zip_code: zipCode,
-              customer_type: inq.customerType === 'commercial' ? 'commercial' : 'residential',
-              total_inquiries: 1,
-              completed_pickups: 0,
-              created_at: nowIso,
-              updated_at: nowIso
-            };
-            v.customers.unshift(cust);
-          } else {
-            cust.total_inquiries = Number(cust.total_inquiries || 1) + 1;
-            cust.updated_at = nowIso;
-          }
-
-          const rawItems = Array.isArray(inq.selectedItems) ? inq.selectedItems : [];
-          const mappedItems = rawItems.length
-            ? rawItems.map((it) => {
-                const cat = String(it.category || 'Junk Removal');
-                const itemName = String(it.item_name || it.name || 'Pickup items');
-                return {
-                  category: cat,
-                  item_name: itemName,
-                  is_electronics: Boolean(it.is_electronics || /electronic|e-waste|tv|computer|monitor/i.test(cat + ' ' + itemName)),
-                  requires_confirmation: Boolean(it.requires_confirmation)
-                };
-              })
-            : [
-                {
-                  category: inq.requestedService || 'Junk Removal',
-                  item_name: inq.requestedService || 'Pickup items',
-                  is_electronics: /electronic|e-waste/i.test(String(inq.requestedService || '')),
-                  requires_confirmation: false
-                }
-              ];
-
-          const itemCategories = [...new Set(mappedItems.map((x) => x.category))];
-          const hasElectronics = mappedItems.some((x) => x.is_electronics) || /electronic|e-waste/i.test(String(inq.requestedService || ''));
-          const leadId = 'lead-' + randHex(6);
-          let photoCount = 0;
-          let videoCount = 0;
-
-          for (const m of mediaItems) {
-            if (!m?.dataB64) continue;
-            const bytes = b64ToBytes(m.dataB64);
-            const isVid = m.kind === 'video' || String(m.mime || '').startsWith('video/');
-            const mimeType = m.mime || (isVid ? 'video/mp4' : 'image/jpeg');
-            const blob = new Blob([bytes], { type: mimeType });
-            const attId = 'att-' + randHex(8);
-            await putMediaBlob(attId, blob);
-            const fname = String(m.filename || (isVid ? 'pickup-video.mp4' : 'pickup-photo.jpg'));
-            v.attachments.unshift({
-              id: attId,
-              lead_id: leadId,
-              lead_number: leadNumber,
-              customer_name: fullName,
-              media_kind: isVid ? 'video' : 'photo',
-              mime_type: mimeType,
-              original_filename: fname,
-              safe_filename: fname,
-              byte_size: bytes.byteLength,
-              created_at: nowIso
-            });
-            if (isVid) videoCount++;
-            else photoCount++;
-          }
-
-          const descParts = [inq.itemDescription, inq.otherItemDescription ? `Other items: ${inq.otherItemDescription}` : ''].filter(Boolean);
-          const lead = {
-            id: leadId,
-            idempotencyKey: inq.idempotencyKey || `relay-${msg.id}`,
-            leadNumber,
-            customerId: cust.id,
-            fullName,
-            phone,
-            email,
-            preferredContact: inq.preferredContact || 'phone',
-            customerType: inq.customerType === 'commercial' ? 'commercial' : 'residential',
-            pickupAddress,
-            addressUnit: String(inq.addressUnit || '').trim(),
-            city,
-            state: stateCode,
-            zipCode,
-            countyName,
-            lat,
-            lng,
-            addressStatus,
-            addressSource,
-            matchedAddress: pickupAddress,
-            requestedService: inq.requestedService || 'Junk Removal',
-            itemCategories,
-            selectedItems: mappedItems,
-            hasElectronics,
-            estimatedQuantity: inq.estimatedQuantity || 'Pickup-truck load',
-            itemDescription: descParts.join(' · '),
-            indoorsOrOutdoors: inq.indoorsOrOutdoors || '',
-            floorLevel: inq.floorLevel || '',
-            hasStairs: inq.hasStairs || '',
-            elevatorAvailable: inq.elevatorAvailable || '',
-            accessInstructions: String(inq.accessInstructions || inq.customerNotes || '').trim(),
-            preferredDate: inq.preferredDate || '',
-            preferredWindow: inq.preferredWindow || 'Flexible',
-            status: 'New',
-            priority: 'normal',
-            estimateCents: null,
-            estimateNotes: '',
-            isUnread: true,
-            needsReview: addressStatus === 'unverified',
-            spamScore: 0,
-            spamFlags: addressStatus === 'unverified' ? ['Address not auto-verified'] : [],
-            photoCount,
-            videoCount,
-            sourceType: 'website_form',
-            sourcePagePath: inq.sourcePagePath || '/request-pickup/',
-            deviceCategory: inq.deviceCategory || 'mobile',
-            createdAt: nowIso,
-            updatedAt: nowIso
-          };
-
-          v.leads.unshift(lead);
-          v.timeline.unshift({
-            id: randHex(6),
-            lead_id: lead.id,
-            event_type: 'lead.created',
-            summary: `Website pickup request ${leadNumber} received (${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo${photoCount === 1 ? '' : 's'}` : ''})`,
-            actor_label: fullName,
-            created_at: nowIso
-          });
-          v.notifications.unshift({
-            id: randHex(8),
-            title: `New request ${leadNumber} · ${fullName}`,
-            body: `${inq.requestedService || 'Junk Removal'} in ${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo(s)` : ''} · ${phone}`,
-            is_read: 0,
-            created_at: nowIso
-          });
-
-          latestLead = lead;
-          imported++;
           seen.add(msg.id);
           dirty = true;
         } catch {
@@ -871,35 +1153,93 @@
     return { ok: true, topic: cfg.topic };
   }
 
+  function triggerAllSyncs() {
+    if (getCloudToken()) {
+      syncCloudBridgeLeads().catch(() => {});
+    }
+    if (readRelayConfig().privateKeyPkcs8B64Url) {
+      syncCloudRelayLeads().catch(() => {});
+    }
+  }
+
   function startRelayLiveStream() {
-    const cfg = readRelayConfig();
-    if (!cfg.privateKeyPkcs8B64Url) return;
-    syncCloudRelayLeads().catch(() => {});
-    if (relayEventSource || typeof EventSource === 'undefined') return;
-    try {
-      relayEventSource = new EventSource(`${cfg.relayUrl}/${encodeURIComponent(cfg.topic)}/json`);
-      relayEventSource.onmessage = (ev) => {
-        try {
-          const d = JSON.parse(ev.data || '{}');
-          if (d && d.event === 'message') {
-            syncCloudRelayLeads().catch(() => {});
+    triggerAllSyncs();
+
+    // 1. Live text/event-stream SSE listener (`/sse`) for <500ms real-time browser & app updates
+    if (!liveEventSource && isHostedCloudEnv() && typeof EventSource !== 'undefined') {
+      try {
+        liveEventSource = new EventSource(getLiveSseUrl());
+        const markOpen = () => {
+          window.__ZOIRIS_LIVE_CONNECTED__ = true;
+          window.dispatchEvent(new CustomEvent('zoiris:live-status', { detail: { connected: true } }));
+        };
+        liveEventSource.onopen = markOpen;
+        liveEventSource.addEventListener('open', markOpen);
+        liveEventSource.onmessage = (ev) => {
+          try {
+            const d = JSON.parse(ev.data || '{}');
+            if (!d || d.event === 'open' || d.event === 'keepalive') return;
+            triggerAllSyncs();
+          } catch {
+            triggerAllSyncs();
           }
-        } catch {}
-      };
-      relayEventSource.onerror = () => {
-        // EventSource automatically reconnects
-      };
-    } catch {}
+        };
+        liveEventSource.onerror = () => {
+          // Browser EventSource automatically reconnects
+        };
+      } catch {}
+    }
+
+    // 2. Optional legacy E2E relay SSE stream (using `/sse` text/event-stream)
+    const cfg = readRelayConfig();
+    if (cfg.privateKeyPkcs8B64Url && !relayEventSource && typeof EventSource !== 'undefined') {
+      try {
+        relayEventSource = new EventSource(`${cfg.relayUrl}/${encodeURIComponent(cfg.topic)}/sse`);
+        relayEventSource.onmessage = (ev) => {
+          try {
+            const d = JSON.parse(ev.data || '{}');
+            if (d && d.event === 'message') {
+              syncCloudRelayLeads().catch(() => {});
+            }
+          } catch {}
+        };
+      } catch {}
+    }
+
+    // 3. Automatic 12-second active-tab reconciliation fallback
+    if (!livePollTimer) {
+      livePollTimer = setInterval(() => {
+        if (document.visibilityState === 'visible' && window.__ZOIRIS_LOCAL_VAULT__) {
+          triggerAllSyncs();
+        }
+      }, 12000);
+    }
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (ev) => {
+      if (ev.data?.type === 'zoiris:push-arrived' && window.__ZOIRIS_LOCAL_VAULT__) {
+        triggerAllSyncs();
+      }
+    });
   }
 
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && window.__ZOIRIS_LOCAL_VAULT__) {
-      syncCloudRelayLeads().catch(() => {});
+    if (document.visibilityState === 'visible') {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistration(window.zoirisOwnerUrl('/owner/'))
+          .then((r) => r?.update())
+          .catch(() => {});
+      }
+      if (window.__ZOIRIS_LOCAL_VAULT__) {
+        triggerAllSyncs();
+      }
     }
   });
   window.addEventListener('focus', () => {
     if (window.__ZOIRIS_LOCAL_VAULT__) {
-      syncCloudRelayLeads().catch(() => {});
+      triggerAllSyncs();
     }
   });
 
@@ -915,12 +1255,70 @@
 
     // 1. Auth endpoints
     if (pathname === '/api/auth/status' && method === 'GET') {
-      const sess = currentSession(v);
+      let sess = currentSession(v);
+      const token = getCloudToken();
+
+      // If opened via a 1-tap `#connect=<token>` link on a new browser, verify token & auto-provision session
+      let autoConnectFlag = false;
+      try {
+        autoConnectFlag = sessionStorage.getItem('zoiris_auto_session_from_connect') === '1';
+      } catch {}
+      if (!sess && token && autoConnectFlag) {
+        try {
+          sessionStorage.removeItem('zoiris_auto_session_from_connect');
+        } catch {}
+        try {
+          const vRes = await nativeFetch(`${getCloudBridgeUrl()}/api/auth/verify`, {
+            headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+          });
+          if (vRes.ok) {
+            const vData = await vRes.json();
+            if (vData?.ok && vData.authenticated) {
+              writeCloudMeta({
+                vapidPublicKey: vData.vapidPublicKey || DEFAULT_VAPID_PUBLIC_KEY,
+                liveTopic: vData.liveTopic || DEFAULT_LIVE_TOPIC,
+                liveSseUrl: vData.liveSseUrl || ''
+              });
+              const nowIso = new Date().toISOString();
+              const email = String(vData.email || 'owner@zoirisjunkremoval.com').toLowerCase();
+              if (!v.owner) {
+                v.owner = {
+                  id: 'owner-local-1',
+                  email,
+                  displayName: 'Zoiris Owner',
+                  passwordHash: '',
+                  mfaEnabled: false,
+                  createdAt: nowIso
+                };
+              }
+              const dev = describeCurrentDevice();
+              sess = {
+                id: randHex(12),
+                csrfToken: randHex(16),
+                deviceLabel: dev.label,
+                deviceKind: dev.kind,
+                rememberDevice: true,
+                ip_hint: 'device',
+                created_at: nowIso,
+                last_active_at: nowIso,
+                expires_at: new Date(Date.now() + 30 * 86400000).toISOString()
+              };
+              v.sessions = [sess];
+              writeVault(v);
+              localStorage.setItem(SESSION_KEY, sess.id);
+              startRelayLiveStream();
+              await syncCloudBridgeLeads({ silent: true });
+            }
+          }
+        } catch {}
+      }
+
       return jsonRes(200, {
         ok: true,
         localVaultMode: true,
+        cloudConnected: Boolean(getCloudToken()),
         authenticated: !!sess,
-        needsInitialSetup: !v.owner,
+        needsInitialSetup: isHostedCloudEnv() ? false : !v.owner,
         setupSecretConfigured: true,
         noSecretNeeded: true,
         owner: sess ? { id: v.owner.id, email: v.owner.email, displayName: v.owner.displayName, mfaEnabled: false } : null,
@@ -934,62 +1332,57 @@
       });
     }
 
-    if (pathname === '/api/auth/setup' && method === 'POST') {
-      if (v.owner) return jsonRes(409, { ok: false, error: 'Owner account already set up on this device. Sign in instead.' });
+    if ((pathname === '/api/auth/login' || pathname === '/api/auth/setup') && method === 'POST') {
       const email = String(body.email || '').trim().toLowerCase();
-      const displayName = String(body.displayName || 'Zoiris Owner').trim();
       const password = String(body.password || '');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return jsonRes(400, { ok: false, error: 'Enter a valid email address.' });
-      if (password.length < 8) return jsonRes(400, { ok: false, error: 'Choose a password with at least 8 characters.' });
-      const salt = randHex(16);
-      const pwHash = await hashPassword(password, salt);
-      const nowIso = new Date().toISOString();
-      v.owner = { id: 'owner-local-1', email, displayName, passwordHash: pwHash, mfaEnabled: false, createdAt: nowIso };
-      v.notifPrefs.email_address = email;
-
-      const dev = describeCurrentDevice(body.deviceHint);
-      const sess = {
-        id: randHex(12),
-        csrfToken: randHex(16),
-        deviceLabel: dev.label,
-        deviceKind: dev.kind,
-        rememberDevice: true,
-        ip_hint: 'device',
-        created_at: nowIso,
-        last_active_at: nowIso,
-        expires_at: new Date(Date.now() + 30 * 86400000).toISOString()
-      };
-      v.sessions = [sess];
-      v.notifications.unshift({
-        id: randHex(8),
-        title: `Signed in from ${dev.label}`,
-        body: 'Zoiris Phone Vault ready — stays signed in on this device for 30 days.',
-        is_read: 0,
-        created_at: nowIso
-      });
-      logAudit(v, 'owner.provisioned', 'owner_profile', v.owner.id);
-      writeVault(v);
-      localStorage.setItem(SESSION_KEY, sess.id);
-      return jsonRes(201, {
-        ok: true,
-        owner: { id: v.owner.id, email, displayName, mfaEnabled: false },
-        sessionId: sess.id,
-        currentDevice: dev.label,
-        deviceKind: dev.kind,
-        rememberDevice: true,
-        activeDeviceCount: 1,
-        csrfToken: sess.csrfToken
-      });
-    }
-
-    if (pathname === '/api/auth/login' && method === 'POST') {
-      if (!v.owner) return jsonRes(400, { ok: false, error: 'Set up your owner login on this device first.' });
-      const email = String(body.email || '').trim().toLowerCase();
-      const okPw = await verifyPassword(String(body.password || ''), v.owner.passwordHash);
-      if (email !== v.owner.email || !okPw) {
-        return jsonRes(401, { ok: false, error: 'Invalid email or password for this device.' });
+      const displayName = String(body.displayName || v.owner?.displayName || 'Zoiris Owner').trim();
+      if (!email || !password) {
+        return jsonRes(400, { ok: false, error: 'Enter your owner email and password.' });
       }
+
+      // 1. Authenticate against 24/7 Cloud Bridge first so every browser/phone auto-syncs immediately
+      const cloudAuth = await authenticateWithCloudBridge(email, password);
+      let authenticatedOk = false;
+
+      if (cloudAuth.reachable && cloudAuth.ok) {
+        authenticatedOk = true;
+      } else if (v.owner && v.owner.passwordHash && email === v.owner.email) {
+        // Offline or custom local password fallback
+        authenticatedOk = await verifyPassword(password, v.owner.passwordHash);
+      } else if (
+        !cloudAuth.reachable &&
+        !v.owner &&
+        (pathname === '/api/auth/setup' || Boolean(readRelayConfig().privateKeyPkcs8B64Url))
+      ) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return jsonRes(400, { ok: false, error: 'Enter a valid email address.' });
+        if (password.length < 8) return jsonRes(400, { ok: false, error: 'Choose a password with at least 8 characters.' });
+        authenticatedOk = true;
+      }
+
+      if (!authenticatedOk) {
+        const msg = !cloudAuth.reachable
+          ? 'Unable to reach authentication service. Check your internet connection and try again.'
+          : cloudAuth.error || 'Invalid email or password.';
+        return jsonRes(cloudAuth.reachable ? 401 : 503, { ok: false, error: msg });
+      }
+
       const nowIso = new Date().toISOString();
+      const pwHash = await hashPassword(password, randHex(16));
+      if (!v.owner) {
+        v.owner = {
+          id: 'owner-local-1',
+          email,
+          displayName: cloudAuth.owner?.displayName || displayName,
+          passwordHash: pwHash,
+          mfaEnabled: false,
+          createdAt: nowIso
+        };
+        v.notifPrefs.email_address = email;
+      } else {
+        v.owner.email = email;
+        v.owner.passwordHash = pwHash;
+      }
+
       const dev = describeCurrentDevice(body.deviceHint);
       const remember = body.rememberDevice !== false;
       const sess = {
@@ -1015,9 +1408,16 @@
       logAudit(v, 'auth.login_succeeded', 'owner_session', sess.id);
       writeVault(v);
       localStorage.setItem(SESSION_KEY, sess.id);
-      return jsonRes(200, {
+
+      if (getCloudToken()) {
+        startRelayLiveStream();
+        await syncCloudBridgeLeads({ silent: true });
+      }
+
+      return jsonRes(pathname === '/api/auth/setup' ? 201 : 200, {
         ok: true,
         mfaRequired: false,
+        cloudConnected: Boolean(getCloudToken()),
         owner: { id: v.owner.id, email: v.owner.email, displayName: v.owner.displayName, mfaEnabled: false },
         sessionId: sess.id,
         currentDevice: dev.label,
@@ -1163,6 +1563,10 @@
               ? body.leadIds
               : []
       );
+      const removedLeadNumbers = v.leads
+        .filter((l) => targetIds.has(l.id))
+        .map((l) => l.leadNumber)
+        .filter(Boolean);
       let bytesFreed = 0;
       for (const a of v.attachments.filter((x) => targetIds.has(x.lead_id))) {
         bytesFreed += Number(a.byte_size || 0);
@@ -1176,6 +1580,7 @@
       const before = v.leads.length;
       v.leads = v.leads.filter((l) => !targetIds.has(l.id));
       writeVault(v);
+      await deleteLeadsFromCloudBridge({ all: Boolean(body.all), leadNumbers: removedLeadNumbers });
       return jsonRes(200, { ok: true, deletedLeads: before - v.leads.length, bytesFreed });
     }
 
@@ -1495,6 +1900,7 @@
         v.leads = v.leads.filter((l) => l.id !== lead.id);
         logAudit(v, 'lead.deleted', 'lead', lead.leadNumber);
         writeVault(v);
+        await deleteLeadsFromCloudBridge({ leadNumbers: [lead.leadNumber] });
         return jsonRes(200, { ok: true, leadNumber: lead.leadNumber, bytesFreed, mediaBytesFreed: bytesFreed });
       }
     }
@@ -1541,6 +1947,7 @@
       }
       if (method === 'DELETE') {
         const cLeads = v.leads.filter((l) => l.customerId === cid);
+        const cLeadNumbers = cLeads.map((l) => l.leadNumber).filter(Boolean);
         let bytesFreed = 0;
         for (const l of cLeads) {
           for (const a of v.attachments.filter((x) => x.lead_id === l.id)) {
@@ -1552,6 +1959,7 @@
         v.leads = v.leads.filter((l) => l.customerId !== cid);
         v.customers = v.customers.filter((x) => x.id !== cid);
         writeVault(v);
+        if (cLeadNumbers.length) await deleteLeadsFromCloudBridge({ leadNumbers: cLeadNumbers });
         return jsonRes(200, { ok: true, deletedLeads: cLeads.length, bytesFreed, mediaBytesFreed: bytesFreed });
       }
     }
@@ -1822,8 +2230,12 @@
     if (pathname === '/api/owner/storage/cleanup' && method === 'POST') {
       const scopes = Array.isArray(body.scopes) ? body.scopes : [];
       let bytesFreed = 0;
+      const cloudNumsToDelete = [];
+      let cloudDeleteAll = false;
       if (scopes.includes('spam_archived') || scopes.includes('spam_closed')) {
-        const dropIds = new Set(v.leads.filter((l) => ['Spam', 'Not Converted', 'Archived'].includes(l.status)).map((l) => l.id));
+        const dropLeads = v.leads.filter((l) => ['Spam', 'Not Converted', 'Archived'].includes(l.status));
+        const dropIds = new Set(dropLeads.map((l) => l.id));
+        cloudNumsToDelete.push(...dropLeads.map((l) => l.leadNumber).filter(Boolean));
         for (const a of v.attachments.filter((x) => dropIds.has(x.lead_id))) {
           bytesFreed += Number(a.byte_size || 0);
           await deleteMediaBlob(a.id);
@@ -1844,7 +2256,9 @@
         });
       }
       if (scopes.includes('completed_leads') || scopes.includes('completed')) {
-        const dropIds = new Set(v.leads.filter((l) => l.status === 'Completed').map((l) => l.id));
+        const dropLeads = v.leads.filter((l) => l.status === 'Completed');
+        const dropIds = new Set(dropLeads.map((l) => l.id));
+        cloudNumsToDelete.push(...dropLeads.map((l) => l.leadNumber).filter(Boolean));
         for (const a of v.attachments.filter((x) => dropIds.has(x.lead_id))) {
           bytesFreed += Number(a.byte_size || 0);
           await deleteMediaBlob(a.id);
@@ -1862,6 +2276,7 @@
         });
       }
       if (scopes.includes('all_leads_customers')) {
+        cloudDeleteAll = true;
         bytesFreed += v.attachments.reduce((s, a) => s + Number(a.byte_size || 0), 0);
         await clearAllMediaBlobs();
         v.attachments = [];
@@ -1879,6 +2294,9 @@
         v.notifications = [];
       }
       writeVault(v);
+      if (cloudDeleteAll || cloudNumsToDelete.length) {
+        await deleteLeadsFromCloudBridge({ all: cloudDeleteAll, leadNumbers: cloudNumsToDelete });
+      }
       return jsonRes(200, { ok: true, summary: { bytesFreed } });
     }
 
@@ -1946,17 +2364,97 @@
       return jsonRes(200, { ok: true, preferences: v.notifPrefs });
     }
 
-    // Background Phone Push & 24/7 Cloud Relay routes
+    // Background Installed-App Web Push & 24/7 Cloud Bridge routes
+    if (pathname === '/api/owner/push/connect-cloud' && method === 'POST') {
+      const email = String(body.email || v.owner?.email || 'owner@zoirisjunkremoval.com').trim().toLowerCase();
+      const password = String(body.password || '');
+      if (!password) {
+        return jsonRes(400, { ok: false, error: 'Enter your owner password to connect live sync and mobile app push.' });
+      }
+      const cloudAuth = await authenticateWithCloudBridge(email, password);
+      if (!cloudAuth.reachable) {
+        return jsonRes(503, { ok: false, error: 'Unable to reach Cloud Push Bridge. Check your internet connection.' });
+      }
+      if (!cloudAuth.ok) {
+        return jsonRes(401, { ok: false, error: cloudAuth.error || 'Invalid owner password.' });
+      }
+      if (v.owner) {
+        v.owner.email = email;
+        v.owner.passwordHash = await hashPassword(password, randHex(16));
+        writeVault(v);
+      }
+      startRelayLiveStream();
+      const syncRes = await syncCloudBridgeLeads();
+      return jsonRes(200, {
+        ok: true,
+        cloudConnected: true,
+        vapidPublicKey: cloudAuth.vapidPublicKey || DEFAULT_VAPID_PUBLIC_KEY,
+        imported: syncRes.imported || 0
+      });
+    }
+
     if (pathname === '/api/owner/push/status' && method === 'GET') {
+      const token = getCloudToken();
+      const meta = readCloudMeta();
+      let cloudStatus = null;
+      if (token) {
+        try {
+          const r = await nativeFetch(`${getCloudBridgeUrl()}/api/owner/push/status`, {
+            headers: { Accept: 'application/json', Authorization: `Bearer ${token}` }
+          });
+          if (r.status === 401) {
+            setCloudToken('');
+          } else if (r.ok) {
+            cloudStatus = await r.json();
+          }
+        } catch {}
+      }
+      const connectedNow = Boolean(getCloudToken());
       return jsonRes(200, {
         ok: true,
         localVaultMode: true,
-        supported: 'Notification' in window,
-        vapidPublicKey: '',
-        subscriptionCount: 0,
-        subscriptions: [],
+        cloudConnected: connectedNow,
+        lastCloudSyncAt: meta.lastSyncAt || null,
+        supported: 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window,
+        vapidPublicKey: cloudStatus?.vapidPublicKey || meta.vapidPublicKey || DEFAULT_VAPID_PUBLIC_KEY,
+        subscriptionCount: Number(cloudStatus?.subscriptionCount || 0),
+        subscriptions: Array.isArray(cloudStatus?.subscriptions) ? cloudStatus.subscriptions : [],
         relay: buildRelayStatus()
       });
+    }
+
+    if (pathname === '/api/owner/push/subscribe' && method === 'POST') {
+      const token = getCloudToken();
+      if (!token) {
+        return jsonRes(401, { ok: false, error: 'Connect your owner password first so background app push can register.' });
+      }
+      const r = await nativeFetch(`${getCloudBridgeUrl()}/api/owner/push/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      });
+      const out = await r.json().catch(() => ({ ok: false }));
+      return jsonRes(r.status, out);
+    }
+
+    if (pathname === '/api/owner/push/subscribe' && method === 'DELETE') {
+      const token = getCloudToken();
+      if (!token) return jsonRes(200, { ok: true, subscriptionCount: 0 });
+      const r = await nativeFetch(`${getCloudBridgeUrl()}/api/owner/push/subscribe`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      });
+      const out = await r.json().catch(() => ({ ok: true }));
+      return jsonRes(r.status, out);
     }
 
     if (pathname === '/api/owner/push/pair' && method === 'POST') {
@@ -1990,36 +2488,69 @@
     }
 
     if (pathname === '/api/owner/push/sync-relay' && method === 'POST') {
-      const syncRes = await syncCloudRelayLeads();
-      return jsonRes(200, { ok: true, ...syncRes, relay: buildRelayStatus() });
+      const [bridgeRes, relayRes] = await Promise.all([
+        getCloudToken() ? syncCloudBridgeLeads() : Promise.resolve({ ok: false, imported: 0 }),
+        readRelayConfig().privateKeyPkcs8B64Url ? syncCloudRelayLeads() : Promise.resolve({ ok: false, imported: 0 })
+      ]);
+      return jsonRes(200, {
+        ok: true,
+        cloudConnected: Boolean(getCloudToken()),
+        imported: Number(bridgeRes.imported || 0) + Number(relayRes.imported || 0),
+        relay: buildRelayStatus()
+      });
     }
 
     if (pathname === '/api/owner/push/test' && method === 'POST') {
-      const relayRes = await sendVaultTestRelayAlert(body.clickUrl);
+      const token = getCloudToken();
+      let webPush = { sent: 0, total: 0 };
+      if (token) {
+        try {
+          const r = await nativeFetch(`${getCloudBridgeUrl()}/api/owner/push/test`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({})
+          });
+          if (r.ok) {
+            const d = await r.json();
+            if (d?.webPush) webPush = d.webPush;
+          }
+        } catch {}
+      }
+      let relayOut = null;
+      if (body.includeRelay && readRelayConfig().privateKeyPkcs8B64Url) {
+        relayOut = await sendVaultTestRelayAlert(body.clickUrl).catch(() => null);
+      }
       return jsonRes(200, {
         ok: true,
         localVaultMode: true,
-        webPush: { sent: 0, total: 0 },
-        relay: relayRes
+        cloudConnected: Boolean(token),
+        webPush,
+        relay: relayOut
       });
     }
 
     if (pathname === '/api/owner/settings') {
       if (method === 'GET') {
         const relaySt = buildRelayStatus();
+        const cloudOn = Boolean(getCloudToken());
         return jsonRes(200, {
           ok: true,
           localVaultMode: true,
+          cloudConnected: cloudOn,
           cloudApiUrl: localStorage.getItem('zoiris.cloudApiUrl') || '',
           settings: v.settings,
           integrations: [
             { id: 'vault', name: 'On-Device Encrypted Phone Vault (24/7 GitHub Pages)', status: 'connected' },
             {
               id: 'webpush',
-              name: '24/7 Customer Form Relay & Lock-Screen Phone Push',
-              status: relaySt.configured ? 'connected' : 'not_configured'
+              name: '24/7 Real-Time Lead Sync & Installed Mobile App Push',
+              status: cloudOn || relaySt.configured ? 'connected' : 'not_configured'
             },
-            { id: 'cloud', name: 'Optional Live Cloud CRM Sync Server', status: localStorage.getItem('zoiris.cloudApiUrl') ? 'configured' : 'not_configured' }
+            { id: 'cloud', name: 'Optional Dedicated Self-Hosted CRM Server', status: localStorage.getItem('zoiris.cloudApiUrl') ? 'configured' : 'not_configured' }
           ]
         });
       }
@@ -2044,6 +2575,25 @@
       const okCur = await verifyPassword(String(body.currentPassword || ''), v.owner.passwordHash);
       if (!okCur) return jsonRes(401, { ok: false, error: 'Current password did not match.' });
       if (String(body.newPassword || '').length < 8) return jsonRes(400, { ok: false, error: 'Choose at least 8 characters.' });
+      const token = getCloudToken();
+      if (token) {
+        const cRes = await nativeFetch(`${getCloudBridgeUrl()}/api/owner/security/password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            currentPassword: body.currentPassword,
+            newPassword: body.newPassword
+          })
+        }).catch(() => null);
+        if (cRes && !cRes.ok) {
+          const cErr = await cRes.json().catch(() => ({}));
+          return jsonRes(cRes.status, { ok: false, error: cErr.error || 'Could not update cloud password.' });
+        }
+      }
       v.owner.passwordHash = await hashPassword(String(body.newPassword), randHex(16));
       logAudit(v, 'security.password_changed', 'owner_profile', v.owner.id);
       writeVault(v);

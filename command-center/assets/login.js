@@ -38,8 +38,8 @@
 
   /* PWA Install Banner on Login */
   try {
-    if (sessionStorage.getItem('zoiris_just_paired_push') === '1') {
-      showMsg('Phone notifications & customer form decryption paired on this device! Sign in (or finish creating your device password below) to view and sync requests.', 'ok');
+    if (sessionStorage.getItem('zoiris_just_paired_push') === '1' || sessionStorage.getItem('zoiris_just_connected_cloud') === '1') {
+      showMsg('Live real-time sync & mobile app alerts paired on this device! Sign in below to open your Command Center.', 'ok');
     }
   } catch {}
   function refreshInstallBanner() {

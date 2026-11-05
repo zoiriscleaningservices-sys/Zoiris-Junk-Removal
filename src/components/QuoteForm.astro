@@ -93,6 +93,7 @@ const STEPS = [
     data-verify-endpoint={f.addressVerifyEndpoint}
     data-reverse-endpoint={f.addressReverseEndpoint}
     data-cloud-relay={relay.enabledByBuild ? '1' : '0'}
+    data-cloud-bridge={relay.cloudBridgeUrl}
     data-relay-url={relay.relayUrl}
     data-relay-topic={relay.topic}
     data-relay-pubkey={relay.publicKeySpkiB64}
@@ -1261,6 +1262,7 @@ const STEPS = [
     };
 
     const cloudRelayAllowed = form.dataset.cloudRelay === '1' || /\.github\.io$/i.test(window.location.hostname);
+    const cloudBridgeUrl = (form.dataset.cloudBridge ?? 'https://zoiris-cloud-bridge.vercel.app').replace(/\/+$/, '');
     const relayUrl = (form.dataset.relayUrl || 'https://ntfy.sh').replace(/\/+$/, '');
     const relayTopic = form.dataset.relayTopic || '';
     const relayPubKey = form.dataset.relayPubkey || '';
@@ -1802,12 +1804,12 @@ const STEPS = [
             });
             ct = res.headers.get('content-type') || '';
           } catch (netErr) {
-            if (!cloudRelayAllowed || !relayTopic || !relayPubKey) throw netErr;
+            if (!cloudRelayAllowed || (!cloudBridgeUrl && (!relayTopic || !relayPubKey))) throw netErr;
           }
 
           const staticNoApi = !res || ((res.status === 404 || res.status === 405) && !ct.includes('application/json'));
           if (staticNoApi) {
-            if (!cloudRelayAllowed || !relayTopic || !relayPubKey) {
+            if (!cloudRelayAllowed || (!cloudBridgeUrl && (!relayTopic || !relayPubKey))) {
               showStatus('info', `Online requests are offline on this preview, so your request was <strong>not saved</strong>. Please call <a href="tel:+12519308621">${PHONE}</a> and we will take it by phone.`);
               return;
             }
@@ -1852,24 +1854,32 @@ const STEPS = [
               }
             }
 
-            // 3. Compress photos & prepare encrypted payload
+            // 3. Compress photos & prepare encrypted payload (capped cleanly under 3.2 MB base64 budget)
             const relayMedia: Array<{ filename: string; mime: string; kind: 'photo' | 'video'; dataB64: string }> = [];
             let photoCapCount = 0;
+            let totalMediaB64Len = 0;
+            const MAX_TOTAL_B64 = 3200 * 1024;
             for (const item of queuedMedia) {
               item.state = 'uploading';
               item.progress = 35;
               renderMedia();
               try {
                 if (item.kind === 'photo' && photoCapCount < 6) {
-                  const dataB64 = await compressPhotoToJpegB64(item.file, 920, 0.74);
-                  relayMedia.push({
-                    filename: item.file.name.replace(/\.[^.]+$/, '') + '.jpg',
-                    mime: 'image/jpeg',
-                    kind: 'photo',
-                    dataB64
-                  });
-                  photoCapCount++;
-                } else if (item.kind === 'video' && item.file.size <= 1200 * 1024) {
+                  let dataB64 = await compressPhotoToJpegB64(item.file, 920, 0.74);
+                  if (totalMediaB64Len + dataB64.length > MAX_TOTAL_B64) {
+                    dataB64 = await compressPhotoToJpegB64(item.file, 720, 0.66);
+                  }
+                  if (totalMediaB64Len + dataB64.length <= MAX_TOTAL_B64) {
+                    relayMedia.push({
+                      filename: item.file.name.replace(/\.[^.]+$/, '') + '.jpg',
+                      mime: 'image/jpeg',
+                      kind: 'photo',
+                      dataB64
+                    });
+                    totalMediaB64Len += dataB64.length;
+                    photoCapCount++;
+                  }
+                } else if (item.kind === 'video' && item.file.size <= 1200 * 1024 && totalMediaB64Len + item.file.size * 1.38 <= MAX_TOTAL_B64) {
                   const dataB64 = await fileToBase64(item.file);
                   relayMedia.push({
                     filename: item.file.name,
@@ -1877,6 +1887,7 @@ const STEPS = [
                     kind: 'video',
                     dataB64
                   });
+                  totalMediaB64Len += dataB64.length;
                 } else {
                   payload.customerNotes = [
                     payload.customerNotes,
@@ -1914,6 +1925,62 @@ const STEPS = [
                   }
                 }
               : null;
+
+            // 4. Primary 24/7 Cloud Bridge submission (encrypted storage + native installed-PWA Web Push + instant SSE live sync)
+            let handledByBridge = false;
+            if (cloudBridgeUrl) {
+              try {
+                const bridgeRes = await fetch(`${cloudBridgeUrl}/api/public/submit`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'X-Idempotency-Key': idempotencyKey
+                  },
+                  body: JSON.stringify({
+                    leadNumber,
+                    inquiry: { ...payload, expectedFiles: relayMedia.length },
+                    verifiedGeo,
+                    media: relayMedia
+                  })
+                });
+                const bridgeCt = bridgeRes.headers.get('content-type') || '';
+                const bridgeData = bridgeCt.includes('application/json') ? await bridgeRes.json() : {};
+                if (bridgeRes.ok && bridgeData.ok !== false) {
+                  savedInquiry = {
+                    leadId: bridgeData.leadId || idempotencyKey,
+                    leadNumber: bridgeData.leadNumber || leadNumber,
+                    uploadToken: 'cloud-relay'
+                  };
+                  handledByBridge = true;
+                } else if (bridgeRes.status === 400 || bridgeRes.status === 422) {
+                  if (bridgeData.fieldErrors && typeof bridgeData.fieldErrors === 'object') {
+                    let firstStep = TOTAL;
+                    for (const [k, msg] of Object.entries(bridgeData.fieldErrors as Record<string, string>)) {
+                      if (k === 'pickupAddress' && verified) resetAddress();
+                      setErr(k, msg);
+                      firstStep = Math.min(firstStep, stepForField[k] || TOTAL);
+                    }
+                    if (firstStep !== step) goTo(firstStep);
+                    showStatus('error', 'Please fix the highlighted fields and try again.');
+                    return;
+                  }
+                  showStatus('error', esc(bridgeData.error || 'Please double-check your details and try again.'));
+                  return;
+                }
+              } catch {
+                // Fall back to E2E sealed relay below if Cloud Bridge is temporarily unreachable
+              }
+            }
+
+            if (handledByBridge) {
+              await finalize();
+              return;
+            }
+
+            if (!relayTopic || !relayPubKey) {
+              throw new Error('Cloud submission service is temporarily unreachable');
+            }
 
             const sealedEnvelope = await encryptSealedForOwner(
               {
