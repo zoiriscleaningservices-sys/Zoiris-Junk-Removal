@@ -106,7 +106,7 @@ describe('Zoiris Command Center — Security, Access Control & Negative Safeguar
     assert.ok([401, 403, 409].includes(hijackSetup.status), `Expected 401/403/409 on repeat setup, got ${hijackSetup.status}`);
   });
 
-  it('only accepts real, in-area addresses and genuine contact details (anti-scam & anti-spam screening)', async () => {
+  it('accepts real verified U.S. addresses nationwide while blocking fake/non-US addresses and spam', async () => {
     const post = (path, body) =>
       fetch(`${baseUrl}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     const base = {
@@ -123,32 +123,67 @@ describe('Zoiris Command Center — Security, Access Control & Negative Safeguar
       consentGiven: true
     };
 
-    // Address verification endpoint: real address → signed token + coordinates + county
-    const okRes = await (await post('/api/public/address/verify', { line: '1450 Government St', city: 'Mobile', zip: '36604' })).json();
+    // Address verification endpoint: real U.S. addresses across any state → signed token + coordinates + county
+    const okRes = await (await post('/api/public/address/verify', { line: '1450 Government St', city: 'Mobile', state: 'AL', zip: '36604' })).json();
     assert.equal(okRes.status, 'verified');
     assert.equal(okRes.address.countyName, 'Mobile County');
     assert.ok(Number.isFinite(okRes.address.lat) && okRes.token.includes('.'));
 
+    const gaRes = await (await post('/api/public/address/verify', { line: '100 Peachtree St', city: 'Atlanta', state: 'GA', zip: '30303' })).json();
+    assert.equal(gaRes.status, 'verified');
+    assert.equal(gaRes.address.state, 'GA');
+    assert.equal(gaRes.address.countyName, 'Fulton County');
+    assert.ok(Number.isFinite(gaRes.address.lat) && gaRes.token.includes('.'));
+
+    const txRes = await (await post('/api/public/address/verify', { line: '1100 Congress Ave', city: 'Austin', state: 'TX', zip: '78701' })).json();
+    assert.equal(txRes.status, 'verified');
+    assert.equal(txRes.address.state, 'TX');
+
     const fakeRes = await (await post('/api/public/address/verify', { line: '99999 Fake St', city: 'Mobile' })).json();
     assert.equal(fakeRes.status, 'not-found');
-    const outRes = await (await post('/api/public/address/verify', { line: '100 Peachtree St', city: 'Atlanta', state: 'GA' })).json();
-    assert.equal(outRes.status, 'outside-area');
+    const nonUsRes = await (await post('/api/public/address/verify', { line: '100 Queen St W', city: 'Toronto', state: 'ON' })).json();
+    assert.equal(nonUsRes.status, 'outside-area');
     const noNum = await (await post('/api/public/address/verify', { line: 'Government Street' })).json();
     assert.equal(noNum.status, 'not-found');
     assert.match(noNum.message, /house or building number/i);
 
-    // Suggestions are filtered to the service area and never expose CRM data
+    // Suggestions work across the United States and never expose CRM data
     const sug = await (await post('/api/public/address/suggest', { q: '1450 Government St' })).json();
     assert.equal(sug.suggestions[0].city, 'Mobile');
     assert.equal(Object.keys(sug).includes('leads'), false);
+    const sugTx = await (await post('/api/public/address/suggest', { q: '1100 Congress Ave, Austin, TX' })).json();
+    assert.equal(sugTx.suggestions[0].city, 'Austin');
+    assert.equal(sugTx.suggestions[0].state, 'TX');
 
-    // Inquiries with fake or out-of-area addresses are rejected with a friendly field error
+    // Inquiries with fake or non-US addresses are rejected with a friendly field error
     let r = await post('/api/public/inquiries', { ...base, pickupAddress: '99999 Fake St' });
     assert.equal(r.status, 400);
-    assert.match((await r.json()).fieldErrors.pickupAddress, /couldn't find/i);
-    r = await post('/api/public/inquiries', { ...base, pickupAddress: '100 Peachtree St', city: 'Atlanta', state: 'GA', zipCode: '30303' });
+    assert.match((await r.json()).fieldErrors.pickupAddress, /couldn't verify|couldn't find/i);
+    r = await post('/api/public/inquiries', { ...base, pickupAddress: '100 Queen St W', city: 'Toronto', state: 'ON', zipCode: '30303' });
     assert.equal(r.status, 400);
-    assert.match((await r.json()).fieldErrors.pickupAddress, /outside Mobile and Baldwin/i);
+    assert.match((await r.json()).fieldErrors.pickupAddress, /United States/i);
+
+    // Nationwide U.S. inquiries (e.g. Atlanta, GA) are accepted and saved with exact state + coordinates
+    r = await post('/api/public/inquiries', {
+      ...base,
+      firstName: 'Jordan',
+      lastName: 'Reed',
+      phone: '(404) 555-0288',
+      pickupAddress: '100 Peachtree St',
+      city: 'Atlanta',
+      state: 'GA',
+      zipCode: '30303',
+      addressToken: gaRes.token,
+      source: 'zoiris-website',
+      formStartedAt: Date.now() - 60000
+    });
+    assert.equal(r.status, 201);
+    const savedGa = await r.json();
+    const rowGa = app.ctx.db.prepare('SELECT * FROM leads WHERE id = ?').get(savedGa.leadId);
+    assert.equal(rowGa.state, 'GA');
+    assert.equal(rowGa.city, 'Atlanta');
+    assert.equal(rowGa.county_slug, null);
+    assert.ok(Number.isFinite(rowGa.geo_lat) && Number.isFinite(rowGa.geo_lng));
 
     // A tampered address token is ignored, so the server re-checks the typed (fake) address
     const [b64, sig] = okRes.token.split('.');

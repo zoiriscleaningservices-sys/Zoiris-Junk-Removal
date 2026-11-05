@@ -199,7 +199,14 @@ async function routeRequest(req, res, deps) {
       if (pathname.endsWith('reverse')) {
         return sendJson(res, 200, await geo.reverse(body.lat, body.lng), req);
       }
-      const result = await geo.verify({ line: body.line, city: body.city, state: body.state, zip: body.zip });
+      const result = await geo.verify({
+        line: body.line,
+        city: body.city,
+        state: body.state,
+        zip: body.zip,
+        magicKey: body.magicKey,
+        singleLine: body.singleLine
+      });
       return sendJson(res, 200, { ok: true, ...result }, req);
     }
 
@@ -489,7 +496,7 @@ async function routeRequest(req, res, deps) {
           email: body.email || '',
           pickupAddress: body.pickupAddress || '',
           city: body.city || 'Mobile',
-          state: 'AL',
+          state: body.state || 'AL',
           zipCode: body.zipCode || '36602',
           requestedService: body.requestedService || 'Junk Removal',
           itemDescription: body.itemDescription || body.requestedService || 'Logged by owner',
@@ -1462,7 +1469,7 @@ async function routeRequest(req, res, deps) {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'private, no-store, must-revalidate',
       'Content-Security-Policy':
-        "default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org https://basemap.nationalmap.gov; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; manifest-src 'self'; frame-ancestors 'none'"
+        "default-src 'self'; img-src 'self' data: blob: https://tile.openstreetmap.org https://services.arcgisonline.com https://basemap.nationalmap.gov; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' https://geocode.arcgis.com https://photon.komoot.io; manifest-src 'self'; frame-ancestors 'none'"
     });
     res.end(readFileSync(shellPath));
     return;

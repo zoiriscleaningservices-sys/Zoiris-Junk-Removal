@@ -238,10 +238,11 @@ export function createCrmService({ ctx, storage, realtime, masterKey, geo = null
     const categories = [...categoriesSet];
     const expectedFiles = Math.max(0, Math.min(20, Number(body.expectedFiles || 0)));
 
-    // Infer matching municipality / county slug when possible
-    const matchedMuni = db
-      .prepare('SELECT id, county_id FROM municipalities WHERE lower(name) = lower(?) LIMIT 1')
-      .get(city);
+    // Infer matching municipality / county slug when possible (Alabama home counties only)
+    const matchedMuni =
+      state === 'AL'
+        ? db.prepare('SELECT id, county_id FROM municipalities WHERE lower(name) = lower(?) LIMIT 1').get(city)
+        : null;
 
     const leadId = randomUUID();
     const prefNum = /^ZJ-\d{4}-[A-Z0-9]{5,8}$/.test(String(reqMeta.preferredLeadNumber || '')) ? String(reqMeta.preferredLeadNumber) : '';
@@ -347,7 +348,13 @@ export function createCrmService({ ctx, storage, realtime, masterKey, geo = null
       addressStatus === 'unverified' ? '' : geoRes.address.countyName || '',
       screen.score,
       JSON.stringify(screen.flags),
-      addressStatus === 'unverified' ? null : geoRes.address.countyFips === '01003' ? 'baldwin-county-al' : 'mobile-county-al',
+      addressStatus === 'unverified'
+        ? null
+        : geoRes.address.countyFips === '01003'
+          ? 'baldwin-county-al'
+          : geoRes.address.countyFips === '01097'
+            ? 'mobile-county-al'
+            : null,
       leadId
     );
     for (const rawItem of selectedItems) {

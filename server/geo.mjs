@@ -1,18 +1,13 @@
 /**
  * server/geo.mjs
- * Real-address search + verification for the public Pickup Request form.
+ * Nationwide United States real-address search + rooftop verification for the Pickup Request form & CRM.
  *
- *  - Suggestions:  OpenStreetMap data via the Photon geocoder (photon.komoot.io), biased and
- *                  filtered to Mobile County + Baldwin County, Alabama.
- *  - Verification: U.S. Census Bureau Geocoder (TIGER address ranges — official, free, no key).
- *                  Falls back to an OpenStreetMap house-number match when the Census range
- *                  database does not know a brand-new address.
- *  - Tokens:       A verified result is returned with a short-lived HMAC token so the inquiry
- *                  endpoint can trust the canonical address + coordinates without re-geocoding.
- *
- * Honest limits: the Census geocoder confirms the house number falls inside a real address range
- * on a real street (and returns its county + coordinates); it does not prove someone lives there.
- * The owner still sees the pin, aerial photo, and Street View link in the Command Center.
+ *  - Primary:   Esri ArcGIS World Geocoding Service (`suggest`, `findAddressCandidates`, `reverseGeocode`, `USA`)
+ *               for rooftop parcel (`PointAddress` / `Subaddress`) & street-interpolated (`StreetAddress`) matches.
+ *  - Secondary: Official U.S. Census Bureau Geocoder (TIGER address ranges + counties across all 50 states, DC & territories).
+ *  - Tertiary:  OpenStreetMap Photon (`photon.komoot.io`, `countrycode=US`) house-number fallback.
+ *  - Tokens:    A verified result is returned with a short-lived HMAC token so the inquiry endpoint can trust
+ *               the canonical U.S. address + coordinates without re-geocoding.
  *
  * ZOIRIS_GEOCODER=mock switches to a deterministic offline fixture for automated tests.
  */
@@ -23,13 +18,37 @@ export const SERVICE_COUNTIES = {
   '01003': 'Baldwin County'
 };
 
-// [minLon, minLat, maxLon, maxLat] — generous box around Mobile + Baldwin counties
-const SERVICE_BBOX = [-88.48, 30.13, -87.36, 31.34];
-const UA = 'ZoirisJunkRemoval/2.0 (+https://www.zoirisjunkremoval.com; pickup address verification)';
-const TOKEN_TTL_MS = 2 * 60 * 60 * 1000;
+export const US_STATES = {
+  AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
+  CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida',
+  GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana',
+  IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine',
+  MD: 'Maryland', MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi',
+  MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire',
+  NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina', ND: 'North Dakota',
+  OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania', RI: 'Rhode Island',
+  SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah',
+  VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin',
+  WY: 'Wyoming', PR: 'Puerto Rico', VI: 'U.S. Virgin Islands', GU: 'Guam', AS: 'American Samoa',
+  MP: 'Northern Mariana Islands'
+};
 
+const US_STATE_BY_NAME = Object.fromEntries(
+  Object.entries(US_STATES).map(([abbr, name]) => [name.toLowerCase(), abbr])
+);
+
+export function normalizeUsState(raw = '') {
+  const clean = String(raw || '').replace(/\./g, '').trim();
+  if (!clean) return '';
+  const up = clean.toUpperCase();
+  if (US_STATES[up]) return up;
+  return US_STATE_BY_NAME[clean.toLowerCase()] || '';
+}
+
+const ARCGIS_BASE = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer';
+const UA = 'ZoirisJunkRemoval/2.1 (+https://www.zoirisjunkremoval.com; US pickup address verification)';
+const TOKEN_TTL_MS = 2 * 60 * 60 * 1000;
 const DIRECTIONALS = new Set(['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']);
-const STATE_ABBR = { alabama: 'AL', mississippi: 'MS', florida: 'FL', georgia: 'GA', tennessee: 'TN', louisiana: 'LA' };
 
 function titleWord(w) {
   const up = w.toUpperCase();
@@ -51,15 +70,12 @@ function cleanText(v, max = 200) {
   return typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, max) : '';
 }
 
-function countyFromName(name = '') {
-  const n = String(name).toLowerCase();
-  if (n.startsWith('mobile')) return { fips: '01097', name: 'Mobile County' };
-  if (n.startsWith('baldwin')) return { fips: '01003', name: 'Baldwin County' };
-  return null;
-}
-
-function inBbox(lat, lng) {
-  return lng >= SERVICE_BBOX[0] && lng <= SERVICE_BBOX[2] && lat >= SERVICE_BBOX[1] && lat <= SERVICE_BBOX[3];
+function inferHomeCountyFips(stateAbbr, countyName = '') {
+  if (stateAbbr !== 'AL') return '';
+  const n = String(countyName || '').toLowerCase();
+  if (n.startsWith('mobile')) return '01097';
+  if (n.startsWith('baldwin')) return '01003';
+  return '';
 }
 
 async function fetchJson(fetchImpl, url, timeoutMs) {
@@ -71,41 +87,127 @@ async function fetchJson(fetchImpl, url, timeoutMs) {
   return res.json();
 }
 
+function parseArcgisSuggestionText(text = '') {
+  const parts = String(text)
+    .split(',')
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length < 3) return null;
+  let idx = parts.length - 1;
+  if (/^(USA|United States|US|PRI|VIR|GUM|ASM|MNP)$/i.test(parts[idx])) idx--;
+  let zip = '';
+  if (idx >= 2 && /^\d{5}(-\d{4})?$/.test(parts[idx])) {
+    zip = parts[idx].slice(0, 5);
+    idx--;
+  }
+  if (idx < 1) return null;
+  let statePart = parts[idx];
+  const stZipMatch = statePart.match(/^([A-Za-z .]+?)\s+(\d{5})(?:-\d{4})?$/);
+  if (stZipMatch) {
+    statePart = stZipMatch[1];
+    if (!zip) zip = stZipMatch[2];
+  }
+  const state = normalizeUsState(statePart);
+  if (!state) return null;
+  idx--;
+  if (idx < 1) return null;
+  const city = parts[idx];
+  const line = parts.slice(0, idx).join(', ');
+  if (!/^\d/.test(line)) return null;
+  return { line, city, state, zip };
+}
+
+function arcgisCandidateToAddress(cand) {
+  const a = cand?.attributes || {};
+  const loc = cand?.location;
+  if (!loc || typeof loc.y !== 'number' || typeof loc.x !== 'number') return null;
+  if (a.Country && !/^(USA|PRI|VIR|GUM|ASM|MNP)$/i.test(String(a.Country))) return null;
+  const state = normalizeUsState(a.RegionAbbr || a.Region || '');
+  if (!state) return null;
+  const baseSt = String(a.StAddr || '').trim();
+  const sub = String(a.SubAddr || '').trim();
+  const rawLine =
+    baseSt && sub && !baseSt.toLowerCase().includes(sub.toLowerCase())
+      ? `${baseSt} ${sub}`
+      : baseSt || String(cand.address || '').split(',')[0]?.trim() || '';
+  if (!rawLine || !/^\d/.test(rawLine)) return null;
+  const countyName = cleanText(a.Subregion || '', 80);
+  const countyFips = inferHomeCountyFips(state, countyName);
+  return {
+    line: rawLine,
+    city: cleanText(a.City || '', 80),
+    state,
+    zip: String(a.Postal || '').slice(0, 5),
+    lat: Number(Number(loc.y).toFixed(6)),
+    lng: Number(Number(loc.x).toFixed(6)),
+    countyFips,
+    countyName,
+    addrType: String(a.Addr_type || ''),
+    addNum: String(a.AddNum || ''),
+    score: Number(cand.score || 0)
+  };
+}
+
 /* ------------------------------------------------------------------------ */
 /* Deterministic offline fixture (ZOIRIS_GEOCODER=mock)                     */
 /* ------------------------------------------------------------------------ */
 const MOCK_CITIES = {
-  mobile: { zip: '36604', county: '01097', lat: 30.6809, lng: -88.0712 },
-  daphne: { zip: '36526', county: '01003', lat: 30.6035, lng: -87.9036 },
-  fairhope: { zip: '36532', county: '01003', lat: 30.5227, lng: -87.9033 },
-  'spanish fort': { zip: '36527', county: '01003', lat: 30.6749, lng: -87.9153 },
-  saraland: { zip: '36571', county: '01097', lat: 30.8207, lng: -88.0706 },
-  atlanta: { zip: '30303', county: '13121', lat: 33.749, lng: -84.388, state: 'GA', countyName: 'Fulton County' }
+  mobile: { zip: '36604', state: 'AL', county: '01097', countyName: 'Mobile County', lat: 30.6809, lng: -88.0712 },
+  daphne: { zip: '36526', state: 'AL', county: '01003', countyName: 'Baldwin County', lat: 30.6035, lng: -87.9036 },
+  fairhope: { zip: '36532', state: 'AL', county: '01003', countyName: 'Baldwin County', lat: 30.5227, lng: -87.9033 },
+  'spanish fort': { zip: '36527', state: 'AL', county: '01003', countyName: 'Baldwin County', lat: 30.6749, lng: -87.9153 },
+  saraland: { zip: '36571', state: 'AL', county: '01097', countyName: 'Mobile County', lat: 30.8207, lng: -88.0706 },
+  atlanta: { zip: '30303', state: 'GA', county: '13121', countyName: 'Fulton County', lat: 33.749, lng: -84.388 },
+  austin: { zip: '78701', state: 'TX', county: '48453', countyName: 'Travis County', lat: 30.2747, lng: -97.7404 },
+  'new york': { zip: '10118', state: 'NY', county: '36061', countyName: 'New York County', lat: 40.7484, lng: -73.9857 },
+  miami: { zip: '33132', state: 'FL', county: '12086', countyName: 'Miami-Dade County', lat: 25.7845, lng: -80.1887 },
+  'los angeles': { zip: '90028', state: 'CA', county: '06037', countyName: 'Los Angeles County', lat: 34.1016, lng: -118.3387 },
+  chicago: { zip: '60601', state: 'IL', county: '17031', countyName: 'Cook County', lat: 41.8853, lng: -87.6216 },
+  seattle: { zip: '98101', state: 'WA', county: '53033', countyName: 'King County', lat: 47.6097, lng: -122.3331 },
+  washington: { zip: '20500', state: 'DC', county: '11001', countyName: 'District of Columbia', lat: 38.8977, lng: -77.0365 }
 };
 
 function mockParse(text) {
   const t = cleanText(text, 240);
-  const m = t.match(/^(\d{1,6})\s+([^,]+?)(?:,\s*([^,]+?))?(?:,\s*([A-Za-z]{2}))?(?:,?\s*(\d{5}))?$/);
+  const m = t.match(/^(\d{1,6}[A-Za-z]?)\s+([^,]+?)(?:,\s*([^,]+?))?(?:,\s*([A-Za-z .]+?))?(?:,?\s*(\d{5}|[A-Za-z]\d[A-Za-z]\s*\d[A-Za-z]\d))?$/);
   if (!m) return null;
-  const cityKey = (m[3] || 'Mobile').toLowerCase().trim();
-  const city = MOCK_CITIES[cityKey] ? cityKey : null;
-  return { number: m[1], street: m[2], cityKey: city, zip: m[5] || '' };
+  const rawCity = (m[3] || 'Mobile').trim();
+  const rawState = (m[4] || '').trim();
+  const rawZip = (m[5] || '').trim();
+  return { number: m[1], street: m[2].trim(), rawCity, rawState, rawZip };
 }
 
-function mockLookup(text) {
+function mockLookup(text, explicitState = '') {
   const p = mockParse(text);
-  if (!p || /fake|nowhere|test street|asdf/i.test(p.street) || Number(p.number) > 90000) return null;
-  const c = MOCK_CITIES[p.cityKey || 'mobile'];
-  const seed = [...(p.number + p.street)].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) % 100000, 7);
+  if (!p) return null;
+  if (/fake|nowhere|test street|asdf|forged/i.test(p.street)) return null;
+  const numVal = parseInt(p.number, 10);
+  if (!Number.isFinite(numVal) || numVal <= 0 || numVal > 90000) return null;
+
+  const stateHint = explicitState || p.rawState;
+  if (stateHint && !normalizeUsState(stateHint)) {
+    return { outsideUs: true };
+  }
+  if (p.rawZip && !/^\d{5}$/.test(p.rawZip)) {
+    return { outsideUs: true };
+  }
+
+  const cityKey = p.rawCity.toLowerCase();
+  const known = MOCK_CITIES[cityKey];
+  const state = normalizeUsState(stateHint) || known?.state || 'AL';
+  const baseLat = known?.lat ?? 35.2271;
+  const baseLng = known?.lng ?? -80.8431;
+  const seed = [...(p.number + p.street + cityKey + state)].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) % 100000, 7);
+
   return {
     line: `${p.number} ${titleCaseAddress(p.street)}`,
-    city: titleCaseAddress(p.cityKey || 'mobile'),
-    state: c.state || 'AL',
-    zip: p.zip || c.zip,
-    lat: Number((c.lat + ((seed % 200) - 100) / 20000).toFixed(6)),
-    lng: Number((c.lng + ((Math.floor(seed / 200) % 200) - 100) / 20000).toFixed(6)),
-    countyFips: c.county,
-    countyName: c.countyName || SERVICE_COUNTIES[c.county] || ''
+    city: known ? titleCaseAddress(cityKey) : titleCaseAddress(p.rawCity || 'Mobile'),
+    state,
+    zip: p.rawZip || known?.zip || '36604',
+    lat: Number((baseLat + ((seed % 200) - 100) / 20000).toFixed(6)),
+    lng: Number((baseLng + ((Math.floor(seed / 200) % 200) - 100) / 20000).toFixed(6)),
+    countyFips: known?.county || '',
+    countyName: known?.countyName || ''
   };
 }
 
@@ -113,7 +215,7 @@ function mockLookup(text) {
 /* Service factory                                                          */
 /* ------------------------------------------------------------------------ */
 export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode = process.env.ZOIRIS_GEOCODER || 'live' } = {}) {
-  const cache = new Map(); // key -> { at, value }
+  const cache = new Map();
   const CACHE_TTL = 10 * 60 * 1000;
 
   function cacheGet(key) {
@@ -123,24 +225,49 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     return undefined;
   }
   function cacheSet(key, value) {
-    if (cache.size > 600) cache.delete(cache.keys().next().value);
+    if (cache.size > 800) cache.delete(cache.keys().next().value);
     cache.set(key, { at: Date.now(), value });
+  }
+
+  async function arcgisCandidates({ singleLine, magicKey = '', maxLocations = 6 }) {
+    const params = new URLSearchParams({
+      f: 'json',
+      singleLine,
+      countryCode: 'USA',
+      category: 'Point Address,Street Address,Subaddress',
+      outFields: 'Addr_type,Match_addr,StAddr,AddNum,City,Subregion,Region,RegionAbbr,Postal,Country',
+      maxLocations: String(maxLocations)
+    });
+    if (magicKey) params.set('magicKey', magicKey);
+    const data = await fetchJson(fetchImpl, `${ARCGIS_BASE}/findAddressCandidates?${params.toString()}`, 6000);
+    return Array.isArray(data?.candidates) ? data.candidates : [];
   }
 
   /* ---------------------------- suggestions ----------------------------- */
   async function suggest(rawQuery) {
-    const q = cleanText(rawQuery, 120);
+    const q = cleanText(rawQuery, 140);
     if (q.length < 3) return { ok: true, suggestions: [], source: 'none' };
-    const typedNumber = (q.match(/^\s*(\d{1,6})\b/) || [])[1] || '';
+    const typedNumber = (q.match(/^\s*(\d{1,6}[A-Za-z]?)\b/) || [])[1] || '';
 
     if (mode === 'mock') {
-      const hit = mockLookup(q.includes(',') ? q : `${q}, Mobile`);
+      const hit = mockLookup(q.includes(',') ? q : `${q}, Mobile, AL`);
+      if (!hit || hit.outsideUs) return { ok: true, source: 'mock', suggestions: [] };
       return {
         ok: true,
         source: 'mock',
-        suggestions: hit
-          ? [{ label: `${hit.line}, ${hit.city}, ${hit.state} ${hit.zip}`, line: hit.line, city: hit.city, state: hit.state, zip: hit.zip, lat: hit.lat, lng: hit.lng, precision: 'house' }]
-          : []
+        suggestions: [
+          {
+            label: `${hit.line}, ${hit.city}, ${hit.state} ${hit.zip}`,
+            line: hit.line,
+            city: hit.city,
+            state: hit.state,
+            zip: hit.zip,
+            lat: hit.lat,
+            lng: hit.lng,
+            precision: 'house',
+            countyName: hit.countyName
+          }
+        ]
       };
     }
 
@@ -148,62 +275,120 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     const cached = cacheGet(key);
     if (cached) return cached;
 
-    const url =
-      'https://photon.komoot.io/api/?' +
-      new URLSearchParams({
-        q: /mobile|baldwin|alabama|\bal\b/i.test(q) ? q : `${q}, Alabama`,
-        limit: '10',
-        lang: 'en',
-        lat: '30.69',
-        lon: '-88.04',
-        bbox: SERVICE_BBOX.join(',')
-      }).toString();
+    const seen = new Set();
+    const suggestions = [];
 
-    let data;
+    // 1. Primary: Esri ArcGIS nationwide U.S. autocomplete
     try {
-      data = await fetchJson(fetchImpl, url, 5000);
+      const sugUrl =
+        `${ARCGIS_BASE}/suggest?` +
+        new URLSearchParams({
+          f: 'json',
+          text: q,
+          countryCode: 'USA',
+          category: 'Point Address,Street Address,Subaddress',
+          maxSuggestions: '8'
+        }).toString();
+      const data = await fetchJson(fetchImpl, sugUrl, 4500);
+      for (const s of data?.suggestions || []) {
+        if (s.isCollection) continue;
+        const parsed = parseArcgisSuggestionText(s.text || '');
+        if (!parsed) continue;
+        const label = [parsed.line, parsed.city, `${parsed.state}${parsed.zip ? ' ' + parsed.zip : ''}`].filter(Boolean).join(', ');
+        const dedupe = `${parsed.line}|${parsed.city}|${parsed.state}`.toLowerCase();
+        if (seen.has(dedupe)) continue;
+        seen.add(dedupe);
+        suggestions.push({
+          label,
+          line: parsed.line,
+          city: parsed.city,
+          state: parsed.state,
+          zip: parsed.zip,
+          precision: 'house',
+          magicKey: s.magicKey || '',
+          singleLine: s.text || label
+        });
+        if (suggestions.length >= 7) break;
+      }
+    } catch {}
+
+    // 2. Highway / route alias fallback via ArcGIS findAddressCandidates
+    if (!suggestions.length && typedNumber) {
+      try {
+        const cands = await arcgisCandidates({ singleLine: q, maxLocations: 6 });
+        for (const c of cands) {
+          if (Number(c.score || 0) < 82) continue;
+          const addr = arcgisCandidateToAddress(c);
+          if (!addr) continue;
+          const label = [addr.line, addr.city, `${addr.state}${addr.zip ? ' ' + addr.zip : ''}`].filter(Boolean).join(', ');
+          const dedupe = `${addr.line}|${addr.city}|${addr.state}`.toLowerCase();
+          if (seen.has(dedupe)) continue;
+          seen.add(dedupe);
+          suggestions.push({
+            label,
+            line: addr.line,
+            city: addr.city,
+            state: addr.state,
+            zip: addr.zip,
+            lat: addr.lat,
+            lng: addr.lng,
+            precision: 'house',
+            countyName: addr.countyName,
+            singleLine: label
+          });
+        }
+      } catch {}
+    }
+
+    if (suggestions.length) {
+      const out = { ok: true, suggestions, source: 'arcgis' };
+      cacheSet(key, out);
+      return out;
+    }
+
+    // 3. Tertiary fallback: OpenStreetMap Photon across the United States
+    try {
+      const url = 'https://photon.komoot.io/api/?' + new URLSearchParams({ q, limit: '10', lang: 'en' }).toString();
+      const data = await fetchJson(fetchImpl, url, 5000);
+      for (const f of data.features || []) {
+        const p = f.properties || {};
+        const [lng, lat] = f.geometry?.coordinates || [];
+        if (String(p.countrycode || '').toUpperCase() !== 'US') continue;
+        if (typeof lat !== 'number' || typeof lng !== 'number') continue;
+        const streetName = p.street || (p.osm_key === 'highway' || p.type === 'street' ? p.name : '');
+        if (!streetName) continue;
+        const cleanNum = typedNumber.replace(/[A-Za-z]$/, '');
+        if (cleanNum && p.housenumber && String(p.housenumber) !== cleanNum) continue;
+        const number = p.housenumber || typedNumber;
+        if (!number) continue;
+        const state = normalizeUsState(p.state || '');
+        if (!state) continue;
+        const line = `${number} ${titleCaseAddress(streetName)}`;
+        const city = p.city || p.locality || p.district || '';
+        const zip = p.postcode && /^\d{5}/.test(p.postcode) ? p.postcode.slice(0, 5) : '';
+        const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+        const dedupe = `${line}|${city}|${state}`.toLowerCase();
+        if (seen.has(dedupe)) continue;
+        seen.add(dedupe);
+        suggestions.push({
+          label,
+          line,
+          city,
+          state,
+          zip,
+          lat: Number(lat.toFixed(6)),
+          lng: Number(lng.toFixed(6)),
+          precision: p.housenumber ? 'house' : 'street',
+          countyName: cleanText(p.county || '', 80)
+        });
+        if (suggestions.length >= 7) break;
+      }
+      const out = { ok: true, suggestions, source: 'openstreetmap' };
+      cacheSet(key, out);
+      return out;
     } catch {
       return { ok: true, suggestions: [], source: 'unavailable' };
     }
-
-    const seen = new Set();
-    const suggestions = [];
-    for (const f of data.features || []) {
-      const p = f.properties || {};
-      const [lng, lat] = f.geometry?.coordinates || [];
-      if (p.countrycode && p.countrycode !== 'US') continue;
-      if (typeof lat !== 'number' || !inBbox(lat, lng)) continue;
-      const county = countyFromName(p.county || '');
-      if (!county) continue;
-      const streetName = p.street || (p.osm_key === 'highway' || p.type === 'street' ? p.name : '');
-      if (!streetName) continue;
-      if (typedNumber && p.housenumber && String(p.housenumber) !== typedNumber) continue;
-      const number = p.housenumber || typedNumber;
-      if (!number) continue; // a pickup needs a house/building number
-      const line = `${number} ${titleCaseAddress(streetName)}`;
-      const city = p.city || p.locality || p.district || '';
-      const state = STATE_ABBR[String(p.state || '').toLowerCase()] || 'AL';
-      const zip = p.postcode && /^\d{5}/.test(p.postcode) ? p.postcode.slice(0, 5) : '';
-      const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
-      const dedupe = `${line}|${city}`.toLowerCase();
-      if (seen.has(dedupe)) continue;
-      seen.add(dedupe);
-      suggestions.push({
-        label,
-        line,
-        city,
-        state,
-        zip,
-        lat: Number(lat.toFixed(6)),
-        lng: Number(lng.toFixed(6)),
-        precision: p.housenumber ? 'house' : 'street',
-        countyName: county.name
-      });
-      if (suggestions.length >= 6) break;
-    }
-    const out = { ok: true, suggestions, source: 'openstreetmap' };
-    cacheSet(key, out);
-    return out;
   }
 
   /* ------------------------- reverse (use my location) ------------------ */
@@ -211,46 +396,104 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     const lat = Number(rawLat);
     const lng = Number(rawLng);
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) return { ok: true, suggestions: [], source: 'none' };
-    if (!inBbox(lat, lng)) {
-      return { ok: true, suggestions: [], source: 'outside', message: 'Your current location looks outside Mobile and Baldwin counties. Type the pickup address instead.' };
-    }
-    if (mode === 'mock') return suggest('1450 Government St, Mobile');
-    let data;
+    if (mode === 'mock') return suggest('1450 Government St, Mobile, AL');
+
+    // 1. Primary: ArcGIS rooftop reverseGeocode
     try {
-      data = await fetchJson(
+      const revUrl =
+        `${ARCGIS_BASE}/reverseGeocode?` +
+        new URLSearchParams({
+          f: 'json',
+          location: `${lng},${lat}`,
+          featureTypes: 'PointAddress,StreetAddress,Subaddress',
+          langCode: 'EN'
+        }).toString();
+      const data = await fetchJson(fetchImpl, revUrl, 5000);
+      const a = data?.address || {};
+      const loc = data?.location || { x: lng, y: lat };
+      if (a.CountryCode && !/^(USA|PRI|VIR|GUM|ASM|MNP)$/i.test(String(a.CountryCode))) {
+        return {
+          ok: true,
+          suggestions: [],
+          source: 'outside',
+          message: 'Your current location appears to be outside the United States. Please enter a U.S. pickup address.'
+        };
+      }
+      const state = normalizeUsState(a.RegionAbbr || a.Region || '');
+      const line = cleanText(a.Address || '', 140);
+      if (state && line && /^\d/.test(line)) {
+        const city = cleanText(a.City || '', 80);
+        const zip = String(a.Postal || '').slice(0, 5);
+        const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+        return {
+          ok: true,
+          source: 'arcgis',
+          suggestions: [
+            {
+              label,
+              line,
+              city,
+              state,
+              zip,
+              lat: Number(Number(loc.y ?? lat).toFixed(6)),
+              lng: Number(Number(loc.x ?? lng).toFixed(6)),
+              precision: 'house',
+              countyName: cleanText(a.Subregion || '', 80),
+              singleLine: label
+            }
+          ]
+        };
+      }
+    } catch {}
+
+    // 2. Fallback: OpenStreetMap Photon reverse
+    try {
+      const data = await fetchJson(
         fetchImpl,
         'https://photon.komoot.io/reverse?' + new URLSearchParams({ lat: String(lat), lon: String(lng), limit: '5', lang: 'en' }).toString(),
         5000
       );
+      const suggestions = [];
+      const seen = new Set();
+      for (const f of data.features || []) {
+        const p = f.properties || {};
+        const [flng, flat] = f.geometry?.coordinates || [];
+        if (String(p.countrycode || '').toUpperCase() !== 'US') continue;
+        if (!p.housenumber || !(p.street || p.name)) continue;
+        const state = normalizeUsState(p.state || '');
+        if (!state) continue;
+        const line = `${p.housenumber} ${titleCaseAddress(p.street || p.name)}`;
+        const city = p.city || p.locality || p.district || '';
+        const zip = p.postcode ? String(p.postcode).slice(0, 5) : '';
+        const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+        if (seen.has(label)) continue;
+        seen.add(label);
+        suggestions.push({
+          label,
+          line,
+          city,
+          state,
+          zip,
+          lat: Number(flat.toFixed(6)),
+          lng: Number(flng.toFixed(6)),
+          precision: 'house',
+          countyName: cleanText(p.county || '', 80)
+        });
+      }
+      return { ok: true, suggestions, source: 'openstreetmap' };
     } catch {
       return { ok: true, suggestions: [], source: 'unavailable' };
     }
-    const suggestions = [];
-    const seen = new Set();
-    for (const f of data.features || []) {
-      const p = f.properties || {};
-      const [flng, flat] = f.geometry?.coordinates || [];
-      if (!p.housenumber || !(p.street || p.name)) continue;
-      const county = countyFromName(p.county || '');
-      if (!county) continue;
-      const line = `${p.housenumber} ${titleCaseAddress(p.street || p.name)}`;
-      const city = p.city || p.locality || p.district || '';
-      const zip = p.postcode ? String(p.postcode).slice(0, 5) : '';
-      const label = [line, city, `AL${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
-      if (seen.has(label)) continue;
-      seen.add(label);
-      suggestions.push({ label, line, city, state: 'AL', zip, lat: Number(flat.toFixed(6)), lng: Number(flng.toFixed(6)), precision: 'house', countyName: county.name });
-    }
-    return { ok: true, suggestions, source: 'openstreetmap' };
   }
 
   /* ---------------------------- verification ---------------------------- */
-  function buildOneLine({ line, city, state, zip }) {
+  function buildOneLine({ line, city, state, zip, singleLine }) {
+    if (singleLine) return cleanText(singleLine, 220);
     const l = cleanText(line, 160);
     const c = cleanText(city, 80);
+    const st = normalizeUsState(state || '') || cleanText(state || '', 20);
     const z = cleanText(zip, 10);
-    if (!c && !z && !/\b(AL|Alabama)\b/i.test(l)) return `${l}, AL`;
-    return [l, c, `${cleanText(state || 'AL', 4)} ${z}`.trim()].filter(Boolean).join(', ');
+    return [l, c, `${st} ${z}`.trim()].filter(Boolean).join(', ');
   }
 
   async function censusLookup(oneLine) {
@@ -263,10 +506,12 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
         layers: 'Counties',
         format: 'json'
       }).toString();
-    const data = await fetchJson(fetchImpl, url, 9000);
+    const data = await fetchJson(fetchImpl, url, 8500);
     const m = data?.result?.addressMatches?.[0];
     if (!m) return null;
     const c = m.addressComponents || {};
+    const state = normalizeUsState(c.state || '');
+    if (!state) return null;
     const number = (String(m.matchedAddress || '').match(/^(\d+[A-Z]?)/i) || [])[1] || '';
     const streetParts = [c.preQualifier, c.preDirection, c.preType, c.streetName, c.suffixType, c.suffixDirection, c.suffixQualifier]
       .filter(Boolean)
@@ -275,51 +520,39 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     return {
       line: titleCaseAddress(`${number} ${streetParts}`),
       city: titleCaseAddress(c.city || ''),
-      state: (c.state || 'AL').toUpperCase(),
+      state,
       zip: c.zip || '',
       lat: Number(Number(m.coordinates?.y).toFixed(6)),
       lng: Number(Number(m.coordinates?.x).toFixed(6)),
-      countyFips: county.GEOID || '',
+      countyFips: county.GEOID || inferHomeCountyFips(state, county.NAME || ''),
       countyName: county.NAME || ''
     };
   }
 
   async function osmHouseLookup(oneLine, typedNumber) {
     if (!typedNumber) return null;
-    const url =
-      'https://photon.komoot.io/api/?' +
-      new URLSearchParams({ q: oneLine, limit: '5', lang: 'en', bbox: SERVICE_BBOX.join(',') }).toString();
+    const url = 'https://photon.komoot.io/api/?' + new URLSearchParams({ q: oneLine, limit: '6', lang: 'en' }).toString();
     const data = await fetchJson(fetchImpl, url, 5000);
     for (const f of data.features || []) {
       const p = f.properties || {};
       const [lng, lat] = f.geometry?.coordinates || [];
+      if (String(p.countrycode || '').toUpperCase() !== 'US') continue;
       if (String(p.housenumber || '') !== typedNumber) continue;
-      const county = countyFromName(p.county || '');
-      if (!county || !inBbox(lat, lng)) continue;
+      const state = normalizeUsState(p.state || '');
+      if (!state || typeof lat !== 'number' || typeof lng !== 'number') continue;
+      const countyName = cleanText(p.county || '', 80);
       return {
         line: `${typedNumber} ${titleCaseAddress(p.street || p.name || '')}`,
         city: p.city || p.locality || '',
-        state: 'AL',
+        state,
         zip: p.postcode ? String(p.postcode).slice(0, 5) : '',
         lat: Number(lat.toFixed(6)),
         lng: Number(lng.toFixed(6)),
-        countyFips: county.fips,
-        countyName: county.name
+        countyFips: inferHomeCountyFips(state, countyName),
+        countyName
       };
     }
     return null;
-  }
-
-  function classify(hit, source) {
-    if (!SERVICE_COUNTIES[hit.countyFips]) {
-      return {
-        status: 'outside-area',
-        source,
-        address: hit,
-        message: `That address is in ${hit.countyName || 'an area'} outside Mobile and Baldwin counties. Please call 251-930-8621 and we'll tell you if we can help.`
-      };
-    }
-    return { status: source === 'census' || source === 'mock' ? 'verified' : 'map-match', source, address: hit };
   }
 
   async function verify(input = {}) {
@@ -328,43 +561,111 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     if (!typedNumber) {
       return { status: 'not-found', message: 'Please include the house or building number (for example 1450 Government St).' };
     }
-    const oneLine = buildOneLine({ line, city: input.city, state: input.state, zip: input.zip });
 
-    if (mode === 'mock') {
-      const hit = mockLookup(oneLine);
-      return hit ? withToken(classify(hit, 'mock')) : { status: 'not-found', message: notFoundMessage() };
+    const explicitState = cleanText(input.state || '', 32);
+    if (explicitState && !normalizeUsState(explicitState)) {
+      return {
+        status: 'outside-area',
+        message: 'Please enter a valid pickup address within the United States (50 states, DC, or U.S. territories).'
+      };
     }
 
-    const key = `v:${oneLine.toLowerCase()}`;
+    const oneLine = buildOneLine({
+      line,
+      city: input.city,
+      state: explicitState,
+      zip: input.zip,
+      singleLine: input.singleLine
+    });
+
+    if (mode === 'mock') {
+      const hit = mockLookup(oneLine, explicitState);
+      if (hit?.outsideUs) {
+        return {
+          status: 'outside-area',
+          message: 'Please enter a valid pickup address within the United States (50 states, DC, or U.S. territories).'
+        };
+      }
+      return hit
+        ? withToken({ status: 'verified', source: 'mock', address: hit })
+        : { status: 'not-found', message: notFoundMessage() };
+    }
+
+    const magicKey = cleanText(input.magicKey || '', 260);
+    const key = `v:${oneLine.toLowerCase()}|${magicKey}`;
     const cached = cacheGet(key);
     if (cached) return withToken(cached);
 
-    let censusFailed = false;
-    let hit = null;
+    const cleanTypedNum = typedNumber.replace(/[A-Za-z]$/, '');
+    let arcgisFailed = false;
     try {
-      hit = await censusLookup(oneLine);
+      const cands = await arcgisCandidates({ singleLine: oneLine, magicKey, maxLocations: 6 });
+      const valid = [];
+      for (const c of cands) {
+        const t = String(c?.attributes?.Addr_type || '');
+        if (!['PointAddress', 'Subaddress', 'StreetAddress'].includes(t)) continue;
+        if (Number(c.score || 0) < 85) continue;
+        const addNum = String(c?.attributes?.AddNum || '').replace(/[A-Za-z]$/, '');
+        if (cleanTypedNum && addNum && addNum !== cleanTypedNum) continue;
+        const addr = arcgisCandidateToAddress(c);
+        if (addr) valid.push(addr);
+      }
+
+      if (valid.length > 0) {
+        const hasLocationContext =
+          Boolean(magicKey) ||
+          Boolean(cleanText(input.city || '', 80)) ||
+          Boolean(cleanText(input.zip || '', 10)) ||
+          line.includes(',');
+        if (!hasLocationContext && valid.length > 1) {
+          const distinctCities = [...new Set(valid.map((v) => `${v.city}, ${v.state}`))];
+          if (distinctCities.length > 1) {
+            const examples = distinctCities.slice(0, 2).join(' or ');
+            return {
+              status: 'not-found',
+              message: `Multiple U.S. cities match "${line}" (${examples}). Add the city and state or ZIP code to pin the exact address.`
+            };
+          }
+        }
+        const best = valid[0];
+        const { addrType, addNum: _n, score: _s, ...address } = best;
+        const res = {
+          status: addrType === 'PointAddress' || addrType === 'Subaddress' ? 'verified' : 'map-match',
+          source: 'arcgis',
+          address
+        };
+        cacheSet(key, res);
+        return withToken(res);
+      }
+    } catch {
+      arcgisFailed = true;
+    }
+
+    let censusFailed = false;
+    try {
+      const hit = await censusLookup(oneLine);
+      if (hit) {
+        const res = { status: 'verified', source: 'census', address: hit };
+        cacheSet(key, res);
+        return withToken(res);
+      }
     } catch {
       censusFailed = true;
-    }
-    if (hit) {
-      const res = classify(hit, 'census');
-      cacheSet(key, res);
-      return withToken(res);
     }
 
     let osmFailed = false;
     try {
-      hit = await osmHouseLookup(oneLine, typedNumber.replace(/[A-Za-z]$/, ''));
+      const hit = await osmHouseLookup(oneLine, cleanTypedNum);
+      if (hit) {
+        const res = { status: 'map-match', source: 'openstreetmap', address: hit };
+        cacheSet(key, res);
+        return withToken(res);
+      }
     } catch {
       osmFailed = true;
     }
-    if (hit) {
-      const res = classify(hit, 'openstreetmap');
-      cacheSet(key, res);
-      return withToken(res);
-    }
 
-    if (censusFailed && osmFailed) {
+    if (arcgisFailed && censusFailed && osmFailed) {
       return {
         status: 'unavailable',
         message: 'Address lookup is temporarily unavailable. You can still send your request — we will confirm the address with you.'
@@ -376,7 +677,7 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
   }
 
   function notFoundMessage() {
-    return "We couldn't find that address. Double-check the house number and street, or call 251-930-8621.";
+    return "We couldn't find or verify that U.S. street address. Check the house number, street, city, and state/ZIP, or call 251-930-8621.";
   }
 
   /* ------------------------------ tokens -------------------------------- */
@@ -401,19 +702,20 @@ export function createGeoService({ masterKey, fetchImpl = globalThis.fetch, mode
     try {
       const payload = JSON.parse(Buffer.from(b64, 'base64url').toString('utf8'));
       if (!payload.exp || payload.exp < Date.now()) return null;
-      if (!SERVICE_COUNTIES[payload.countyFips]) return null;
+      if (!normalizeUsState(payload.state || '')) return null;
+      if (!Number.isFinite(Number(payload.lat)) || !Number.isFinite(Number(payload.lng))) return null;
       return {
         status: payload.status,
         source: payload.source,
         address: {
           line: payload.line,
           city: payload.city,
-          state: payload.state,
+          state: normalizeUsState(payload.state),
           zip: payload.zip,
-          lat: payload.lat,
-          lng: payload.lng,
-          countyFips: payload.countyFips,
-          countyName: payload.countyName
+          lat: Number(payload.lat),
+          lng: Number(payload.lng),
+          countyFips: payload.countyFips || '',
+          countyName: payload.countyName || ''
         }
       };
     } catch {

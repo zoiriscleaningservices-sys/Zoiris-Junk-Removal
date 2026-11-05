@@ -330,11 +330,48 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
     await context.route('https://tile.openstreetmap.org/**', (route) =>
       route.fulfill({ status: 200, contentType: 'image/png', body: tinyPng })
     );
-    await context.route('https://basemap.nationalmap.gov/**', (route) =>
+    await context.route('https://services.arcgisonline.com/**', (route) =>
       route.fulfill({ status: 200, contentType: 'image/png', body: tinyPng })
     );
 
-    // Mock Photon live autocomplete & U.S. Census JSONP geocoder for deterministic CI execution
+    // Mock ArcGIS, Photon & U.S. Census JSONP geocoders for deterministic CI execution
+    await context.route('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          suggestions: [{ text: '104 Dauphin St, Mobile, AL, 36602, USA', magicKey: 'mk-104-dauphin', isCollection: false }]
+        })
+      })
+    );
+    await context.route('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates**', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          candidates: [
+            {
+              address: '104 Dauphin St, Mobile, Alabama, 36602',
+              location: { x: -88.043055, y: 30.691522 },
+              score: 100,
+              attributes: {
+                Addr_type: 'PointAddress',
+                StAddr: '104 Dauphin St',
+                AddNum: '104',
+                City: 'Mobile',
+                Subregion: 'Mobile County',
+                Region: 'Alabama',
+                RegionAbbr: 'AL',
+                Postal: '36602',
+                Country: 'USA'
+              }
+            }
+          ]
+        })
+      })
+    );
     await context.route('https://photon.komoot.io/api/**', (route) =>
       route.fulfill({
         status: 200,
@@ -345,6 +382,7 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
             {
               geometry: { coordinates: [-88.0431, 30.6915] },
               properties: {
+                countrycode: 'US',
                 housenumber: '104',
                 street: 'Dauphin St',
                 city: 'Mobile',
@@ -645,7 +683,44 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
 
     const setupGeoRoutes = async (ctx) => {
       await ctx.route('https://tile.openstreetmap.org/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: tinyPng }));
-      await ctx.route('https://basemap.nationalmap.gov/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: tinyPng }));
+      await ctx.route('https://services.arcgisonline.com/**', (r) => r.fulfill({ status: 200, contentType: 'image/png', body: tinyPng }));
+      await ctx.route('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest**', (r) =>
+        r.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({
+            suggestions: [{ text: '1100 Congress Ave, Austin, TX, 78701, USA', magicKey: 'mk-1100-congress', isCollection: false }]
+          })
+        })
+      );
+      await ctx.route('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates**', (r) =>
+        r.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          headers: { 'Access-Control-Allow-Origin': '*' },
+          body: JSON.stringify({
+            candidates: [
+              {
+                address: '1100 Congress Ave, Austin, Texas, 78701',
+                location: { x: -97.74035, y: 30.27467 },
+                score: 100,
+                attributes: {
+                  Addr_type: 'PointAddress',
+                  StAddr: '1100 Congress Ave',
+                  AddNum: '1100',
+                  City: 'Austin',
+                  Subregion: 'Travis County',
+                  Region: 'Texas',
+                  RegionAbbr: 'TX',
+                  Postal: '78701',
+                  Country: 'USA'
+                }
+              }
+            ]
+          })
+        })
+      );
       await ctx.route('https://photon.komoot.io/api/**', (r) =>
         r.fulfill({
           status: 200,
@@ -654,14 +729,15 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
           body: JSON.stringify({
             features: [
               {
-                geometry: { coordinates: [-87.9036, 30.5229] },
+                geometry: { coordinates: [-97.74035, 30.27467] },
                 properties: {
-                  housenumber: '312',
-                  street: 'Fairhope Ave',
-                  city: 'Fairhope',
-                  state: 'Alabama',
-                  postcode: '36532',
-                  county: 'Baldwin County'
+                  countrycode: 'US',
+                  housenumber: '1100',
+                  street: 'Congress Ave',
+                  city: 'Austin',
+                  state: 'Texas',
+                  postcode: '78701',
+                  county: 'Travis County'
                 }
               }
             ]
@@ -785,7 +861,7 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
       await custPage.fill('#pickup-request-itemDescription', 'Stainless garage refrigerator ready by side driveway.');
       await custPage.click('[data-pf-next]');
 
-      await custPage.fill('#pickup-request-address', '312 Fairhope Ave');
+      await custPage.fill('#pickup-request-address', '1100 Congress Ave');
       await custPage.waitForSelector('[data-address-list] [data-opt="0"]');
       await custPage.click('[data-address-list] [data-opt="0"]');
       await custPage.waitForSelector('[data-address-card]:not([hidden])');
@@ -794,7 +870,7 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
 
       await custPage.fill('#pickup-request-firstName', 'Devon');
       await custPage.fill('#pickup-request-lastName', ' Brooks');
-      await custPage.fill('#pickup-request-phone', '251-555-0344');
+      await custPage.fill('#pickup-request-phone', '512-555-0344');
       await custPage.fill('#pickup-request-email', 'devon.brooks@zoiris-test.org');
       await custPage.check('#pickup-request-consentGiven');
       await custPage.waitForTimeout(3700);
@@ -810,7 +886,7 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
       assert.equal(leadPush.kind, 'new_lead');
       assert.match(leadPush.title, new RegExp(liveLeadRef));
       assert.match(leadPush.body, /Devon Brooks/);
-      assert.match(leadPush.body, /Fairhope/);
+      assert.match(leadPush.body, /Austin, TX/);
       assert.equal(leadPush.url, `/owner/leads/${liveLeadRef}`);
 
       // 5. Verify Owner Browser updated LIVE IN REAL TIME (< 4s) WITHOUT calling ownerPage.reload()!
@@ -820,10 +896,12 @@ describe('Background Phone Push Notifications (RFC 8291 Web Push + 24/7 Encrypte
         { timeout: 5000 }
       );
 
-      // Open lead detail on Owner Browser and confirm decrypted photo + verified Fairhope address
+      // Open lead detail on Owner Browser and confirm decrypted photo + verified nationwide Austin, TX address + map pin
       await ownerPage.click(`a[href*="${liveLeadRef}"]`);
       await ownerPage.waitForSelector('.cc-lead-hero');
-      assert.match(await ownerPage.locator('#cc-workspace').textContent(), /312 Fairhope Ave, Fairhope, AL 36532/);
+      assert.match(await ownerPage.locator('#cc-workspace').textContent(), /1100 Congress Ave, Austin, TX 78701/);
+      assert.match(await ownerPage.locator('#cc-workspace').textContent(), /Travis County/);
+      await ownerPage.waitForSelector('[data-lead-map] .zmap__pin');
       await ownerPage.waitForSelector('.cc-media-preview img');
       const liveImgW = await ownerPage.locator('.cc-media-preview img').first().evaluate((img) => img.naturalWidth);
       assert.ok(liveImgW > 100, `Expected decrypted photo rendered live in Owner browser, got width=${liveImgW}`);

@@ -41,8 +41,8 @@
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!hadControllerAtBoot) return;
       try {
-        if (!sessionStorage.getItem('zoiris_sw_upgraded_v6')) {
-          sessionStorage.setItem('zoiris_sw_upgraded_v6', '1');
+        if (!sessionStorage.getItem('zoiris_sw_upgraded_v7')) {
+          sessionStorage.setItem('zoiris_sw_upgraded_v7', '1');
           window.location.reload();
         }
       } catch {}
@@ -710,7 +710,7 @@
     const addressStatus = vGeo?.status === 'verified' || vGeo?.status === 'map-match' ? vGeo.status : 'unverified';
     const rawSource = String(vGeo?.source || 'manual');
     const addressSource = rawSource === 'us-census' ? 'census' : rawSource;
-    const countyName = String(vGeo?.address?.countyName || 'Mobile / Baldwin Area');
+    const countyName = String(vGeo?.address?.countyName || '').trim();
 
     const phoneNorm = phone.replace(/\D/g, '').replace(/^1(\d{10})$/, '$1');
     let cust = v.customers.find(
@@ -1594,6 +1594,7 @@
       const phone = String(body.phone || '').trim();
       const pickupAddress = String(body.pickupAddress || '').trim();
       const city = String(body.city || 'Mobile').trim();
+      const stateCode = String(body.state || 'AL').trim().toUpperCase() || 'AL';
       const zipCode = String(body.zipCode || '36602').trim();
       if (!fullName || !phone || !pickupAddress) {
         return jsonRes(400, { ok: false, error: 'Enter customer name, phone number, and pickup address.' });
@@ -1607,24 +1608,51 @@
       let lng = body.lng ?? null;
       let addressStatus = 'unverified';
       let addressSource = 'manual';
+      let countyName = '';
       if (lat === null || lng === null) {
+        const qAddr = [pickupAddress, city, `${stateCode} ${zipCode}`.trim()].filter(Boolean).join(', ');
         try {
-          const qAddr = `${pickupAddress}, ${city}, AL ${zipCode}`;
-          const gRes = await nativeFetch(`https://photon.komoot.io/api/?limit=1&lang=en&q=${encodeURIComponent(qAddr)}`);
-          if (gRes.ok) {
-            const gData = await gRes.json();
-            const coords = gData?.features?.[0]?.geometry?.coordinates;
-            if (Array.isArray(coords) && coords.length >= 2) {
-              lng = Number(coords[0]);
-              lat = Number(coords[1]);
-              addressStatus = 'map-match';
-              addressSource = 'openstreetmap';
+          const arcUrl =
+            'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?' +
+            new URLSearchParams({
+              f: 'json',
+              singleLine: qAddr,
+              countryCode: 'USA',
+              category: 'Point Address,Street Address,Subaddress',
+              outFields: 'Addr_type,Subregion,RegionAbbr',
+              maxLocations: '1'
+            }).toString();
+          const aRes = await nativeFetch(arcUrl);
+          if (aRes.ok) {
+            const aData = await aRes.json();
+            const c0 = aData?.candidates?.[0];
+            if (c0?.location && Number(c0.score || 0) >= 82) {
+              lat = Number(Number(c0.location.y).toFixed(6));
+              lng = Number(Number(c0.location.x).toFixed(6));
+              addressStatus = c0.attributes?.Addr_type === 'PointAddress' || c0.attributes?.Addr_type === 'Subaddress' ? 'verified' : 'map-match';
+              addressSource = 'arcgis';
+              countyName = String(c0.attributes?.Subregion || '').trim();
             }
           }
         } catch {}
+        if (lat === null || lng === null) {
+          try {
+            const gRes = await nativeFetch(`https://photon.komoot.io/api/?limit=1&lang=en&q=${encodeURIComponent(qAddr)}`);
+            if (gRes.ok) {
+              const gData = await gRes.json();
+              const coords = gData?.features?.[0]?.geometry?.coordinates;
+              if (Array.isArray(coords) && coords.length >= 2) {
+                lng = Number(coords[0]);
+                lat = Number(coords[1]);
+                addressStatus = 'map-match';
+                addressSource = 'openstreetmap';
+              }
+            }
+          } catch {}
+        }
       } else {
         addressStatus = 'verified';
-        addressSource = 'census';
+        addressSource = 'arcgis';
       }
 
       let cust = v.customers.find((c) => String(c.phone || '').replace(/\D/g, '') === phone.replace(/\D/g, ''));
@@ -1637,7 +1665,7 @@
           email: String(body.email || '').trim(),
           primary_address: pickupAddress,
           city,
-          state: 'AL',
+          state: stateCode,
           zip_code: zipCode,
           customer_type: body.customerType || 'residential',
           total_inquiries: 1,
@@ -1662,9 +1690,9 @@
         customerType: body.customerType || 'residential',
         pickupAddress,
         city,
-        state: 'AL',
+        state: stateCode,
         zipCode,
-        countyName: 'Mobile / Baldwin Area',
+        countyName,
         lat,
         lng,
         addressStatus,
@@ -2656,8 +2684,8 @@
       const v = readVault();
       const csvCell = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
       const lines = [
-        ['LeadNumber', 'Customer', 'Phone', 'Address', 'City', 'ZIP', 'Service', 'Status', 'CreatedAt'].join(','),
-        ...v.leads.map((l) => [l.leadNumber, l.fullName, l.phone, l.pickupAddress, l.city, l.zipCode, l.requestedService, l.status, l.createdAt].map(csvCell).join(','))
+        ['LeadNumber', 'Customer', 'Phone', 'Address', 'City', 'State', 'ZIP', 'Service', 'Status', 'CreatedAt'].join(','),
+        ...v.leads.map((l) => [l.leadNumber, l.fullName, l.phone, l.pickupAddress, l.city, l.state || 'AL', l.zipCode, l.requestedService, l.status, l.createdAt].map(csvCell).join(','))
       ];
       const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8' });
       const dl = document.createElement('a');
@@ -2679,7 +2707,7 @@
       const lead = v.leads.find((l) => l.leadNumber === key || l.id === key) || {};
       const isCsv = apiHref.includes('format=csv');
       const content = isCsv
-        ? `LeadNumber,Customer,Phone,Address,City,Service,Status\n"${lead.leadNumber || ''}","${lead.fullName || ''}","${lead.phone || ''}","${lead.pickupAddress || ''}","${lead.city || ''}","${lead.requestedService || ''}","${lead.status || ''}"`
+        ? `LeadNumber,Customer,Phone,Address,City,State,ZIP,Service,Status\n"${lead.leadNumber || ''}","${lead.fullName || ''}","${lead.phone || ''}","${lead.pickupAddress || ''}","${lead.city || ''}","${lead.state || 'AL'}","${lead.zipCode || ''}","${lead.requestedService || ''}","${lead.status || ''}"`
         : JSON.stringify(lead, null, 2);
       const blob = new Blob([content], { type: isCsv ? 'text/csv' : 'application/json' });
       const dl = document.createElement('a');

@@ -134,7 +134,7 @@ describe('End-to-End Customer & Owner Command Center Workflows (Playwright)', ()
     await context.route('https://tile.openstreetmap.org/**', (route) =>
       route.fulfill({ status: 200, contentType: 'image/png', body: tinyPng })
     );
-    await context.route('https://basemap.nationalmap.gov/**', (route) =>
+    await context.route('https://services.arcgisonline.com/**', (route) =>
       route.fulfill({ status: 200, contentType: 'image/png', body: tinyPng })
     );
     const page = await context.newPage();
@@ -206,7 +206,7 @@ describe('End-to-End Customer & Owner Command Center Workflows (Playwright)', ()
     assert.match(await page.locator('[data-verified-county]').textContent(), /Mobile County/);
     assert.ok((await page.locator('[data-map-tiles] img').count()) > 0, 'Expected map tiles around the verified pin');
     await page.click('[data-map-layer="satellite"]');
-    assert.match(await page.locator('[data-map-tiles] img').first().getAttribute('src'), /basemap\.nationalmap\.gov/);
+    assert.match(await page.locator('[data-map-tiles] img').first().getAttribute('src'), /services\.arcgisonline\.com/);
     await page.fill('#pickup-request-addressUnit', 'Unit B');
     await pick('input[name="indoorsOrOutdoors"][value="Inside – upstairs"]');
     await pick('input[name="hasStairs"][value="Stairs only"]');

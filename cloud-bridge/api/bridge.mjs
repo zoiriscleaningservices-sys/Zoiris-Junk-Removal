@@ -637,6 +637,7 @@ export function createBridgeHandler(options = {}) {
 
         const fullName = String(inq.name || `${inq.firstName || ''} ${inq.lastName || ''}`.trim() || 'New Customer').trim();
         const city = String(verifiedGeo?.address?.city || inq.city || 'Mobile').trim();
+        const stateCode = String(verifiedGeo?.address?.state || inq.state || 'AL').trim().toUpperCase() || 'AL';
         const svc = String(inq.requestedService || 'Junk Removal').trim();
         const mediaNote = media.length ? ` · ${media.length} photo${media.length === 1 ? '' : 's'}` : '';
 
@@ -646,7 +647,7 @@ export function createBridgeHandler(options = {}) {
             kind: 'new_lead',
             leadNumber,
             title: `New Pickup Request · ${leadNumber}`,
-            body: `${fullName} · ${city}, AL · ${svc}${mediaNote}`,
+            body: `${fullName} · ${city}, ${stateCode} · ${svc}${mediaNote}`,
             url: `/owner/leads/${leadNumber}`,
             tag: `zoiris-lead-${leadNumber}`
           }),

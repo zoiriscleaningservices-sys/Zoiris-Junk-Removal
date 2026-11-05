@@ -259,7 +259,7 @@ const STEPS = [
             type="text"
             inputmode="text"
             autocomplete="street-address"
-            placeholder="Start typing: 1450 Government St…"
+            placeholder="Start typing any U.S. street address…"
             role="combobox"
             aria-autocomplete="list"
             aria-expanded="false"
@@ -273,16 +273,21 @@ const STEPS = [
           <button type="button" class="pf-pill" data-address-locate><Icon name="pin" /> Use my current location</button>
           <button type="button" class="pf-pill" data-address-check><Icon name="check" /> Check this address</button>
         </div>
-        <p class="pf-addr__note"><Icon name="shield" /> Addresses are checked against the U.S. Census Bureau address database. We serve Mobile &amp; Baldwin counties.</p>
+        <p class="pf-addr__note"><Icon name="shield" /> Verified against official U.S. street &amp; parcel databases and pinned live on the map.</p>
       </div>
 
       <div class="pf-verified" data-address-card hidden>
-        <div class="pf-map" data-map>
+        <div class="pf-map" data-map role="region" aria-label="Verified pickup address map">
           <div class="pf-map__tiles" data-map-tiles></div>
-          <span class="pf-map__pin" aria-hidden="true"><Icon name="pin" /></span>
+          <span class="pf-map__pin" data-map-pin aria-hidden="true"><Icon name="pin" /></span>
           <div class="pf-map__toggle" role="group" aria-label="Map style">
             <button type="button" data-map-layer="street" aria-pressed="true">Map</button>
             <button type="button" data-map-layer="satellite" aria-pressed="false">Satellite</button>
+          </div>
+          <div class="pf-map__zoom" role="group" aria-label="Map zoom">
+            <button type="button" data-map-zoom="1" aria-label="Zoom in">+</button>
+            <button type="button" data-map-zoom="-1" aria-label="Zoom out">&minus;</button>
+            <button type="button" data-map-recenter hidden aria-label="Recenter on pin" title="Recenter on address pin">◎</button>
           </div>
           <span class="pf-map__attr" data-map-attr>© OpenStreetMap contributors</span>
         </div>
@@ -290,7 +295,10 @@ const STEPS = [
           <span class="pf-badge"><Icon name="check-circle" /> <span data-verified-badge>Verified address</span></span>
           <p class="pf-verified__addr" data-verified-text></p>
           <p class="pf-verified__county" data-verified-county></p>
-          <button type="button" class="pf-link" data-address-change>Not right? Change address</button>
+          <div class="pf-verified__links">
+            <button type="button" class="pf-link" data-address-change>Not right? Change address</button>
+            <a class="pf-link pf-link--ext" data-verified-gmaps href="https://maps.google.com" target="_blank" rel="noopener">Open in Google Maps ↗</a>
+          </div>
         </div>
       </div>
 
@@ -300,11 +308,16 @@ const STEPS = [
           <label for={`${id}-pickupAddress`}>Street address</label>
           <input id={`${id}-pickupAddress`} name="pickupAddress" type="text" autocomplete="address-line1" maxlength="200" aria-describedby={`${id}-pickupAddress-err`} />
         </div>
-        <div class="pf-grid2">
+        <div class="pf-grid3">
           <div class="pf-field">
             <label for={`${id}-city`}>City</label>
-            <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" value="Mobile" maxlength="80" />
+            <input id={`${id}-city`} name="city" type="text" autocomplete="address-level2" placeholder="City" value="Mobile" maxlength="80" />
             <p class="pf-error" id={`${id}-city-err`} role="alert"></p>
+          </div>
+          <div class="pf-field">
+            <label for={`${id}-state`}>State</label>
+            <input id={`${id}-state`} name="state" type="text" autocomplete="address-level1" placeholder="AL" value="AL" maxlength="2" />
+            <p class="pf-error" id={`${id}-state-err`} role="alert"></p>
           </div>
           <div class="pf-field">
             <label for={`${id}-zipCode`}>ZIP code</label>
@@ -312,7 +325,6 @@ const STEPS = [
             <p class="pf-error" id={`${id}-zipCode-err`} role="alert"></p>
           </div>
         </div>
-        <input type="hidden" name="state" value="AL" />
       </div>
       <p class="pf-error" id={`${id}-pickupAddress-err`} role="alert"></p>
 
@@ -488,7 +500,18 @@ const STEPS = [
     token: string;
     status: string;
   };
-  type Suggestion = { label: string; line: string; city: string; state: string; zip: string; lat?: number; lng?: number; countyName?: string };
+  type Suggestion = {
+    label: string;
+    line: string;
+    city: string;
+    state: string;
+    zip: string;
+    lat?: number;
+    lng?: number;
+    countyName?: string;
+    magicKey?: string;
+    singleLine?: string;
+  };
   type QueuedMedia = {
     uid: string;
     file: File;
@@ -519,9 +542,38 @@ const STEPS = [
     return { ok: res.ok, status: res.status, data: await res.json() };
   }
 
-  /* -------- Live Browser Geocoding, Spam Guard & E2E Encryption (24/7 Static Mode) -------- */
-  const SERVICE_BBOX: [number, number, number, number] = [-88.48, 30.13, -87.36, 31.34];
+  /* -------- Live Nationwide U.S. Geocoding, Spam Guard & E2E Encryption (24/7 Mode) -------- */
   const DIRECTIONALS = new Set(['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']);
+  const US_STATE_NAMES: Record<string, string> = {
+    AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California', CO: 'Colorado', CT: 'Connecticut',
+    DE: 'Delaware', DC: 'District of Columbia', FL: 'Florida', GA: 'Georgia', HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois',
+    IN: 'Indiana', IA: 'Iowa', KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
+    MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi', MO: 'Missouri', MT: 'Montana',
+    NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire', NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York',
+    NC: 'North Carolina', ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania',
+    RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee', TX: 'Texas', UT: 'Utah',
+    VT: 'Vermont', VA: 'Virginia', WA: 'Washington', WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming',
+    PR: 'Puerto Rico', VI: 'U.S. Virgin Islands', GU: 'Guam', AS: 'American Samoa', MP: 'Northern Mariana Islands'
+  };
+  const US_STATE_BY_NAME: Record<string, string> = Object.fromEntries(
+    Object.entries(US_STATE_NAMES).map(([abbr, full]) => [full.toLowerCase(), abbr])
+  );
+  const US_COUNTRY_CODES = new Set(['USA', 'US', 'PRI', 'VIR', 'GUM', 'ASM', 'MNP']);
+  const ARCGIS_BASE = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer';
+
+  function normalizeUsState(raw = ''): string {
+    const clean = String(raw || '').trim().replace(/\./g, '');
+    if (!clean) return '';
+    const up = clean.toUpperCase();
+    if (US_STATE_NAMES[up]) return up;
+    return US_STATE_BY_NAME[clean.toLowerCase()] || '';
+  }
+
+  function stateFullName(abbr = ''): string {
+    const st = normalizeUsState(abbr);
+    return US_STATE_NAMES[st] || abbr;
+  }
+
   const DISPOSABLE_DOMAINS = new Set([
     'mailinator.com', 'guerrillamail.com', 'sharklasers.com', '10minutemail.com', 'tempmail.com', 'temp-mail.org',
     'yopmail.com', 'trashmail.com', 'getnada.com', 'maildrop.cc', 'throwawaymail.com', 'fakeinbox.com',
@@ -548,87 +600,315 @@ const STEPS = [
       })
       .join(' ');
   }
-  function countyFromText(name = '') {
-    const n = String(name).toLowerCase();
-    if (n.startsWith('mobile')) return { fips: '01097', name: 'Mobile County' };
-    if (n.startsWith('baldwin')) return { fips: '01003', name: 'Baldwin County' };
-    return null;
+
+  function parseArcgisSuggestionText(rawText: string, magicKey = ''): Suggestion | null {
+    const parts = String(rawText || '')
+      .split(',')
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (parts.length < 3) return null;
+    const lastUp = parts[parts.length - 1].toUpperCase();
+    if (US_COUNTRY_CODES.has(lastUp) || lastUp === 'UNITED STATES') parts.pop();
+    let zip = '';
+    if (parts.length && /^\d{5}(-\d{4})?$/.test(parts[parts.length - 1])) {
+      zip = parts.pop()!.slice(0, 5);
+    }
+    let state = '';
+    if (parts.length) {
+      const stMaybe = parts[parts.length - 1];
+      const stZipMatch = stMaybe.match(/^([A-Za-z]{2})\s+(\d{5})/);
+      if (stZipMatch) {
+        state = normalizeUsState(stZipMatch[1]);
+        if (!zip) zip = stZipMatch[2];
+        parts.pop();
+      } else {
+        const norm = normalizeUsState(stMaybe);
+        if (norm) {
+          state = norm;
+          parts.pop();
+        }
+      }
+    }
+    if (!state || parts.length < 2) return null;
+    const city = parts.pop() || '';
+    const line = parts.join(', ').trim();
+    if (!/^\d{1,6}[A-Za-z]?(?:-\d+)?\b/.test(line)) return null;
+    const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+    return { label, line, city, state, zip, magicKey: magicKey || undefined, singleLine: rawText };
   }
-  function inServiceBbox(lat: number, lng: number) {
-    return lng >= SERVICE_BBOX[0] && lng <= SERVICE_BBOX[2] && lat >= SERVICE_BBOX[1] && lat <= SERVICE_BBOX[3];
+
+  function arcgisCandidateToAddress(cand: any, typedNumber = '') {
+    const a = cand?.attributes || {};
+    const loc = cand?.location || {};
+    const country = String(a.Country || 'USA').toUpperCase();
+    if (country && !US_COUNTRY_CODES.has(country)) return null;
+    const score = Number(cand?.score ?? a.Score ?? 0);
+    const addrType = String(a.Addr_type || '');
+    if (score < 82 || !['PointAddress', 'Subaddress', 'StreetAddress'].includes(addrType)) return null;
+    const lat = Number(loc.y);
+    const lng = Number(loc.x);
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    const stAddr = String(a.StAddr || '').trim();
+    const addNum = String(a.AddNum || '').trim() || (stAddr.match(/^(\d+[A-Za-z]?)/) || [])[1] || '';
+    if (!addNum) return null;
+    if (typedNumber && addrType === 'StreetAddress' && addNum.replace(/\D/g, '') !== typedNumber.replace(/\D/g, '')) {
+      return null;
+    }
+    const state = normalizeUsState(a.RegionAbbr || a.Region || '');
+    if (!state) return null;
+    const unit = [a.UnitType, a.UnitName].filter(Boolean).join(' ').trim();
+    const fullLine = unit && !stAddr.toLowerCase().includes(unit.toLowerCase()) ? `${stAddr}, ${unit}` : stAddr;
+    const city = String(a.City || '').trim();
+    const zip = String(a.Postal || '').slice(0, 5);
+    const countyName = String(a.Subregion || '').trim();
+    const countyFips =
+      state === 'AL' && /^mobile/i.test(countyName)
+        ? '01097'
+        : state === 'AL' && /^baldwin/i.test(countyName)
+          ? '01003'
+          : '';
+    return {
+      line: fullLine || titleCaseAddr(`${addNum} ${a.StName || ''}`),
+      city: city || titleCaseAddr(String(a.Match_addr || '').split(',')[1] || ''),
+      state,
+      zip,
+      lat: Number(lat.toFixed(6)),
+      lng: Number(lng.toFixed(6)),
+      countyFips,
+      countyName
+    };
+  }
+
+  async function arcgisFindCandidates(singleLine: string, magicKey = '', maxLocations = 5): Promise<any[] | null> {
+    const params: Record<string, string> = {
+      f: 'json',
+      SingleLine: singleLine,
+      countryCode: 'USA',
+      category: 'Point Address,Street Address,Subaddress',
+      outFields: 'Match_addr,StAddr,UnitType,UnitName,AddNum,StName,City,Region,RegionAbbr,Subregion,Postal,Country,Addr_type,Score',
+      maxLocations: String(maxLocations)
+    };
+    if (magicKey) params.magicKey = magicKey;
+    const res = await fetch(`${ARCGIS_BASE}/findAddressCandidates?${new URLSearchParams(params).toString()}`, {
+      headers: { Accept: 'application/json' }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return Array.isArray(data?.candidates) ? data.candidates : [];
   }
 
   async function browserSuggest(rawQ: string): Promise<Suggestion[] | null> {
-    const q = rawQ.trim().slice(0, 120);
+    const q = rawQ.trim().slice(0, 140);
     if (q.length < 3) return [];
-    const typedNumber = (q.match(/^\s*(\d{1,6})\b/) || [])[1] || '';
-    const url =
-      'https://photon.komoot.io/api/?' +
-      new URLSearchParams({
-        q: /mobile|baldwin|alabama|\bal\b/i.test(q) ? q : `${q}, Alabama`,
-        limit: '10',
-        lang: 'en',
-        lat: '30.69',
-        lon: '-88.04',
-        bbox: SERVICE_BBOX.join(',')
-      }).toString();
-    const res = await fetch(url, { headers: { Accept: 'application/json' } });
-    if (!res.ok) return null;
-    const data = await res.json();
+    const typedNumber = (q.match(/^\s*(\d{1,6}[A-Za-z]?)\b/) || [])[1] || '';
     const seen = new Set<string>();
     const out: Suggestion[] = [];
-    for (const f of data.features || []) {
-      const p = f.properties || {};
-      const [lng, lat] = f.geometry?.coordinates || [];
-      if (p.countrycode && p.countrycode !== 'US') continue;
-      if (typeof lat !== 'number' || typeof lng !== 'number' || !inServiceBbox(lat, lng)) continue;
-      const county = countyFromText(p.county || '');
-      if (!county) continue;
-      const streetName = p.street || (p.osm_key === 'highway' || p.type === 'street' ? p.name : '');
-      if (!streetName) continue;
-      if (typedNumber && p.housenumber && String(p.housenumber) !== typedNumber) continue;
-      const number = p.housenumber || typedNumber;
-      if (!number) continue;
-      const line = `${number} ${titleCaseAddr(streetName)}`;
-      const city = p.city || p.locality || p.district || '';
-      const zip = p.postcode && /^\d{5}/.test(String(p.postcode)) ? String(p.postcode).slice(0, 5) : '';
-      const label = [line, city, `AL${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
-      const key = `${line}|${city}`.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
-      out.push({ label, line, city, state: 'AL', zip, lat: Number(lat.toFixed(6)), lng: Number(lng.toFixed(6)), countyName: county.name });
-      if (out.length >= 6) break;
-    }
-    return out;
+    let anyProviderOk = false;
+
+    // 1. Primary Authoritative U.S. Autocomplete: Esri ArcGIS World Geocoder (all 50 states + DC)
+    try {
+      const sUrl =
+        `${ARCGIS_BASE}/suggest?` +
+        new URLSearchParams({
+          f: 'json',
+          text: q,
+          countryCode: 'USA',
+          category: 'Point Address,Street Address,Subaddress',
+          maxSuggestions: '7'
+        }).toString();
+      const sRes = await fetch(sUrl, { headers: { Accept: 'application/json' } });
+      if (sRes.ok) {
+        anyProviderOk = true;
+        const sData = await sRes.json();
+        for (const item of sData?.suggestions || []) {
+          if (item?.isCollection) continue;
+          const parsed = parseArcgisSuggestionText(item.text || '', item.magicKey || '');
+          if (!parsed) continue;
+          const key = `${parsed.line}|${parsed.city}|${parsed.state}`.toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push(parsed);
+          if (out.length >= 7) break;
+        }
+      }
+
+      // Highway / postal-city alias fallback (e.g. "12405 US Hwy 98, Fairhope, AL")
+      if (!out.length && typedNumber && q.length >= 6) {
+        const cands = await arcgisFindCandidates(q, '', 5);
+        if (cands) {
+          anyProviderOk = true;
+          for (const c of cands) {
+            const addr = arcgisCandidateToAddress(c, typedNumber);
+            if (!addr) continue;
+            const key = `${addr.line}|${addr.city}|${addr.state}`.toLowerCase();
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const label = [addr.line, addr.city, `${addr.state}${addr.zip ? ' ' + addr.zip : ''}`].filter(Boolean).join(', ');
+            out.push({
+              label,
+              line: addr.line,
+              city: addr.city,
+              state: addr.state,
+              zip: addr.zip,
+              lat: addr.lat,
+              lng: addr.lng,
+              countyName: addr.countyName,
+              singleLine: label
+            });
+            if (out.length >= 6) break;
+          }
+        }
+      }
+    } catch {}
+
+    if (out.length) return out;
+
+    // 2. Nationwide OpenStreetMap Photon fallback (all U.S. states, zero bbox lockout)
+    try {
+      const pRes = await fetch(
+        'https://photon.komoot.io/api/?' + new URLSearchParams({ q, limit: '10', lang: 'en' }).toString(),
+        { headers: { Accept: 'application/json' } }
+      );
+      if (pRes.ok) {
+        anyProviderOk = true;
+        const pData = await pRes.json();
+        for (const f of pData.features || []) {
+          const p = f.properties || {};
+          const [lng, lat] = f.geometry?.coordinates || [];
+          if (String(p.countrycode || '').toUpperCase() !== 'US') continue;
+          if (typeof lat !== 'number' || typeof lng !== 'number') continue;
+          const streetName = p.street || (p.osm_key === 'highway' || p.type === 'street' ? p.name : '');
+          if (!streetName) continue;
+          if (typedNumber && p.housenumber && String(p.housenumber) !== typedNumber) continue;
+          const number = p.housenumber || typedNumber;
+          if (!number) continue;
+          const state = normalizeUsState(p.state || '');
+          if (!state) continue;
+          const line = `${number} ${titleCaseAddr(streetName)}`;
+          const city = p.city || p.locality || p.town || p.village || p.district || '';
+          const zip = p.postcode && /^\d{5}/.test(String(p.postcode)) ? String(p.postcode).slice(0, 5) : '';
+          const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+          const key = `${line}|${city}|${state}`.toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push({
+            label,
+            line,
+            city,
+            state,
+            zip,
+            lat: Number(lat.toFixed(6)),
+            lng: Number(lng.toFixed(6)),
+            countyName: String(p.county || '').trim(),
+            singleLine: label
+          });
+          if (out.length >= 6) break;
+        }
+      }
+    } catch {}
+
+    return anyProviderOk ? out : null;
   }
 
   async function browserReverse(lat: number, lng: number): Promise<{ suggestions: Suggestion[]; message?: string } | null> {
-    if (!inServiceBbox(lat, lng)) {
-      return { suggestions: [], message: 'Your current location looks outside Mobile and Baldwin counties. Type the pickup address instead.' };
-    }
-    const res = await fetch(
-      'https://photon.komoot.io/reverse?' + new URLSearchParams({ lat: String(lat), lon: String(lng), limit: '5', lang: 'en' }).toString(),
-      { headers: { Accept: 'application/json' } }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
     const out: Suggestion[] = [];
     const seen = new Set<string>();
-    for (const f of data.features || []) {
-      const p = f.properties || {};
-      const [flng, flat] = f.geometry?.coordinates || [];
-      if (!p.housenumber || !(p.street || p.name)) continue;
-      const county = countyFromText(p.county || '');
-      if (!county) continue;
-      const line = `${p.housenumber} ${titleCaseAddr(p.street || p.name)}`;
-      const city = p.city || p.locality || p.district || '';
-      const zip = p.postcode ? String(p.postcode).slice(0, 5) : '';
-      const label = [line, city, `AL${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
-      if (seen.has(label)) continue;
-      seen.add(label);
-      out.push({ label, line, city, state: 'AL', zip, lat: Number(flat.toFixed(6)), lng: Number(flng.toFixed(6)), countyName: county.name });
-    }
-    return { suggestions: out };
+    let anyProviderOk = false;
+
+    // 1. Esri ArcGIS Rooftop Reverse Geocoder (Nationwide U.S.)
+    try {
+      const rRes = await fetch(
+        `${ARCGIS_BASE}/reverseGeocode?` +
+          new URLSearchParams({
+            f: 'json',
+            location: `${lng},${lat}`,
+            featureTypes: 'PointAddress,StreetAddress,Subaddress'
+          }).toString(),
+        { headers: { Accept: 'application/json' } }
+      );
+      if (rRes.ok) {
+        anyProviderOk = true;
+        const rData = await rRes.json();
+        const a = rData?.address;
+        if (a) {
+          const cc = String(a.CountryCode || '').toUpperCase();
+          if (cc && !US_COUNTRY_CODES.has(cc)) {
+            return {
+              suggestions: [],
+              message: 'Your current location appears outside the United States. Please type a U.S. street address.'
+            };
+          }
+          const state = normalizeUsState(a.RegionAbbr || a.Region || '');
+          const line = String(a.Address || a.ShortLabel || '').trim();
+          const city = String(a.City || '').trim();
+          const zip = String(a.Postal || '').slice(0, 5);
+          const rLat = Number(rData?.location?.y ?? lat);
+          const rLng = Number(rData?.location?.x ?? lng);
+          if (line && /^\d/.test(line) && state) {
+            const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+            seen.add(label.toLowerCase());
+            out.push({
+              label,
+              line,
+              city,
+              state,
+              zip,
+              lat: Number(rLat.toFixed(6)),
+              lng: Number(rLng.toFixed(6)),
+              countyName: String(a.Subregion || '').trim(),
+              singleLine: label
+            });
+          }
+        }
+      }
+    } catch {}
+
+    // 2. OpenStreetMap Photon reverse supplement / fallback
+    try {
+      const pRes = await fetch(
+        'https://photon.komoot.io/reverse?' + new URLSearchParams({ lat: String(lat), lon: String(lng), limit: '5', lang: 'en' }).toString(),
+        { headers: { Accept: 'application/json' } }
+      );
+      if (pRes.ok) {
+        anyProviderOk = true;
+        const pData = await pRes.json();
+        for (const f of pData.features || []) {
+          const p = f.properties || {};
+          const [flng, flat] = f.geometry?.coordinates || [];
+          if (p.countrycode && String(p.countrycode).toUpperCase() !== 'US') {
+            if (!out.length) {
+              return {
+                suggestions: [],
+                message: 'Your current location appears outside the United States. Please type a U.S. street address.'
+              };
+            }
+            continue;
+          }
+          if (!p.housenumber || !(p.street || p.name)) continue;
+          const state = normalizeUsState(p.state || '');
+          if (!state) continue;
+          const line = `${p.housenumber} ${titleCaseAddr(p.street || p.name)}`;
+          const city = p.city || p.locality || p.town || p.district || '';
+          const zip = p.postcode ? String(p.postcode).slice(0, 5) : '';
+          const label = [line, city, `${state}${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+          if (seen.has(label.toLowerCase())) continue;
+          seen.add(label.toLowerCase());
+          out.push({
+            label,
+            line,
+            city,
+            state,
+            zip,
+            lat: Number(flat.toFixed(6)),
+            lng: Number(flng.toFixed(6)),
+            countyName: String(p.county || '').trim(),
+            singleLine: label
+          });
+        }
+      }
+    } catch {}
+
+    return anyProviderOk ? { suggestions: out } : null;
   }
 
   function censusJsonpLookup(oneLine: string): Promise<any | null> {
@@ -667,86 +947,151 @@ const STEPS = [
     });
   }
 
-  async function browserVerify(input: { line: string; city?: string; zip?: string }) {
+  async function browserVerify(input: {
+    line: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    magicKey?: string;
+    singleLine?: string;
+  }) {
     const line = (input.line || '').trim();
-    const typedNumber = (line.match(/^(\d{1,6})\b/) || [])[1] || '';
+    const typedNumber = (line.match(/^(\d{1,6}[A-Za-z]?)\b/) || [])[1] || '';
     if (!typedNumber || line.length < 5 || /fake|nowhere|test street|asdf/i.test(line)) {
-      return { status: 'not-found' as const, message: 'Start with the house or building number (for example, 1450 Government St).' };
-    }
-    const oneLine = [line, input.city || '', `AL ${input.zip || ''}`.trim()].filter(Boolean).join(', ');
-
-    // 1. Official U.S. Census Bureau address-range + county verification (JSONP)
-    const census = await censusJsonpLookup(oneLine);
-    const match = census?.result?.addressMatches?.[0];
-    if (match) {
-      const c = match.addressComponents || {};
-      const num = (String(match.matchedAddress || '').match(/^(\d+[A-Z]?)/i) || [])[1] || typedNumber;
-      const streetParts = [c.preQualifier, c.preDirection, c.preType, c.streetName, c.suffixType, c.suffixDirection, c.suffixQualifier]
-        .filter(Boolean)
-        .join(' ');
-      const county = match.geographies?.Counties?.[0] || {};
-      const fips = String(county.GEOID || '');
-      if (fips && fips !== '01097' && fips !== '01003') {
-        return {
-          status: 'outside-area' as const,
-          message: `That address appears to be in ${county.NAME || 'another county'}, outside our Mobile & Baldwin County service area. Call ${PHONE} if you are right on the line.`
-        };
-      }
       return {
-        status: 'verified' as const,
-        source: 'census',
-        address: {
-          line: titleCaseAddr(`${num} ${streetParts}`),
-          city: titleCaseAddr(c.city || input.city || ''),
-          state: String(c.state || 'AL').toUpperCase(),
-          zip: String(c.zip || input.zip || ''),
-          lat: Number(Number(match.coordinates?.y).toFixed(6)),
-          lng: Number(Number(match.coordinates?.x).toFixed(6)),
-          countyFips: fips || '01097',
-          countyName: fips === '01003' ? 'Baldwin County' : 'Mobile County'
-        }
+        status: 'not-found' as const,
+        message: 'Start with your real U.S. house or building number (for example, 104 Dauphin St, Mobile, AL).'
       };
     }
 
-    // 2. OpenStreetMap Photon house-number fallback (brand-new subdivisions)
+    const rawState = (input.state || '').trim();
+    const stNorm = normalizeUsState(rawState);
+    if (rawState && !stNorm) {
+      return {
+        status: 'outside-area' as const,
+        message: 'Please enter a valid pickup address within the United States (50 states, DC, or U.S. territories).'
+      };
+    }
+    const stZip = [stNorm, (input.zip || '').trim()].filter(Boolean).join(' ');
+    const oneLine =
+      (input.singleLine || '').trim() ||
+      [line, (input.city || '').trim(), stZip].filter(Boolean).join(', ');
+
+    let anyProviderReachable = false;
+
+    // 1. Primary Rooftop Parcel Verification: Esri ArcGIS World Geocoder (All 50 U.S. States + DC)
+    try {
+      const cands = await arcgisFindCandidates(oneLine, input.magicKey || '', 5);
+      if (cands !== null) {
+        anyProviderReachable = true;
+        for (const c of cands) {
+          const addr = arcgisCandidateToAddress(c, typedNumber);
+          if (addr) {
+            return {
+              status: 'verified' as const,
+              source: 'arcgis',
+              address: addr
+            };
+          }
+        }
+      }
+    } catch {}
+
+    // 2. Official Federal U.S. Census Bureau Geocoder (Nationwide TIGER address ranges + counties)
+    if (oneLine.includes(',') || /\b\d{5}\b/.test(oneLine)) {
+      const census = await censusJsonpLookup(oneLine);
+      if (census) anyProviderReachable = true;
+      const match = census?.result?.addressMatches?.[0];
+      if (match) {
+        const c = match.addressComponents || {};
+        const state = normalizeUsState(c.state || stNorm);
+        if (state) {
+          const num = (String(match.matchedAddress || '').match(/^(\d+[A-Z]?)/i) || [])[1] || typedNumber;
+          const streetParts = [c.preQualifier, c.preDirection, c.preType, c.streetName, c.suffixType, c.suffixDirection, c.suffixQualifier]
+            .filter(Boolean)
+            .join(' ');
+          const county = match.geographies?.Counties?.[0] || {};
+          return {
+            status: 'verified' as const,
+            source: 'census',
+            address: {
+              line: titleCaseAddr(`${num} ${streetParts}`),
+              city: titleCaseAddr(c.city || input.city || ''),
+              state,
+              zip: String(c.zip || input.zip || '').slice(0, 5),
+              lat: Number(Number(match.coordinates?.y).toFixed(6)),
+              lng: Number(Number(match.coordinates?.x).toFixed(6)),
+              countyFips: String(county.GEOID || ''),
+              countyName: String(county.NAME || '')
+            }
+          };
+        }
+      }
+    }
+
+    // 3. Nationwide OpenStreetMap Photon House-Number Fallback
     try {
       const res = await fetch(
-        'https://photon.komoot.io/api/?' + new URLSearchParams({ q: oneLine, limit: '5', lang: 'en', bbox: SERVICE_BBOX.join(',') }).toString(),
+        'https://photon.komoot.io/api/?' + new URLSearchParams({ q: oneLine, limit: '6', lang: 'en' }).toString(),
         { headers: { Accept: 'application/json' } }
       );
       if (res.ok) {
+        anyProviderReachable = true;
         const data = await res.json();
         for (const f of data.features || []) {
           const p = f.properties || {};
           const [lng, lat] = f.geometry?.coordinates || [];
-          if (String(p.housenumber || '') !== typedNumber) continue;
-          const county = countyFromText(p.county || '');
-          if (!county || !inServiceBbox(lat, lng)) continue;
+          if (String(p.countrycode || '').toUpperCase() !== 'US') continue;
+          if (String(p.housenumber || '').toUpperCase() !== typedNumber.toUpperCase()) continue;
+          const state = normalizeUsState(p.state || stNorm);
+          if (!state || typeof lat !== 'number' || typeof lng !== 'number') continue;
           return {
             status: 'map-match' as const,
             source: 'openstreetmap',
             address: {
               line: `${typedNumber} ${titleCaseAddr(p.street || p.name || '')}`,
-              city: titleCaseAddr(p.city || p.locality || input.city || ''),
-              state: 'AL',
-              zip: p.postcode ? String(p.postcode).slice(0, 5) : input.zip || '',
+              city: titleCaseAddr(p.city || p.locality || p.town || input.city || ''),
+              state,
+              zip: p.postcode ? String(p.postcode).slice(0, 5) : (input.zip || '').slice(0, 5),
               lat: Number(lat.toFixed(6)),
               lng: Number(lng.toFixed(6)),
-              countyFips: county.fips,
-              countyName: county.name
+              countyFips: '',
+              countyName: String(p.county || '')
             }
           };
         }
-      } else if (!census) {
-        return { status: 'unavailable' as const };
       }
-    } catch {
-      if (!census) return { status: 'unavailable' as const };
+    } catch {}
+
+    // 4. Smart Disambiguation: if user typed street without city/state (e.g. "233 S Wacker"), surface U.S. city options
+    if (!input.city && !input.zip && !input.magicKey) {
+      const partialMatches = await browserSuggest(oneLine).catch(() => null);
+      if (partialMatches && partialMatches.length === 1 && partialMatches[0].magicKey) {
+        return browserVerify({
+          line: partialMatches[0].line,
+          city: partialMatches[0].city,
+          state: partialMatches[0].state,
+          zip: partialMatches[0].zip,
+          magicKey: partialMatches[0].magicKey,
+          singleLine: partialMatches[0].singleLine
+        });
+      }
+      if (partialMatches && partialMatches.length > 1) {
+        return {
+          status: 'ambiguous' as const,
+          suggestions: partialMatches,
+          message: 'Multiple U.S. cities match that street — tap your exact address from the list above.'
+        };
+      }
+    }
+
+    if (!anyProviderReachable) {
+      return { status: 'unavailable' as const };
     }
 
     return {
       status: 'not-found' as const,
-      message: `We couldn't confirm that street address in Mobile or Baldwin County. Double-check the house number and street name, or call ${PHONE}.`
+      message: `We couldn't find that U.S. street address. Include the house number, street, and city/ZIP — or call ${PHONE}.`
     };
   }
 
@@ -884,34 +1229,59 @@ const STEPS = [
   }
 
   /* ----------------------------- tile map ----------------------------- */
-  function drawMap(host: HTMLElement, lat: number, lng: number, layer: 'street' | 'satellite', zoom = 17) {
+  function drawMap(
+    host: HTMLElement,
+    lat: number,
+    lng: number,
+    layer: 'street' | 'satellite',
+    zoom = 18,
+    panX = 0,
+    panY = 0
+  ) {
     const tilesEl = host.querySelector<HTMLElement>('[data-map-tiles]');
     if (!tilesEl) return;
     const w = host.clientWidth || 320;
-    const h = host.clientHeight || 200;
-    const maxZ = layer === 'satellite' ? 16 : 19;
-    const tz = Math.min(zoom, maxZ);
-    const ts = 256 * 2 ** (zoom - tz);
+    const h = host.clientHeight || 230;
+    const zClamped = Math.max(12, Math.min(19, Math.round(zoom)));
+    const maxZ = 19;
+    const tz = Math.min(zClamped, maxZ);
+    const ts = 256 * 2 ** (zClamped - tz);
     const n = 2 ** tz;
-    const latR = (lat * Math.PI) / 180;
+    const latClamped = Math.max(-85.05112878, Math.min(85.05112878, lat));
+    const latR = (latClamped * Math.PI) / 180;
     const cx = ((lng + 180) / 360) * n * ts;
     const cy = ((1 - Math.log(Math.tan(latR) + 1 / Math.cos(latR)) / Math.PI) / 2) * n * ts;
-    const left = cx - w / 2;
-    const top = cy - h / 2;
+    const left = cx - w / 2 - panX;
+    const top = cy - h / 2 - panY;
     let html = '';
+    const tyMin = Math.max(0, Math.floor(top / ts));
+    const tyMax = Math.min(n - 1, Math.floor((top + h) / ts));
     for (let tx = Math.floor(left / ts); tx <= Math.floor((left + w) / ts); tx++) {
-      for (let ty = Math.floor(top / ts); ty <= Math.floor((top + h) / ts); ty++) {
+      for (let ty = tyMin; ty <= tyMax; ty++) {
         const x = ((tx % n) + n) % n;
         const src =
           layer === 'satellite'
-            ? `https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/${tz}/${ty}/${x}`
+            ? `https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${tz}/${ty}/${x}`
             : `https://tile.openstreetmap.org/${tz}/${x}/${ty}.png`;
-        html += `<img src="${src}" alt="" decoding="async" referrerpolicy="strict-origin-when-cross-origin" style="left:${Math.round(tx * ts - left)}px;top:${Math.round(ty * ts - top)}px;width:${ts}px;height:${ts}px">`;
+        html += `<img src="${src}" alt="" draggable="false" decoding="async" referrerpolicy="strict-origin-when-cross-origin" style="left:${Math.round(tx * ts - left)}px;top:${Math.round(ty * ts - top)}px;width:${ts}px;height:${ts}px">`;
       }
     }
     tilesEl.innerHTML = html;
+    const pinEl = host.querySelector<HTMLElement>('[data-map-pin]');
+    if (pinEl) {
+      pinEl.style.left = `${Math.round(w / 2 + panX)}px`;
+      pinEl.style.top = `${Math.round(h / 2 + panY)}px`;
+    }
+    const recenterBtn = host.querySelector<HTMLButtonElement>('[data-map-recenter]');
+    if (recenterBtn) {
+      recenterBtn.hidden = Math.hypot(panX, panY) < 12;
+    }
+    const zIn = host.querySelector<HTMLButtonElement>('[data-map-zoom="1"]');
+    const zOut = host.querySelector<HTMLButtonElement>('[data-map-zoom="-1"]');
+    if (zIn) zIn.disabled = zClamped >= 19;
+    if (zOut) zOut.disabled = zClamped <= 12;
     const attr = host.querySelector<HTMLElement>('[data-map-attr]');
-    if (attr) attr.textContent = layer === 'satellite' ? 'Imagery: USGS The National Map' : '© OpenStreetMap contributors';
+    if (attr) attr.textContent = layer === 'satellite' ? 'Imagery © Esri, Maxar' : '© OpenStreetMap contributors';
   }
 
   document.querySelectorAll<HTMLFormElement>('form[data-quote-form]').forEach((form) => {
@@ -941,6 +1311,9 @@ const STEPS = [
     let lookupOffline = false;
     let manualMode = false;
     let mapLayer: 'street' | 'satellite' = 'street';
+    let mapZoom = 18;
+    let mapPanX = 0;
+    let mapPanY = 0;
     let savedInquiry: { leadId: string; leadNumber: string; uploadToken: string } | null = null;
     const idempotencyKey = (crypto as Crypto & { randomUUID?: () => string }).randomUUID?.() || `idem-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const queuedMedia: QueuedMedia[] = [];
@@ -1212,34 +1585,60 @@ const STEPS = [
       updateNextLabel();
     };
 
-    const fillAddressFields = (v: { line: string; city: string; zip: string }) => {
+    const fillAddressFields = (v: { line: string; city: string; state?: string; zip: string }) => {
       const street = named<HTMLInputElement>('pickupAddress');
       const city = named<HTMLInputElement>('city');
+      const stateInp = named<HTMLInputElement>('state');
       const zip = named<HTMLInputElement>('zipCode');
       if (street) street.value = v.line;
       if (city) city.value = v.city;
+      if (stateInp && v.state) stateInp.value = normalizeUsState(v.state) || v.state.toUpperCase();
       if (zip) zip.value = v.zip;
     };
 
     const renderVerified = () => {
       if (!verified) return;
+      const stCode = normalizeUsState(verified.state) || verified.state || 'AL';
+      const stName = stateFullName(stCode);
+      const fullText = `${verified.line}, ${verified.city}, ${stCode}${verified.zip ? ' ' + verified.zip : ''}`;
       const t = $('[data-verified-text]');
-      if (t) t.textContent = `${verified.line}, ${verified.city}, ${verified.state} ${verified.zip}`;
+      if (t) t.textContent = fullText;
       const cty = $('[data-verified-county]');
-      if (cty) cty.textContent = verified.countyName ? `${verified.countyName}, Alabama` : '';
+      if (cty) {
+        const cn = String(verified.countyName || '').trim();
+        cty.textContent = cn && cn.toLowerCase() !== stName.toLowerCase() ? `${cn}, ${stName}` : stName;
+      }
       const badge = $('[data-verified-badge]');
-      if (badge) badge.textContent = verified.status === 'verified' ? 'Verified address' : verified.status === 'map-match' ? 'Address found on map' : 'Address saved';
+      if (badge) {
+        badge.textContent =
+          verified.status === 'verified'
+            ? 'Verified U.S. address'
+            : verified.status === 'map-match'
+              ? 'Address pinned on map'
+              : 'Address saved';
+      }
+      const gmaps = $<HTMLAnchorElement>('[data-verified-gmaps]');
+      if (gmaps) {
+        const q = verified.lat != null && verified.lng != null ? `${verified.lat},${verified.lng}` : fullText;
+        gmaps.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+      }
       if (verified.lat != null && verified.lng != null) {
         mapHost.hidden = false;
-        drawMap(mapHost, verified.lat, verified.lng, mapLayer);
+        drawMap(mapHost, verified.lat, verified.lng, mapLayer, mapZoom, mapPanX, mapPanY);
       } else {
         mapHost.hidden = true;
       }
     };
 
     const showVerified = (v: Verified) => {
-      verified = v;
-      fillAddressFields(v);
+      verified = {
+        ...v,
+        state: normalizeUsState(v.state) || (v.state || 'AL').toUpperCase()
+      };
+      mapPanX = 0;
+      mapPanY = 0;
+      mapZoom = 18;
+      fillAddressFields(verified);
       searchWrap.hidden = true;
       manualWrap.hidden = true;
       card.hidden = false;
@@ -1248,12 +1647,15 @@ const STEPS = [
       card.classList.add('is-drop');
       setErr('pickupAddress', '');
       renderVerified();
+      window.requestAnimationFrame(() => !card.hidden && renderVerified());
       updateNextLabel();
       saveDraft();
     };
 
     const resetAddress = () => {
       verified = null;
+      mapPanX = 0;
+      mapPanY = 0;
       card.hidden = true;
       searchWrap.hidden = false;
       if (manualMode) manualWrap.hidden = false;
@@ -1272,14 +1674,28 @@ const STEPS = [
     let useBrowserGeo = staticCloudOnly;
 
     const verifyEndpoint = form.dataset.verifyEndpoint || '';
-    const verifyAddress = async (input: { line: string; city?: string; zip?: string }): Promise<'ok' | 'bad' | 'offline'> => {
+    const verifyAddress = async (input: {
+      line: string;
+      city?: string;
+      state?: string;
+      zip?: string;
+      magicKey?: string;
+      singleLine?: string;
+    }): Promise<'ok' | 'bad' | 'offline'> => {
       if (!verifyEndpoint && !cloudRelayAllowed) return 'offline';
       busy(true);
       setErr('pickupAddress', '');
       try {
         let data: any = null;
         if (verifyEndpoint && !useBrowserGeo) {
-          const res = await postJson(verifyEndpoint, { line: input.line, city: input.city || '', state: 'AL', zip: input.zip || '' }).catch(() => ({ data: null }));
+          const res = await postJson(verifyEndpoint, {
+            line: input.line,
+            city: input.city || '',
+            state: input.state || '',
+            zip: input.zip || '',
+            magicKey: input.magicKey || '',
+            singleLine: input.singleLine || ''
+          }).catch(() => ({ data: null }));
           data = res.data;
         }
         if (!data && cloudRelayAllowed) {
@@ -1301,8 +1717,13 @@ const STEPS = [
           });
           return 'ok';
         }
+        if (data.status === 'ambiguous' && Array.isArray(data.suggestions) && data.suggestions.length) {
+          renderList(data.suggestions);
+          setErr('pickupAddress', data.message || 'Tap your exact U.S. city and state from the list above.');
+          return 'bad';
+        }
         if (data.status === 'unavailable') return 'offline';
-        setErr('pickupAddress', data.message || data.error || "We couldn't find that address.");
+        setErr('pickupAddress', data.message || data.error || "We couldn't find that U.S. street address.");
         return 'bad';
       } catch {
         lookupOffline = true;
@@ -1315,7 +1736,30 @@ const STEPS = [
     const choose = async (s: Suggestion) => {
       closeList();
       addrInput.value = s.label;
-      const r = await verifyAddress({ line: s.line, city: s.city, zip: s.zip });
+      if (s.lat != null && s.lng != null && !s.magicKey) {
+        showVerified({
+          line: s.line,
+          city: s.city,
+          state: s.state,
+          zip: s.zip,
+          lat: s.lat,
+          lng: s.lng,
+          countyName: s.countyName || '',
+          countyFips: '',
+          source: 'arcgis',
+          token: 'browser-verified',
+          status: 'verified'
+        });
+        return;
+      }
+      const r = await verifyAddress({
+        line: s.line,
+        city: s.city,
+        state: s.state,
+        zip: s.zip,
+        magicKey: s.magicKey,
+        singleLine: s.singleLine || s.label
+      });
       if (r === 'offline') {
         fillAddressFields(s);
         enterManual('We could not double-check this address right now. Confirm it below and we will verify it with you.');
@@ -1327,7 +1771,7 @@ const STEPS = [
       setErr('pickupAddress', '');
       window.clearTimeout(suggestTimer);
       const q = addrInput.value.trim();
-      if (q.length < 4 || lookupOffline || (!suggestEndpoint && !cloudRelayAllowed)) return closeList();
+      if (q.length < 3 || lookupOffline || (!suggestEndpoint && !cloudRelayAllowed)) return closeList();
       suggestTimer = window.setTimeout(async () => {
         const seq = ++suggestSeq;
         busy(true);
@@ -1349,7 +1793,12 @@ const STEPS = [
             enterManual('Address search is unavailable right now — please type your address below.');
             return;
           }
-          renderList(items, /^\d/.test(q) ? 'No match yet — keep typing, or tap "Check this address".' : 'Start with your house number, e.g. 1450 Government St');
+          renderList(
+            items,
+            /^\d/.test(q)
+              ? 'Keep typing street and city/ZIP, or tap "Check this address".'
+              : 'Start with your house or building number (e.g. 1100 Congress Ave)'
+          );
         } catch {
           lookupOffline = true;
           closeList();
@@ -1357,7 +1806,7 @@ const STEPS = [
         } finally {
           if (seq === suggestSeq) busy(false);
         }
-      }, 260);
+      }, 180);
     });
 
     addrInput.addEventListener('keydown', (e) => {
@@ -1371,6 +1820,7 @@ const STEPS = [
       } else if (e.key === 'Enter') {
         e.preventDefault();
         if (activeIdx >= 0 && suggestions[activeIdx]) choose(suggestions[activeIdx]);
+        else if (suggestions.length === 1 && !addrList.hidden) choose(suggestions[0]);
         else if (addrInput.value.trim()) $<HTMLButtonElement>('[data-address-check]')?.click();
       } else if (e.key === 'Escape') {
         closeList();
@@ -1381,17 +1831,26 @@ const STEPS = [
       const li = (e.target as HTMLElement).closest<HTMLElement>('[data-opt]');
       if (li) choose(suggestions[Number(li.dataset.opt)]);
     });
-    addrInput.addEventListener('blur', () => window.setTimeout(closeList, 150));
+    // Close suggestions only when tapping outside the address search block (never on mobile soft-keyboard dismiss!)
+    document.addEventListener('pointerdown', (e) => {
+      if (!addrList.hidden && !searchWrap.contains(e.target as Node)) {
+        closeList();
+      }
+    });
 
     $('[data-address-check]')?.addEventListener('click', async () => {
       const text = addrInput.value.trim();
       if (!text) {
-        setErr('pickupAddress', 'Type your street address first.');
+        setErr('pickupAddress', 'Type your U.S. street address first.');
         addrInput.focus();
         return;
       }
+      if (suggestions.length === 1 && !addrList.hidden) {
+        await choose(suggestions[0]);
+        return;
+      }
       closeList();
-      const r = await verifyAddress({ line: text });
+      const r = await verifyAddress({ line: text, singleLine: text });
       if (r === 'offline') enterManual('We could not double-check addresses right now. Type it below and we will confirm it with you.');
     });
 
@@ -1420,7 +1879,9 @@ const STEPS = [
             }
             if (data.message) setErr('pickupAddress', data.message);
             const items: Suggestion[] = data.suggestions || [];
-            if (items.length) {
+            if (items.length === 1) {
+              await choose(items[0]);
+            } else if (items.length > 1) {
               addrInput.focus();
               renderList(items);
             } else if (!data.message) setErr('pickupAddress', "We couldn't pin down your exact address — please type it.");
@@ -1446,6 +1907,67 @@ const STEPS = [
         renderVerified();
       })
     );
+    $$<HTMLButtonElement>('[data-map-zoom]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const dz = Number(b.dataset.mapZoom || 0);
+        const nextZ = Math.max(12, Math.min(19, mapZoom + dz));
+        if (nextZ === mapZoom) return;
+        const scale = 2 ** (nextZ - mapZoom);
+        mapPanX *= scale;
+        mapPanY *= scale;
+        mapZoom = nextZ;
+        renderVerified();
+      })
+    );
+    $('[data-map-recenter]')?.addEventListener('click', () => {
+      mapPanX = 0;
+      mapPanY = 0;
+      renderVerified();
+    });
+
+    // Interactive touch/mouse drag panning on the verified map preview
+    (() => {
+      let dragId: number | null = null;
+      let startX = 0;
+      let startY = 0;
+      mapHost.addEventListener('pointerdown', (e) => {
+        if ((e.target as HTMLElement).closest('button')) return;
+        dragId = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
+        try {
+          mapHost.setPointerCapture(e.pointerId);
+        } catch {}
+      });
+      mapHost.addEventListener('pointermove', (e) => {
+        if (dragId !== e.pointerId || !verified) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        startX = e.clientX;
+        startY = e.clientY;
+        mapPanX += dx;
+        mapPanY += dy;
+        renderVerified();
+      });
+      const endDrag = (e: PointerEvent) => {
+        if (dragId === e.pointerId) dragId = null;
+      };
+      mapHost.addEventListener('pointerup', endDrag);
+      mapHost.addEventListener('pointercancel', endDrag);
+    })();
+
+    if ('ResizeObserver' in window) {
+      let lastMapSize = '';
+      const mapRo = new ResizeObserver(() => {
+        if (card.hidden || !verified) return;
+        const sig = `${mapHost.clientWidth}x${mapHost.clientHeight}`;
+        if (sig !== lastMapSize && mapHost.clientWidth > 0) {
+          lastMapSize = sig;
+          renderVerified();
+        }
+      });
+      mapRo.observe(mapHost);
+    }
     window.addEventListener('resize', () => !card.hidden && renderVerified());
 
     // Access + timing reveals
@@ -1459,7 +1981,13 @@ const STEPS = [
     form.addEventListener('change', (e) => {
       const t = e.target as HTMLInputElement;
       if (t.name === 'indoorsOrOutdoors' || t.name === 'timing') syncReveals();
-      if (t.name === 'indoorsOrOutdoors') setErr('indoorsOrOutdoors', '');
+      if (t.name === 'indoorsOrOutdoors') {
+        setErr('indoorsOrOutdoors', '');
+        if (!verified && !manualMode && !lookupOffline && addrInput.value.trim().length >= 5) {
+          closeList();
+          verifyAddress({ line: addrInput.value.trim(), singleLine: addrInput.value.trim() });
+        }
+      }
       saveDraft();
     });
 
@@ -1477,7 +2005,8 @@ const STEPS = [
     const addressText = () => {
       const line = val('pickupAddress');
       const unit = val('addressUnit');
-      return line ? `${line}${unit ? ` ${unit}` : ''}, ${val('city')}, AL ${val('zipCode')}` : '';
+      const st = normalizeUsState(verified?.state || val('state')) || (val('state') || 'AL').toUpperCase();
+      return line ? `${line}${unit ? ` ${unit}` : ''}, ${val('city')}, ${st} ${val('zipCode')}`.replace(/\s+/g, ' ').trim() : '';
     };
 
     const renderReview = () => {
@@ -1528,9 +2057,10 @@ const STEPS = [
           if (manualMode) {
             if (val('pickupAddress').length < 4 || !/^\d/.test(val('pickupAddress'))) ok = setErr('pickupAddress', 'Enter the street address with the house number.') && ok;
             if (val('city').length < 2) ok = setErr('city', 'Enter the city.') && ok;
+            if (!normalizeUsState(val('state'))) ok = setErr('state', 'Enter a 2-letter U.S. state (e.g. AL, TX, CA).') && ok;
             if (!/^\d{5}$/.test(val('zipCode'))) ok = setErr('zipCode', 'Enter the 5-digit ZIP code.') && ok;
           } else {
-            ok = setErr('pickupAddress', 'Choose your address from the list (or tap "Check this address").') && ok;
+            ok = setErr('pickupAddress', 'Choose your U.S. address from the list (or tap "Check this address").') && ok;
             addrInput.focus();
           }
         }
@@ -1553,10 +2083,18 @@ const STEPS = [
 
     nextBtn.addEventListener('click', async () => {
       clearStatus();
+      if (step === 3 && !verified && !manualMode && !lookupOffline && addrInput.value.trim().length >= 5) {
+        nextBtn.disabled = true;
+        closeList();
+        const r = await verifyAddress({ line: addrInput.value.trim(), singleLine: addrInput.value.trim() });
+        nextBtn.disabled = false;
+        if (r === 'bad') return;
+        if (r === 'offline') enterManual('Confirm your U.S. street address below.');
+      }
       if (!validateStep(step)) return;
       if (step === 3 && !verified && manualMode && !lookupOffline) {
         nextBtn.disabled = true;
-        const r = await verifyAddress({ line: val('pickupAddress'), city: val('city'), zip: val('zipCode') });
+        const r = await verifyAddress({ line: val('pickupAddress'), city: val('city'), state: val('state'), zip: val('zipCode') });
         nextBtn.disabled = false;
         if (r === 'bad') return;
       }
@@ -1714,7 +2252,7 @@ const STEPS = [
       root.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
-    const stepForField: Record<string, number> = { items: 1, estimatedQuantity: 1, pickupAddress: 3, city: 3, zipCode: 3, indoorsOrOutdoors: 3, firstName: 4, lastName: 4, phone: 4, email: 4, consentGiven: 4 };
+    const stepForField: Record<string, number> = { items: 1, estimatedQuantity: 1, pickupAddress: 3, city: 3, state: 3, zipCode: 3, indoorsOrOutdoors: 3, firstName: 4, lastName: 4, phone: 4, email: 4, consentGiven: 4 };
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1763,7 +2301,7 @@ const STEPS = [
             pickupAddress: val('pickupAddress'),
             addressUnit: val('addressUnit'),
             city: val('city'),
-            state: 'AL',
+            state: normalizeUsState(verified?.state || val('state')) || (val('state') || 'AL').toUpperCase(),
             zipCode: val('zipCode'),
             addressToken: verified?.token || '',
             requestedService: val('requestedService') || 'Junk Removal',
@@ -1837,7 +2375,7 @@ const STEPS = [
 
             // 2. Ensure address is verified when online
             if (!verified) {
-              const vCheck = await browserVerify({ line: payload.pickupAddress, city: payload.city, zip: payload.zipCode });
+              const vCheck = await browserVerify({ line: payload.pickupAddress, city: payload.city, state: payload.state, zip: payload.zipCode });
               if (vCheck.status === 'verified' || vCheck.status === 'map-match') {
                 showVerified({
                   ...vCheck.address,
@@ -1849,8 +2387,9 @@ const STEPS = [
                 });
                 payload.pickupAddress = vCheck.address.line;
                 payload.city = vCheck.address.city;
+                payload.state = vCheck.address.state;
                 payload.zipCode = vCheck.address.zip;
-              } else if (vCheck.status === 'outside-area' || vCheck.status === 'not-found') {
+              } else if (vCheck.status === 'outside-area' || vCheck.status === 'not-found' || vCheck.status === 'ambiguous') {
                 setErr('pickupAddress', vCheck.message);
                 goTo(3);
                 showStatus('error', esc(vCheck.message));
@@ -1916,11 +2455,11 @@ const STEPS = [
             const verifiedGeo = verified
               ? {
                   status: verified.status,
-                  source: verified.source || 'us-census',
+                  source: verified.source || 'arcgis',
                   address: {
                     line: verified.line,
                     city: verified.city,
-                    state: verified.state || 'AL',
+                    state: verified.state || payload.state || 'AL',
                     zip: verified.zip,
                     lat: verified.lat,
                     lng: verified.lng,
@@ -1998,7 +2537,7 @@ const STEPS = [
             );
 
             const alertSummary = [
-              `${payload.city || 'Mobile'}, AL`,
+              `${payload.city || 'Mobile'}, ${payload.state || 'AL'}`,
               `${payload.requestedService}${payload.estimatedQuantity ? ` (${payload.estimatedQuantity})` : ''}`,
               relayMedia.length ? `${relayMedia.length} file(s) attached` : 'No photos'
             ].join(' · ');
@@ -2190,6 +2729,12 @@ const STEPS = [
   .pf-field input:focus, .pf-field textarea:focus, .pf-addr__box input:focus { outline: none; border-color: var(--pf-teal); box-shadow: 0 0 0 4px rgba(15, 118, 110, .18); }
   .pf-field [aria-invalid='true'], .pf-addr__box input[aria-invalid='true'] { border-color: #a32020; box-shadow: 0 0 0 4px rgba(163, 32, 32, .12); }
   .pf-grid2 { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .pf-grid3 { display: grid; gap: .75rem; grid-template-columns: 1fr 1fr; }
+  .pf-grid3 > :first-child { grid-column: 1 / -1; }
+  @media (min-width: 520px) {
+    .pf-grid3 { grid-template-columns: minmax(0, 1.45fr) minmax(0, .65fr) minmax(0, .9fr); }
+    .pf-grid3 > :first-child { grid-column: auto; }
+  }
   .pf-error { margin: 0; color: #a32020; font-weight: 700; font-size: .9rem; }
   .pf-error:empty { display: none; }
 
@@ -2252,12 +2797,18 @@ const STEPS = [
   .pf-verified[hidden] { display: none; }
   .pf-verified.is-drop .pf-map__pin { animation: pfDrop .6s cubic-bezier(.3, 1.5, .5, 1); }
   @keyframes pfDrop { 0% { transform: translate(-50%, -160%); opacity: 0; } 100% { transform: translate(-50%, -100%); opacity: 1; } }
-  .pf-map { position: relative; height: 210px; overflow: hidden; background: #dfe7e4; touch-action: pan-y; }
+  .pf-map { position: relative; height: 230px; overflow: hidden; background: #dfe7e4; touch-action: none; cursor: grab; }
+  .pf-map:active { cursor: grabbing; }
   .pf-map[hidden] { display: none; }
   .pf-map__tiles { position: absolute; inset: 0; }
   .pf-map__tiles img { position: absolute; max-width: none; user-select: none; -webkit-user-drag: none; }
-  .pf-map__pin { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -100%); color: var(--pf-orange); filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .35)); }
+  .pf-map__pin { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -100%); color: var(--pf-orange); filter: drop-shadow(0 6px 6px rgba(0, 0, 0, .35)); pointer-events: none; }
   .pf-map__pin svg { width: 44px; height: 44px; fill: #f26b1d; stroke: #fff; stroke-width: 1.6; }
+  .pf-map__zoom { position: absolute; top: .6rem; left: .6rem; display: flex; gap: 2px; background: rgba(255, 255, 255, .95); border-radius: 99px; padding: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, .15); }
+  .pf-map__zoom button { border: 0; background: transparent; font: inherit; font-weight: 800; font-size: 1.05rem; line-height: 1; width: 34px; height: 34px; border-radius: 99px; cursor: pointer; color: var(--pf-ink); display: grid; place-items: center; }
+  .pf-map__zoom button:hover:not(:disabled) { background: var(--pf-teal-soft); }
+  .pf-map__zoom button:disabled { opacity: .38; cursor: default; }
+  .pf-map__zoom button[hidden] { display: none; }
   .pf-map__toggle { position: absolute; top: .6rem; right: .6rem; display: flex; background: rgba(255, 255, 255, .95); border-radius: 99px; padding: 3px; box-shadow: 0 4px 12px rgba(0, 0, 0, .15); }
   .pf-map__toggle button { border: 0; background: transparent; font: inherit; font-weight: 700; font-size: .8rem; padding: .4rem .75rem; border-radius: 99px; cursor: pointer; min-height: 34px; }
   .pf-map__toggle button[aria-pressed='true'] { background: var(--pf-navy); color: #fff; }
@@ -2267,6 +2818,7 @@ const STEPS = [
   .pf-badge svg { width: 16px; height: 16px; }
   .pf-verified__addr { margin: .2rem 0 0; font-weight: 800; font-size: 1.08rem; }
   .pf-verified__county { margin: 0; color: #0b5c56; font-size: .88rem; }
+  .pf-verified__links { display: flex; flex-wrap: wrap; gap: .35rem 1rem; align-items: center; margin-top: .15rem; }
   .pf-link { border: 0; background: none; padding: 0; font: inherit; font-weight: 700; color: #0f766e; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; width: fit-content; min-height: 32px; }
   .pf-manual { display: grid; gap: .8rem; padding: .9rem; border-radius: 18px; background: #f7f3eb; }
   .pf-manual[hidden] { display: none; }

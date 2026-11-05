@@ -385,9 +385,17 @@
   function trustBadges(l, { compact = false } = {}) {
     const out = [];
     if (l.addressStatus === 'verified') {
-      out.push(`<span class="cc-badge cc-badge--ok" title="Matched by the U.S. Census Bureau address database">${ico('check')}Address verified</span>`);
+      const title =
+        l.addressSource === 'arcgis'
+          ? 'Verified rooftop parcel address (Esri ArcGIS)'
+          : 'Matched by the U.S. Census Bureau address database';
+      out.push(`<span class="cc-badge cc-badge--ok" title="${esc(title)}">${ico('check')}Address verified</span>`);
     } else if (l.addressStatus === 'map-match') {
-      out.push(`<span class="cc-badge cc-badge--info" title="Matched an OpenStreetMap house number">${ico('pin')}Found on map</span>`);
+      const title =
+        l.addressSource === 'arcgis'
+          ? 'Matched a U.S. street segment (Esri ArcGIS)'
+          : 'Matched an OpenStreetMap house number';
+      out.push(`<span class="cc-badge cc-badge--info" title="${esc(title)}">${ico('pin')}Found on map</span>`);
     }
     if (l.needsReview) {
       const flags = (l.spamFlags || []).join(' · ') || 'Address could not be auto-checked';
@@ -1393,6 +1401,7 @@
         <div class="cc-field"><label for="ql-addr">Pickup street address</label><input id="ql-addr" class="cc-input" type="text" placeholder="104 Dauphin St" required /></div>
         <div class="cc-form-row">
           <div class="cc-field"><label for="ql-city">City</label><input id="ql-city" class="cc-input" type="text" value="Mobile" required /></div>
+          <div class="cc-field"><label for="ql-state">State</label><input id="ql-state" class="cc-input" type="text" maxlength="2" value="AL" style="text-transform:uppercase" required /></div>
           <div class="cc-field"><label for="ql-zip">ZIP code</label><input id="ql-zip" class="cc-input" type="text" inputmode="numeric" value="36602" required /></div>
         </div>
         <div class="cc-form-row">
@@ -1423,6 +1432,7 @@
           phone: document.getElementById('ql-phone').value.trim(),
           pickupAddress: document.getElementById('ql-addr').value.trim(),
           city: document.getElementById('ql-city').value.trim(),
+          state: (document.getElementById('ql-state')?.value || 'AL').trim().toUpperCase(),
           zipCode: document.getElementById('ql-zip').value.trim(),
           requestedService: svc,
           hasElectronics: /electronic|e-waste/i.test(svc),
@@ -1478,7 +1488,7 @@
             <strong class="cc-req__name">${esc(l.fullName)}</strong>
             <span class="cc-req__time">${esc(timeAgo(l.createdAt))}</span>
           </span>
-          <span class="cc-req__where">${ico('pin')}<span>${esc(l.pickupAddress || '')}${l.pickupAddress ? ' · ' : ''}${esc(l.city)}</span></span>
+          <span class="cc-req__where">${ico('pin')}<span>${esc(l.pickupAddress || '')}${l.pickupAddress ? ' · ' : ''}${esc(l.city)}${l.state ? `, ${esc(l.state)}` : ''}</span></span>
           <span class="cc-req__chips">${leadNeeds(l)}</span>
           <span class="cc-req__meta">
             ${statusPill(l.status)}
@@ -1975,6 +1985,7 @@
   }
 
   function addressSourceText(l) {
+    if (l.addressSource === 'arcgis') return 'Verified rooftop parcel & street GIS (Esri ArcGIS World Geocoder).';
     if (l.addressSource === 'census' || l.addressSource === 'us-census') return 'Matched by the U.S. Census Bureau address database.';
     if (l.addressSource === 'openstreetmap') return 'Matched an OpenStreetMap house number.';
     if (l.addressSource === 'mock') return 'Checked by the offline test geocoder.';
@@ -2322,7 +2333,7 @@
     // Map
     const mapEl = workspace.querySelector('[data-lead-map]');
     if (mapEl) {
-      mountMap(mapEl, { center: [Number(l.lat), Number(l.lng)], zoom: 17, markers: [leadMarker(l)] });
+      mountMap(mapEl, { center: [Number(l.lat), Number(l.lng)], zoom: 18, markers: [leadMarker(l)] });
     }
 
     // Remember which tools are open across re-renders

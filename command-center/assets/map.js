@@ -18,9 +18,9 @@
     },
     satellite: {
       label: 'Satellite',
-      maxNative: 16,
-      url: (z, x, y) => `https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/${z}/${y}/${x}`,
-      attribution: 'Imagery: <a href="https://www.usgs.gov/programs/national-geospatial-program/national-map" target="_blank" rel="noopener">USGS The National Map</a>'
+      maxNative: 19,
+      url: (z, x, y) => `https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`,
+      attribution: 'Imagery © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a>'
     }
   };
 
@@ -59,7 +59,7 @@
       {
         center: [30.6954, -88.0399], // Mobile, AL
         zoom: 12,
-        minZoom: 4,
+        minZoom: 3,
         maxZoom: 19,
         layer: 'street',
         markers: [],
