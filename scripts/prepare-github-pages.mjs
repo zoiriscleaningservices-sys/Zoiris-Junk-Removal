@@ -109,19 +109,15 @@ if (existsSync(notFoundPath)) {
 /* ---------------- 2. Subpath Rewriting (when PAGES_BASE_PATH is set) ---------------- */
 const rawBase = String(process.env.PAGES_BASE_PATH || '').trim();
 const base = rawBase && rawBase !== '/' ? '/' + rawBase.replace(/^\/+|\/+$/g, '') : '';
+const hasCname = existsSync(join(TARGET_DIST, 'CNAME'));
 
-if (!base || existsSync(join(TARGET_DIST, 'CNAME'))) {
-  console.log(`prepare-github-pages: bundled /owner/* PWA + .nojekyll (root deployment, base="${base || '/'}").`);
-  process.exit(0);
-}
-
-const escapedBase = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-const attrRe = new RegExp(`(\\b(?:href|src|action)=["'])\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g');
+const escapedBase = base ? base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '';
+const attrRe = base ? new RegExp(`(\\b(?:href|src|action)=["'])\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g') : null;
 const srcsetAttrRe = /\bsrcset=(["'])([^"']*)\1/g;
-const srcsetItemRe = new RegExp(`(^|,\\s*)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g');
-const refreshRe = new RegExp(`(http-equiv=["']refresh["'][^>]*content=["']\\d+;\\s*url=)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'gi');
-const cssUrlRe = new RegExp(`(url\\(\\s*['"]?)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g');
-const manifestPathRe = new RegExp(`(")\\/(?!(?:\\/|${escapedBase.slice(1)}(?:\\/|"|$)))`, 'g');
+const srcsetItemRe = base ? new RegExp(`(^|,\\s*)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g') : null;
+const refreshRe = base ? new RegExp(`(http-equiv=["']refresh["'][^>]*content=["']\\d+;\\s*url=)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'gi') : null;
+const cssUrlRe = base ? new RegExp(`(url\\(\\s*['"]?)\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g') : null;
+const manifestPathRe = base ? new RegExp(`(")\\/(?!(?:\\/|${escapedBase.slice(1)}(?:\\/|"|$)))`, 'g') : null;
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {
@@ -141,14 +137,18 @@ for (const file of walk(TARGET_DIST)) {
   let after = before;
 
   if (ext === '.html') {
-    after = after
-      .replace(attrRe, `$1${base}/`)
-      .replace(srcsetAttrRe, (_m, q, val) => `srcset=${q}${val.replace(srcsetItemRe, `$1${base}/`)}${q}`)
-      .replace(refreshRe, `$1${base}/`)
-      .replace(cssUrlRe, `$1${base}/`);
-  } else if (ext === '.css') {
+    // Enable live browser geocoding + encrypted cloud push relay on static GitHub Pages deployments
+    after = after.replace(/data-cloud-relay="0"/g, 'data-cloud-relay="1"');
+    if (base && !hasCname) {
+      after = after
+        .replace(attrRe, `$1${base}/`)
+        .replace(srcsetAttrRe, (_m, q, val) => `srcset=${q}${val.replace(srcsetItemRe, `$1${base}/`)}${q}`)
+        .replace(refreshRe, `$1${base}/`)
+        .replace(cssUrlRe, `$1${base}/`);
+    }
+  } else if (ext === '.css' && base && !hasCname) {
     after = after.replace(cssUrlRe, `$1${base}/`);
-  } else if (ext === '.webmanifest') {
+  } else if (ext === '.webmanifest' && base && !hasCname) {
     after = after.replace(manifestPathRe, `$1${base}/`);
   }
 
@@ -158,4 +158,4 @@ for (const file of walk(TARGET_DIST)) {
   }
 }
 
-console.log(`prepare-github-pages: bundled /owner/* PWA and rewrote root-relative URLs with "${base}" across ${updatedCount} file(s).`);
+console.log(`prepare-github-pages: bundled /owner/* PWA + cloud-relay enabled across ${updatedCount} file(s) (base="${base && !hasCname ? base : '/'}").`);

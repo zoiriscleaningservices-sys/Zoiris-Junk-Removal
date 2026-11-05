@@ -132,8 +132,8 @@ export function createCrmService({ ctx, storage, realtime, masterKey, geo = null
       throw err;
     }
 
-    // Layer 2 — real-address verification (signed token from the form, or server-side lookup)
-    let geoRes = body.addressToken && geo ? geo.readToken(String(body.addressToken)) : null;
+    // Layer 2 — real-address verification (signed token from the form, trusted relay geo, or server-side lookup)
+    let geoRes = reqMeta.preVerifiedGeo || (body.addressToken && geo ? geo.readToken(String(body.addressToken)) : null);
     const fieldErrors = {};
     if (!geoRes && geo && pickupAddress.length >= 3) {
       geoRes = await geo.verify({ line: pickupAddress, city, state, zip: zipCode });
@@ -244,7 +244,9 @@ export function createCrmService({ ctx, storage, realtime, masterKey, geo = null
       .get(city);
 
     const leadId = randomUUID();
-    const leadNumber = nextLeadNumber();
+    const prefNum = /^ZJ-\d{4}-[A-Z0-9]{5,8}$/.test(String(reqMeta.preferredLeadNumber || '')) ? String(reqMeta.preferredLeadNumber) : '';
+    const leadNumber =
+      prefNum && !db.prepare('SELECT 1 FROM leads WHERE lead_number = ?').get(prefNum) ? prefNum : nextLeadNumber();
     const deviceCategory = detectDeviceCategory(body.deviceCategory, reqMeta.userAgent);
     const sourcePagePath = clean(body.sourcePagePath || body.page || '', 180);
 

@@ -123,6 +123,25 @@ export function openZoirisDb(customDataDir = process.env.ZOIRIS_DATA_DIR) {
   addSessCol('device_kind', "TEXT NOT NULL DEFAULT 'desktop'");
   addSessCol('remember_device', 'INTEGER NOT NULL DEFAULT 1');
 
+  // 004 — background OS Web Push subscriptions (RFC 8291 + RFC 8292 VAPID)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS push_subscriptions (
+      id TEXT PRIMARY KEY,
+      owner_id TEXT REFERENCES owner_profiles(id) ON DELETE CASCADE,
+      endpoint TEXT NOT NULL UNIQUE,
+      p256dh TEXT NOT NULL,
+      auth TEXT NOT NULL,
+      device_label TEXT NOT NULL DEFAULT '',
+      device_kind TEXT NOT NULL DEFAULT 'phone',
+      user_agent TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      last_sent_at TEXT,
+      fail_count INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS idx_push_subs_owner ON push_subscriptions(owner_id);
+  `);
+
   const now = new Date().toISOString();
 
   // Seed default business settings without overwriting owner edits
@@ -379,6 +398,16 @@ export function seedIntegrations(db, now = new Date().toISOString()) {
       summary: {
         provider: 'twilio',
         note: smsConnected ? 'SMS provider configured.' : 'Optional SMS alerts unconfigured (set SMS_TWILIO_* env vars to enable).'
+      }
+    },
+    {
+      id: 'webpush',
+      name: 'Background Phone Push (Web Push + 24/7 Relay)',
+      kind: 'notification',
+      status: 'connected',
+      summary: {
+        vapid: 'RFC 8291/8292 ES256',
+        note: 'Delivers lock-screen push alerts even when the Zoiris app is closed.'
       }
     },
     {

@@ -26,6 +26,8 @@ import { createRealtimeAndNotifications } from './realtime.mjs';
 import { createAnalyticsService } from './analytics.mjs';
 import { createCrmService, csvEscape } from './crm.mjs';
 import { createGeoService } from './geo.mjs';
+import { createWebPushManager } from './webpush.mjs';
+import { createCloudRelaySync } from './cloud-relay.mjs';
 import { deletePage, DIST_DIR, loadData, savePage } from '../scripts/lib/load-data.mjs';
 import { candidateToRecord, proposeCandidates } from '../src/lib/matrix.ts';
 import { auditSite } from '../src/lib/audit.ts';
@@ -53,16 +55,21 @@ const STATIC_MIME = {
 
 export function createZoirisApp({
   dataDir = process.env.ZOIRIS_DATA_DIR,
-  servePublicDist = process.env.SERVE_PUBLIC_DIST !== '0'
+  servePublicDist = process.env.SERVE_PUBLIC_DIST !== '0',
+  pushFetchImpl = globalThis.fetch,
+  relayFetchImpl = globalThis.fetch,
+  enableRelaySync = !dataDir && process.env.ZOIRIS_RELAY_SYNC !== '0'
 } = {}) {
   const ctx = openZoirisDb(dataDir);
   const masterKey = loadOrInitMasterKey(ctx.paths.secretFile);
   const auth = createAuthManager({ ctx, masterKey });
   const storage = createStorageProvider({ paths: ctx.paths });
-  const realtime = createRealtimeAndNotifications({ ctx });
+  const webPush = createWebPushManager({ ctx, fetchImpl: pushFetchImpl });
+  const realtime = createRealtimeAndNotifications({ ctx, webPush });
   const analytics = createAnalyticsService({ ctx });
   const geo = createGeoService({ masterKey });
   const crm = createCrmService({ ctx, storage, realtime, masterKey, geo });
+  const cloudRelay = createCloudRelaySync({ ctx, crm, fetchImpl: relayFetchImpl, autoPoll: enableRelaySync });
 
   const cleanupInterval = setInterval(() => {
     try {
@@ -76,7 +83,7 @@ export function createZoirisApp({
 
   const server = createServer(async (req, res) => {
     try {
-      await routeRequest(req, res, { ctx, masterKey, auth, storage, realtime, analytics, crm, geo, servePublicDist });
+      await routeRequest(req, res, { ctx, masterKey, auth, storage, webPush, cloudRelay, realtime, analytics, crm, geo, servePublicDist });
     } catch (err) {
       const status = Number(err.status) || 500;
       const exposeMessage = status < 500 || status === 503 || status === 507 || err.expose === true;
@@ -97,12 +104,15 @@ export function createZoirisApp({
     ctx,
     auth,
     storage,
+    webPush,
+    cloudRelay,
     realtime,
     analytics,
     crm,
     close: () =>
       new Promise((resolveClose) => {
         clearInterval(cleanupInterval);
+        cloudRelay.close();
         realtime.closeAll();
         server.close(() => {
           try {
@@ -117,7 +127,7 @@ export function createZoirisApp({
 }
 
 async function routeRequest(req, res, deps) {
-  const { ctx, masterKey, auth, storage, realtime, analytics, crm, geo, servePublicDist } = deps;
+  const { ctx, masterKey, auth, storage, webPush, cloudRelay, realtime, analytics, crm, geo, servePublicDist } = deps;
   const url = new URL(req.url || '/', `http://${req.headers.host || '127.0.0.1'}`);
   const pathname = url.pathname;
   const method = (req.method || 'GET').toUpperCase();
@@ -1164,6 +1174,62 @@ async function routeRequest(req, res, deps) {
           now
         );
       return sendJson(res, 200, { ok: true });
+    }
+
+    if (pathname === '/api/owner/push/status' && method === 'GET') {
+      const subs = webPush.listSubscriptions(owner.id);
+      return sendJson(res, 200, {
+        ok: true,
+        supported: true,
+        vapidPublicKey: webPush.publicKey,
+        subscriptionCount: subs.length,
+        subscriptions: subs,
+        relay: cloudRelay.status()
+      });
+    }
+
+    if (pathname === '/api/owner/push/subscribe') {
+      if (method === 'POST') {
+        const body = await readJsonBody(req, 32 * 1024);
+        const subs = webPush.saveSubscription({
+          ownerId: owner.id,
+          subscription: body.subscription || body,
+          deviceLabel: body.deviceLabel || session.deviceLabel || 'Owner Device',
+          deviceKind: body.deviceKind || session.deviceKind || 'phone',
+          userAgent: req.headers['user-agent'] || ''
+        });
+        return sendJson(res, 201, { ok: true, subscriptionCount: subs.length, subscriptions: subs });
+      }
+      if (method === 'DELETE') {
+        const body = await readJsonBody(req, 16 * 1024);
+        const subs = webPush.removeSubscription({
+          ownerId: owner.id,
+          endpoint: body.endpoint || '',
+          id: body.id || ''
+        });
+        return sendJson(res, 200, { ok: true, subscriptionCount: subs.length, subscriptions: subs });
+      }
+    }
+
+    if (pathname === '/api/owner/push/test' && method === 'POST') {
+      const body = await readJsonBody(req, 16 * 1024).catch(() => ({}));
+      const pushRes = await webPush.sendPushToOwner(owner.id, {
+        kind: 'test_push',
+        title: 'Zoiris Background Notification Test',
+        body: 'Success! You will get real alerts like this whenever a customer submits a pickup request — even when the app is closed.',
+        url: '/owner/command-center/',
+        tag: 'zoiris-test-push'
+      });
+      let relayRes = null;
+      if (body.includeRelay && cloudRelay.configured) {
+        relayRes = await cloudRelay.sendTestRelayAlert({ clickUrl: body.clickUrl }).catch((e) => ({ ok: false, error: e.message }));
+      }
+      return sendJson(res, 200, { ok: true, webPush: pushRes, relay: relayRes });
+    }
+
+    if (pathname === '/api/owner/push/sync-relay' && method === 'POST') {
+      const synced = await cloudRelay.syncNow();
+      return sendJson(res, 200, { ok: true, ...synced });
     }
 
     if (pathname === '/api/owner/capacity' && method === 'GET') {

@@ -241,7 +241,147 @@
   /* ---------------- Structured Vault State in localStorage ---------------- */
   const VAULT_KEY = 'zoiris.phoneVault.v1';
   const SESSION_KEY = 'zoiris.phoneSessionId.v1';
+  const RELAY_CFG_KEY = 'zoiris.relayConfig.v1';
+  const DEFAULT_RELAY_URL = 'https://ntfy.sh';
+  const DEFAULT_RELAY_TOPIC = 'zoiris_pickup_eeaf07c6f04d03eee2';
   let seedSeoCache = null;
+
+  function normalizeB64(str) {
+    const s = String(str || '').trim().replace(/-/g, '+').replace(/_/g, '/');
+    return s + '='.repeat((4 - (s.length % 4)) % 4);
+  }
+  function b64ToBytes(str) {
+    const bin = atob(normalizeB64(str));
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  function readRelayConfig() {
+    try {
+      const raw = localStorage.getItem(RELAY_CFG_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            relayUrl: String(parsed.relayUrl || DEFAULT_RELAY_URL).replace(/\/+$/, ''),
+            topic: String(parsed.topic || DEFAULT_RELAY_TOPIC).trim(),
+            privateKeyPkcs8B64Url: String(parsed.privateKeyPkcs8B64Url || '').trim(),
+            pairedAt: parsed.pairedAt || null,
+            lastSyncAt: parsed.lastSyncAt || null,
+            importedCount: Number(parsed.importedCount || 0)
+          };
+        }
+      }
+    } catch {}
+    return {
+      relayUrl: DEFAULT_RELAY_URL,
+      topic: DEFAULT_RELAY_TOPIC,
+      privateKeyPkcs8B64Url: '',
+      pairedAt: null,
+      lastSyncAt: null,
+      importedCount: 0
+    };
+  }
+
+  function writeRelayConfig(cfg) {
+    try {
+      localStorage.setItem(RELAY_CFG_KEY, JSON.stringify(cfg));
+    } catch {}
+  }
+
+  function parsePairingInput(rawInput) {
+    const text = String(rawInput || '').trim();
+    if (!text) return null;
+    let fragment = text;
+    const hashIdx = text.indexOf('#');
+    if (hashIdx >= 0) fragment = text.slice(hashIdx + 1);
+    else if (text.includes('pair=')) {
+      const qIdx = text.indexOf('?');
+      fragment = qIdx >= 0 ? text.slice(qIdx + 1) : text;
+    }
+    if (fragment.includes('pair=')) {
+      const sp = new URLSearchParams(fragment.replace(/^#/, ''));
+      const pk = String(sp.get('pair') || '').trim();
+      if (pk.length > 200) {
+        return {
+          privateKeyPkcs8B64Url: pk,
+          topic: String(sp.get('topic') || DEFAULT_RELAY_TOPIC).trim(),
+          relayUrl: String(sp.get('relay') || DEFAULT_RELAY_URL).trim().replace(/\/+$/, '')
+        };
+      }
+    }
+    // Raw PKCS#8 base64 / base64url key pasted directly
+    const cleaned = text.replace(/\s+/g, '');
+    if (cleaned.length > 400 && /^[A-Za-z0-9+/_=-]+$/.test(cleaned)) {
+      return {
+        privateKeyPkcs8B64Url: cleaned,
+        topic: DEFAULT_RELAY_TOPIC,
+        relayUrl: DEFAULT_RELAY_URL
+      };
+    }
+    return null;
+  }
+
+  async function importRelayPrivateKey(pkcs8B64) {
+    if (!crypto.subtle) throw new Error('WebCrypto is required to decrypt customer form submissions.');
+    const der = b64ToBytes(pkcs8B64);
+    return crypto.subtle.importKey('pkcs8', der, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+  }
+
+  async function decryptRelayEnvelope(envelope, pkcs8B64) {
+    if (!envelope || envelope.v !== 1 || !envelope.ek || !envelope.iv || !envelope.ct) {
+      throw new Error('Malformed encrypted relay envelope.');
+    }
+    const rsaPriv = await importRelayPrivateKey(pkcs8B64);
+    const aesRaw = await crypto.subtle.decrypt({ name: 'RSA-OAEP' }, rsaPriv, b64ToBytes(envelope.ek));
+    const aesKey = await crypto.subtle.importKey('raw', aesRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64ToBytes(envelope.iv) }, aesKey, b64ToBytes(envelope.ct));
+    return JSON.parse(new TextDecoder().decode(plainBuf));
+  }
+
+  function buildRelayStatus() {
+    const cfg = readRelayConfig();
+    const configured = Boolean(cfg.privateKeyPkcs8B64Url);
+    const hostPart = cfg.relayUrl.replace(/^https?:\/\//i, '');
+    return {
+      configured,
+      relayUrl: cfg.relayUrl,
+      topic: cfg.topic,
+      ntfySubscribeUrl: `${cfg.relayUrl}/${cfg.topic}`,
+      ntfyAppDeepLink: `ntfy://${hostPart}/${cfg.topic}`,
+      pairingFragment: configured
+        ? `pair=${encodeURIComponent(cfg.privateKeyPkcs8B64Url)}&topic=${encodeURIComponent(cfg.topic)}`
+        : '',
+      pairedAt: cfg.pairedAt,
+      lastSyncAt: cfg.lastSyncAt,
+      importedCount: cfg.importedCount
+    };
+  }
+
+  // Automatically capture 1-tap `#pair=...` phone pairing links at startup and scrub the URL bar immediately
+  (() => {
+    const rawHash = window.location.hash || '';
+    if (!rawHash.includes('pair=')) return;
+    const parsed = parsePairingInput(rawHash);
+    if (parsed) {
+      const prev = readRelayConfig();
+      writeRelayConfig({
+        relayUrl: parsed.relayUrl || prev.relayUrl || DEFAULT_RELAY_URL,
+        topic: parsed.topic || prev.topic || DEFAULT_RELAY_TOPIC,
+        privateKeyPkcs8B64Url: parsed.privateKeyPkcs8B64Url,
+        pairedAt: new Date().toISOString(),
+        lastSyncAt: prev.lastSyncAt || null,
+        importedCount: prev.importedCount || 0
+      });
+      try {
+        sessionStorage.setItem('zoiris_just_paired_push', '1');
+      } catch {}
+    }
+    try {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    } catch {}
+  })();
 
   async function loadSeedSeo() {
     if (seedSeoCache) return seedSeoCache;
@@ -273,6 +413,7 @@
       coverageOverrides: {},
       draftPages: [],
       gscRows: [],
+      syncedRelayIds: [],
       leadSeq: 0,
       settings: {
         max_photos: 12,
@@ -429,10 +570,338 @@
         }
       } catch {}
       window.__ZOIRIS_LOCAL_VAULT__ = true;
+      startRelayLiveStream();
       return { local: true, cloudOrigin: '' };
     })();
     return modePromise;
   }
+
+  /* ---------------- 24/7 Encrypted Cloud Relay Sync (WebCrypto) ---------------- */
+  let relaySyncing = false;
+  let relayEventSource = null;
+
+  async function syncCloudRelayLeads() {
+    const cfg = readRelayConfig();
+    if (!cfg.privateKeyPkcs8B64Url) {
+      return { ok: false, configured: false, imported: 0 };
+    }
+    if (relaySyncing) {
+      return { ok: true, configured: true, imported: 0 };
+    }
+    relaySyncing = true;
+    let imported = 0;
+    let latestLead = null;
+    try {
+      const pollUrl = `${cfg.relayUrl}/${encodeURIComponent(cfg.topic)}/json?poll=1`;
+      const res = await nativeFetch(pollUrl);
+      if (!res.ok) return { ok: false, configured: true, imported: 0, status: res.status };
+      const text = await res.text();
+      const lines = text
+        .split('\n')
+        .map((l) => l.trim())
+        .filter(Boolean);
+
+      const v = readVault();
+      const seen = new Set(Array.isArray(v.syncedRelayIds) ? v.syncedRelayIds : []);
+      let dirty = false;
+
+      for (const line of lines) {
+        let msg;
+        try {
+          msg = JSON.parse(line);
+        } catch {
+          continue;
+        }
+        if (!msg?.id || msg.event !== 'message') continue;
+        if (seen.has(msg.id)) continue;
+
+        let rawEnvelopeText = '';
+        if (msg.attachment?.url) {
+          try {
+            const attRes = await nativeFetch(msg.attachment.url);
+            if (attRes.ok) rawEnvelopeText = await attRes.text();
+          } catch {
+            continue;
+          }
+        } else if (typeof msg.message === 'string' && msg.message.trim().startsWith('{')) {
+          rawEnvelopeText = msg.message.trim();
+        } else {
+          seen.add(msg.id);
+          dirty = true;
+          continue;
+        }
+
+        let envelope;
+        try {
+          envelope = JSON.parse(rawEnvelopeText);
+        } catch {
+          seen.add(msg.id);
+          dirty = true;
+          continue;
+        }
+        if (envelope?.v !== 1 || !envelope?.ct) {
+          seen.add(msg.id);
+          dirty = true;
+          continue;
+        }
+
+        try {
+          const decrypted = await decryptRelayEnvelope(envelope, cfg.privateKeyPkcs8B64Url);
+          const inq = decrypted.inquiry || decrypted || {};
+          const vGeo = decrypted.verifiedGeo || null;
+          const mediaItems = Array.isArray(decrypted.media) ? decrypted.media : [];
+          const leadNumber =
+            String(decrypted.leadNumber || inq.leadNumber || '').trim() ||
+            `ZJ-${new Date().getFullYear()}-${String(100000 + Math.floor(Math.random() * 900000))}`;
+
+          if (v.leads.some((l) => l.leadNumber === leadNumber || (inq.idempotencyKey && l.idempotencyKey === inq.idempotencyKey))) {
+            seen.add(msg.id);
+            dirty = true;
+            continue;
+          }
+
+          const nowIso = String(decrypted.submittedAt || new Date().toISOString());
+          const fullName = String(inq.name || `${inq.firstName || ''} ${inq.lastName || ''}`.trim() || 'Customer').trim();
+          const phone = String(inq.phone || '').trim();
+          const email = String(inq.email || '').trim();
+          const pickupAddress = String(vGeo?.address?.line || inq.pickupAddress || '').trim();
+          const city = String(vGeo?.address?.city || inq.city || 'Mobile').trim();
+          const stateCode = String(vGeo?.address?.state || inq.state || 'AL').trim() || 'AL';
+          const zipCode = String(vGeo?.address?.zip || inq.zipCode || '').trim();
+          const lat = Number.isFinite(Number(vGeo?.address?.lat)) ? Number(vGeo.address.lat) : null;
+          const lng = Number.isFinite(Number(vGeo?.address?.lng)) ? Number(vGeo.address.lng) : null;
+          const addressStatus = vGeo?.status === 'verified' || vGeo?.status === 'map-match' ? vGeo.status : 'unverified';
+          const rawSource = String(vGeo?.source || 'manual');
+          const addressSource = rawSource === 'us-census' ? 'census' : rawSource;
+          const countyName = String(vGeo?.address?.countyName || 'Mobile / Baldwin Area');
+
+          const phoneNorm = phone.replace(/\D/g, '').replace(/^1(\d{10})$/, '$1');
+          let cust = v.customers.find((c) => String(c.phone || '').replace(/\D/g, '').replace(/^1(\d{10})$/, '$1') === phoneNorm && phoneNorm.length >= 10);
+          if (!cust) {
+            cust = {
+              id: 'cust-' + randHex(6),
+              full_name: fullName,
+              phone,
+              phone_display: phone,
+              email,
+              primary_address: pickupAddress,
+              city,
+              state: stateCode,
+              zip_code: zipCode,
+              customer_type: inq.customerType === 'commercial' ? 'commercial' : 'residential',
+              total_inquiries: 1,
+              completed_pickups: 0,
+              created_at: nowIso,
+              updated_at: nowIso
+            };
+            v.customers.unshift(cust);
+          } else {
+            cust.total_inquiries = Number(cust.total_inquiries || 1) + 1;
+            cust.updated_at = nowIso;
+          }
+
+          const rawItems = Array.isArray(inq.selectedItems) ? inq.selectedItems : [];
+          const mappedItems = rawItems.length
+            ? rawItems.map((it) => {
+                const cat = String(it.category || 'Junk Removal');
+                const itemName = String(it.item_name || it.name || 'Pickup items');
+                return {
+                  category: cat,
+                  item_name: itemName,
+                  is_electronics: Boolean(it.is_electronics || /electronic|e-waste|tv|computer|monitor/i.test(cat + ' ' + itemName)),
+                  requires_confirmation: Boolean(it.requires_confirmation)
+                };
+              })
+            : [
+                {
+                  category: inq.requestedService || 'Junk Removal',
+                  item_name: inq.requestedService || 'Pickup items',
+                  is_electronics: /electronic|e-waste/i.test(String(inq.requestedService || '')),
+                  requires_confirmation: false
+                }
+              ];
+
+          const itemCategories = [...new Set(mappedItems.map((x) => x.category))];
+          const hasElectronics = mappedItems.some((x) => x.is_electronics) || /electronic|e-waste/i.test(String(inq.requestedService || ''));
+          const leadId = 'lead-' + randHex(6);
+          let photoCount = 0;
+          let videoCount = 0;
+
+          for (const m of mediaItems) {
+            if (!m?.dataB64) continue;
+            const bytes = b64ToBytes(m.dataB64);
+            const isVid = m.kind === 'video' || String(m.mime || '').startsWith('video/');
+            const mimeType = m.mime || (isVid ? 'video/mp4' : 'image/jpeg');
+            const blob = new Blob([bytes], { type: mimeType });
+            const attId = 'att-' + randHex(8);
+            await putMediaBlob(attId, blob);
+            const fname = String(m.filename || (isVid ? 'pickup-video.mp4' : 'pickup-photo.jpg'));
+            v.attachments.unshift({
+              id: attId,
+              lead_id: leadId,
+              lead_number: leadNumber,
+              customer_name: fullName,
+              media_kind: isVid ? 'video' : 'photo',
+              mime_type: mimeType,
+              original_filename: fname,
+              safe_filename: fname,
+              byte_size: bytes.byteLength,
+              created_at: nowIso
+            });
+            if (isVid) videoCount++;
+            else photoCount++;
+          }
+
+          const descParts = [inq.itemDescription, inq.otherItemDescription ? `Other items: ${inq.otherItemDescription}` : ''].filter(Boolean);
+          const lead = {
+            id: leadId,
+            idempotencyKey: inq.idempotencyKey || `relay-${msg.id}`,
+            leadNumber,
+            customerId: cust.id,
+            fullName,
+            phone,
+            email,
+            preferredContact: inq.preferredContact || 'phone',
+            customerType: inq.customerType === 'commercial' ? 'commercial' : 'residential',
+            pickupAddress,
+            addressUnit: String(inq.addressUnit || '').trim(),
+            city,
+            state: stateCode,
+            zipCode,
+            countyName,
+            lat,
+            lng,
+            addressStatus,
+            addressSource,
+            matchedAddress: pickupAddress,
+            requestedService: inq.requestedService || 'Junk Removal',
+            itemCategories,
+            selectedItems: mappedItems,
+            hasElectronics,
+            estimatedQuantity: inq.estimatedQuantity || 'Pickup-truck load',
+            itemDescription: descParts.join(' · '),
+            indoorsOrOutdoors: inq.indoorsOrOutdoors || '',
+            floorLevel: inq.floorLevel || '',
+            hasStairs: inq.hasStairs || '',
+            elevatorAvailable: inq.elevatorAvailable || '',
+            accessInstructions: String(inq.accessInstructions || inq.customerNotes || '').trim(),
+            preferredDate: inq.preferredDate || '',
+            preferredWindow: inq.preferredWindow || 'Flexible',
+            status: 'New',
+            priority: 'normal',
+            estimateCents: null,
+            estimateNotes: '',
+            isUnread: true,
+            needsReview: addressStatus === 'unverified',
+            spamScore: 0,
+            spamFlags: addressStatus === 'unverified' ? ['Address not auto-verified'] : [],
+            photoCount,
+            videoCount,
+            sourceType: 'website_form',
+            sourcePagePath: inq.sourcePagePath || '/request-pickup/',
+            deviceCategory: inq.deviceCategory || 'mobile',
+            createdAt: nowIso,
+            updatedAt: nowIso
+          };
+
+          v.leads.unshift(lead);
+          v.timeline.unshift({
+            id: randHex(6),
+            lead_id: lead.id,
+            event_type: 'lead.created',
+            summary: `Website pickup request ${leadNumber} received (${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo${photoCount === 1 ? '' : 's'}` : ''})`,
+            actor_label: fullName,
+            created_at: nowIso
+          });
+          v.notifications.unshift({
+            id: randHex(8),
+            title: `New request ${leadNumber} · ${fullName}`,
+            body: `${inq.requestedService || 'Junk Removal'} in ${city}, ${stateCode}${photoCount ? ` · ${photoCount} photo(s)` : ''} · ${phone}`,
+            is_read: 0,
+            created_at: nowIso
+          });
+
+          latestLead = lead;
+          imported++;
+          seen.add(msg.id);
+          dirty = true;
+        } catch {
+          seen.add(msg.id);
+          dirty = true;
+        }
+      }
+
+      if (dirty) {
+        v.syncedRelayIds = [...seen].slice(-400);
+        writeVault(v);
+      }
+
+      const freshCfg = readRelayConfig();
+      freshCfg.lastSyncAt = new Date().toISOString();
+      freshCfg.importedCount = Number(freshCfg.importedCount || 0) + imported;
+      writeRelayConfig(freshCfg);
+
+      if (imported > 0) {
+        window.dispatchEvent(new CustomEvent('zoiris:vault-lead-synced', { detail: { imported, latestLead } }));
+      }
+      return { ok: true, configured: true, imported };
+    } catch {
+      return { ok: false, configured: true, imported };
+    } finally {
+      relaySyncing = false;
+    }
+  }
+
+  async function sendVaultTestRelayAlert(clickUrl) {
+    const cfg = readRelayConfig();
+    const targetClick =
+      clickUrl || window.location.origin + window.zoirisOwnerUrl('/owner/command-center/');
+    const qs = new URLSearchParams({
+      title: 'Zoiris Lock-Screen Test Alert',
+      message: 'Success! Your 24/7 phone notifications work even when the Zoiris app is closed. Tap to open.',
+      priority: 'high',
+      tags: 'white_check_mark,truck',
+      click: targetClick
+    });
+    const res = await nativeFetch(`${cfg.relayUrl}/${encodeURIComponent(cfg.topic)}?${qs.toString()}`, {
+      method: 'POST',
+      body: 'Zoiris background push test OK'
+    });
+    if (!res.ok) throw new Error(`Notification relay returned HTTP ${res.status}.`);
+    return { ok: true, topic: cfg.topic };
+  }
+
+  function startRelayLiveStream() {
+    const cfg = readRelayConfig();
+    if (!cfg.privateKeyPkcs8B64Url) return;
+    syncCloudRelayLeads().catch(() => {});
+    if (relayEventSource || typeof EventSource === 'undefined') return;
+    try {
+      relayEventSource = new EventSource(`${cfg.relayUrl}/${encodeURIComponent(cfg.topic)}/json`);
+      relayEventSource.onmessage = (ev) => {
+        try {
+          const d = JSON.parse(ev.data || '{}');
+          if (d && d.event === 'message') {
+            syncCloudRelayLeads().catch(() => {});
+          }
+        } catch {}
+      };
+      relayEventSource.onerror = () => {
+        // EventSource automatically reconnects
+      };
+    } catch {}
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && window.__ZOIRIS_LOCAL_VAULT__) {
+      syncCloudRelayLeads().catch(() => {});
+    }
+  });
+  window.addEventListener('focus', () => {
+    if (window.__ZOIRIS_LOCAL_VAULT__) {
+      syncCloudRelayLeads().catch(() => {});
+    }
+  });
 
   /* ---------------- Local API Router ---------------- */
   async function handleLocalApi(pathname, urlObj, method, init) {
@@ -731,12 +1200,13 @@
       if (lat === null || lng === null) {
         try {
           const qAddr = `${pickupAddress}, ${city}, AL ${zipCode}`;
-          const gRes = await nativeFetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=us&q=${encodeURIComponent(qAddr)}`);
+          const gRes = await nativeFetch(`https://photon.komoot.io/api/?limit=1&lang=en&q=${encodeURIComponent(qAddr)}`);
           if (gRes.ok) {
-            const gRows = await gRes.json();
-            if (gRows?.[0]) {
-              lat = Number(gRows[0].lat);
-              lng = Number(gRows[0].lon);
+            const gData = await gRes.json();
+            const coords = gData?.features?.[0]?.geometry?.coordinates;
+            if (Array.isArray(coords) && coords.length >= 2) {
+              lng = Number(coords[0]);
+              lat = Number(coords[1]);
               addressStatus = 'map-match';
               addressSource = 'openstreetmap';
             }
@@ -1476,8 +1946,67 @@
       return jsonRes(200, { ok: true, preferences: v.notifPrefs });
     }
 
+    // Background Phone Push & 24/7 Cloud Relay routes
+    if (pathname === '/api/owner/push/status' && method === 'GET') {
+      return jsonRes(200, {
+        ok: true,
+        localVaultMode: true,
+        supported: 'Notification' in window,
+        vapidPublicKey: '',
+        subscriptionCount: 0,
+        subscriptions: [],
+        relay: buildRelayStatus()
+      });
+    }
+
+    if (pathname === '/api/owner/push/pair' && method === 'POST') {
+      const parsed = parsePairingInput(body.pairingInput || body.privateKey || '');
+      if (!parsed) {
+        return jsonRes(400, { ok: false, error: 'Paste your full Phone Pairing Link (or pairing key) to connect encrypted form decryption.' });
+      }
+      try {
+        await importRelayPrivateKey(parsed.privateKeyPkcs8B64Url);
+      } catch {
+        return jsonRes(400, { ok: false, error: 'That pairing key is incomplete or invalid. Copy the full Phone Pairing Link and try again.' });
+      }
+      const prev = readRelayConfig();
+      writeRelayConfig({
+        relayUrl: parsed.relayUrl || prev.relayUrl || DEFAULT_RELAY_URL,
+        topic: parsed.topic || prev.topic || DEFAULT_RELAY_TOPIC,
+        privateKeyPkcs8B64Url: parsed.privateKeyPkcs8B64Url,
+        pairedAt: new Date().toISOString(),
+        lastSyncAt: prev.lastSyncAt || null,
+        importedCount: prev.importedCount || 0
+      });
+      if (relayEventSource) {
+        try {
+          relayEventSource.close();
+        } catch {}
+        relayEventSource = null;
+      }
+      startRelayLiveStream();
+      const syncRes = await syncCloudRelayLeads();
+      return jsonRes(200, { ok: true, imported: syncRes.imported || 0, relay: buildRelayStatus() });
+    }
+
+    if (pathname === '/api/owner/push/sync-relay' && method === 'POST') {
+      const syncRes = await syncCloudRelayLeads();
+      return jsonRes(200, { ok: true, ...syncRes, relay: buildRelayStatus() });
+    }
+
+    if (pathname === '/api/owner/push/test' && method === 'POST') {
+      const relayRes = await sendVaultTestRelayAlert(body.clickUrl);
+      return jsonRes(200, {
+        ok: true,
+        localVaultMode: true,
+        webPush: { sent: 0, total: 0 },
+        relay: relayRes
+      });
+    }
+
     if (pathname === '/api/owner/settings') {
       if (method === 'GET') {
+        const relaySt = buildRelayStatus();
         return jsonRes(200, {
           ok: true,
           localVaultMode: true,
@@ -1485,6 +2014,11 @@
           settings: v.settings,
           integrations: [
             { id: 'vault', name: 'On-Device Encrypted Phone Vault (24/7 GitHub Pages)', status: 'connected' },
+            {
+              id: 'webpush',
+              name: '24/7 Customer Form Relay & Lock-Screen Phone Push',
+              status: relaySt.configured ? 'connected' : 'not_configured'
+            },
             { id: 'cloud', name: 'Optional Live Cloud CRM Sync Server', status: localStorage.getItem('zoiris.cloudApiUrl') ? 'configured' : 'not_configured' }
           ]
         });

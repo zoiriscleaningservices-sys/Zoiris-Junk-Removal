@@ -6,7 +6,10 @@
  * By default, the public static site talks to `/api/public/*` on `PUBLIC_API_BASE`
  * (empty string = same origin when hosted behind the Zoiris Command Center server
  * or reverse proxy, or a dedicated API origin such as `https://crm.zoirisjunkremoval.com`).
- * Optional third-party webhook fallback (`PUBLIC_FORM_ENDPOINT`) remains supported.
+ *
+ * On static GitHub Pages (`github.io`), when no `/api/public/*` server is reachable,
+ * `QuoteForm.astro` encrypts pickup requests end-to-end in the browser using ONLY the
+ * one-way RSA-OAEP-2048 Public Key below and dispatches an instant lock-screen push alert.
  */
 export type FormProvider = 'zoiris-crm' | 'formspree' | 'gohighlevel' | 'custom' | 'none';
 
@@ -34,6 +37,19 @@ export const integrations = {
     addressVerifyEndpoint: `${apiBase}/api/public/address/verify`,
     addressReverseEndpoint: `${apiBase}/api/public/address/reverse`,
     allowUploads: resolvedProvider === 'zoiris-crm' || env.PUBLIC_FORM_ALLOW_UPLOADS === 'true'
+  },
+  cloudRelay: {
+    enabledByBuild: env.PUBLIC_STATIC_CLOUD_MODE === '1',
+    relayUrl: (env.PUBLIC_RELAY_URL ?? 'https://ntfy.sh').trim().replace(/\/+$/, ''),
+    topic: (env.PUBLIC_RELAY_TOPIC ?? 'zoiris_pickup_eeaf07c6f04d03eee2').trim(),
+    // One-way RSA-OAEP-2048 SPKI Public Key (can ONLY encrypt customer submissions; private key never leaves .zoiris-private)
+    publicKeySpkiB64: (
+      env.PUBLIC_RELAY_PUBKEY ??
+      'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1Ag5ROEE2hWFrLfIqhIljK2LsuqatCQPuE/XnT17uv9YMsO7HJ98HzzXH/Ol8tw/5gSmuIT7Chzt/B8ZyXk9eZVxtJMk81B919LOQbwORfz8o/yyauplw8BXLvBUAReEchbhboN6l8iqSCmj4zaglObNEAxnxZPijJBnPR5ujDa1xKA+/vY42metVDXAgLmytlgK9gwKrJ+8cJVt/nFMdiLpI+4nu7Dqyw9I45S4KlXzkLLIpvB3DG3axxFN7dGhH8f1JM3VP0uAw29xASMQ/S/G/x4zGOgplqz3Zs4ZLdI6hpIriN3WBfrMQ6ClwbD3WUT+smnDzAaithEclr+hQIDAQAB'
+    ).trim(),
+    ownerClickUrl: (
+      env.PUBLIC_OWNER_APP_URL ?? 'https://zoiriscleaningservices-sys.github.io/Zoiris-Junk-Removal/owner/command-center/?sync=1'
+    ).trim()
   },
   analytics: {
     eventsEndpoint: `${apiBase}/api/public/events`,

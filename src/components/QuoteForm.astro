@@ -21,6 +21,7 @@ interface Props {
 }
 const { id = 'pickup-form', compact = false } = Astro.props;
 const f = integrations.form;
+const relay = integrations.cloudRelay;
 
 const CATEGORIES = [
   { key: 'Furniture', label: 'Furniture', hint: 'Couches, beds, tables', icon: 'sofa', items: ['Couches', 'Chairs', 'Tables', 'Mattresses', 'Bed frames', 'Desks', 'Dressers', 'Cabinets'] },
@@ -91,6 +92,11 @@ const STEPS = [
     data-suggest-endpoint={f.addressSuggestEndpoint}
     data-verify-endpoint={f.addressVerifyEndpoint}
     data-reverse-endpoint={f.addressReverseEndpoint}
+    data-cloud-relay={relay.enabledByBuild ? '1' : '0'}
+    data-relay-url={relay.relayUrl}
+    data-relay-topic={relay.topic}
+    data-relay-pubkey={relay.publicKeySpkiB64}
+    data-relay-click={relay.ownerClickUrl}
   >
     <div class="hp-field" aria-hidden="true">
       <label for={`${id}-gotcha`}>Leave this field empty</label>
@@ -476,10 +482,12 @@ const STEPS = [
     lat: number | null;
     lng: number | null;
     countyName: string;
+    countyFips?: string;
+    source?: string;
     token: string;
     status: string;
   };
-  type Suggestion = { label: string; line: string; city: string; state: string; zip: string; lat?: number; lng?: number };
+  type Suggestion = { label: string; line: string; city: string; state: string; zip: string; lat?: number; lng?: number; countyName?: string };
   type QueuedMedia = {
     uid: string;
     file: File;
@@ -508,6 +516,370 @@ const STEPS = [
     const ct = res.headers.get('content-type') || '';
     if (!ct.includes('application/json')) return { ok: false, status: res.status, data: null };
     return { ok: res.ok, status: res.status, data: await res.json() };
+  }
+
+  /* -------- Live Browser Geocoding, Spam Guard & E2E Encryption (24/7 Static Mode) -------- */
+  const SERVICE_BBOX: [number, number, number, number] = [-88.48, 30.13, -87.36, 31.34];
+  const DIRECTIONALS = new Set(['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']);
+  const DISPOSABLE_DOMAINS = new Set([
+    'mailinator.com', 'guerrillamail.com', 'sharklasers.com', '10minutemail.com', 'tempmail.com', 'temp-mail.org',
+    'yopmail.com', 'trashmail.com', 'getnada.com', 'maildrop.cc', 'throwawaymail.com', 'fakeinbox.com',
+    'burnermail.io', 'mailnesia.com', 'inboxkitten.com', 'mail.tm', 'discard.email', 'fakemail.net', 'example.com', 'example.org', 'test.com'
+  ]);
+  const PROMO_PATTERNS = [
+    /\bseo\b/i, /backlinks?/i, /guest\s*post/i, /first page of google/i, /rank(ing)? (higher|#?1)/i,
+    /web\s*design/i, /website (redesign|traffic)/i, /digital marketing/i, /marketing (services|agency)/i,
+    /lead generation/i, /crypto|bitcoin|forex|binary option/i, /casino|betting|viagra|cialis/i,
+    /whats\s?app|telegram/i, /unsubscribe/i, /dear (sir|madam|business owner)/i
+  ];
+  const URL_RE = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|io|ru|xyz|info|biz|top|site|online|shop)\b)/gi;
+  const URL_TEST = new RegExp(URL_RE.source, 'i');
+
+  function titleCaseAddr(s = '') {
+    return String(s)
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((w) => {
+        const up = w.toUpperCase();
+        if (DIRECTIONALS.has(up) || /^\d/.test(w)) return up;
+        return up.charAt(0) + up.slice(1).toLowerCase();
+      })
+      .join(' ');
+  }
+  function countyFromText(name = '') {
+    const n = String(name).toLowerCase();
+    if (n.startsWith('mobile')) return { fips: '01097', name: 'Mobile County' };
+    if (n.startsWith('baldwin')) return { fips: '01003', name: 'Baldwin County' };
+    return null;
+  }
+  function inServiceBbox(lat: number, lng: number) {
+    return lng >= SERVICE_BBOX[0] && lng <= SERVICE_BBOX[2] && lat >= SERVICE_BBOX[1] && lat <= SERVICE_BBOX[3];
+  }
+
+  async function browserSuggest(rawQ: string): Promise<Suggestion[] | null> {
+    const q = rawQ.trim().slice(0, 120);
+    if (q.length < 3) return [];
+    const typedNumber = (q.match(/^\s*(\d{1,6})\b/) || [])[1] || '';
+    const url =
+      'https://photon.komoot.io/api/?' +
+      new URLSearchParams({
+        q: /mobile|baldwin|alabama|\bal\b/i.test(q) ? q : `${q}, Alabama`,
+        limit: '10',
+        lang: 'en',
+        lat: '30.69',
+        lon: '-88.04',
+        bbox: SERVICE_BBOX.join(',')
+      }).toString();
+    const res = await fetch(url, { headers: { Accept: 'application/json' } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const seen = new Set<string>();
+    const out: Suggestion[] = [];
+    for (const f of data.features || []) {
+      const p = f.properties || {};
+      const [lng, lat] = f.geometry?.coordinates || [];
+      if (p.countrycode && p.countrycode !== 'US') continue;
+      if (typeof lat !== 'number' || typeof lng !== 'number' || !inServiceBbox(lat, lng)) continue;
+      const county = countyFromText(p.county || '');
+      if (!county) continue;
+      const streetName = p.street || (p.osm_key === 'highway' || p.type === 'street' ? p.name : '');
+      if (!streetName) continue;
+      if (typedNumber && p.housenumber && String(p.housenumber) !== typedNumber) continue;
+      const number = p.housenumber || typedNumber;
+      if (!number) continue;
+      const line = `${number} ${titleCaseAddr(streetName)}`;
+      const city = p.city || p.locality || p.district || '';
+      const zip = p.postcode && /^\d{5}/.test(String(p.postcode)) ? String(p.postcode).slice(0, 5) : '';
+      const label = [line, city, `AL${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+      const key = `${line}|${city}`.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push({ label, line, city, state: 'AL', zip, lat: Number(lat.toFixed(6)), lng: Number(lng.toFixed(6)), countyName: county.name });
+      if (out.length >= 6) break;
+    }
+    return out;
+  }
+
+  async function browserReverse(lat: number, lng: number): Promise<{ suggestions: Suggestion[]; message?: string } | null> {
+    if (!inServiceBbox(lat, lng)) {
+      return { suggestions: [], message: 'Your current location looks outside Mobile and Baldwin counties. Type the pickup address instead.' };
+    }
+    const res = await fetch(
+      'https://photon.komoot.io/reverse?' + new URLSearchParams({ lat: String(lat), lon: String(lng), limit: '5', lang: 'en' }).toString(),
+      { headers: { Accept: 'application/json' } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const out: Suggestion[] = [];
+    const seen = new Set<string>();
+    for (const f of data.features || []) {
+      const p = f.properties || {};
+      const [flng, flat] = f.geometry?.coordinates || [];
+      if (!p.housenumber || !(p.street || p.name)) continue;
+      const county = countyFromText(p.county || '');
+      if (!county) continue;
+      const line = `${p.housenumber} ${titleCaseAddr(p.street || p.name)}`;
+      const city = p.city || p.locality || p.district || '';
+      const zip = p.postcode ? String(p.postcode).slice(0, 5) : '';
+      const label = [line, city, `AL${zip ? ' ' + zip : ''}`].filter(Boolean).join(', ');
+      if (seen.has(label)) continue;
+      seen.add(label);
+      out.push({ label, line, city, state: 'AL', zip, lat: Number(flat.toFixed(6)), lng: Number(flng.toFixed(6)), countyName: county.name });
+    }
+    return { suggestions: out };
+  }
+
+  function censusJsonpLookup(oneLine: string): Promise<any | null> {
+    return new Promise((resolve) => {
+      const cbName = `__zCensus_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const win = window as unknown as Record<string, any>;
+      const script = document.createElement('script');
+      let settled = false;
+      const done = (val: any) => {
+        if (settled) return;
+        settled = true;
+        delete win[cbName];
+        script.remove();
+        resolve(val);
+      };
+      const timer = window.setTimeout(() => done(null), 6500);
+      win[cbName] = (data: any) => {
+        window.clearTimeout(timer);
+        done(data);
+      };
+      script.onerror = () => {
+        window.clearTimeout(timer);
+        done(null);
+      };
+      script.src =
+        'https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?' +
+        new URLSearchParams({
+          address: oneLine,
+          benchmark: 'Public_AR_Current',
+          vintage: 'Current_Current',
+          layers: 'Counties',
+          format: 'jsonp',
+          callback: cbName
+        }).toString();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function browserVerify(input: { line: string; city?: string; zip?: string }) {
+    const line = (input.line || '').trim();
+    const typedNumber = (line.match(/^(\d{1,6})\b/) || [])[1] || '';
+    if (!typedNumber || line.length < 5 || /fake|nowhere|test street|asdf/i.test(line)) {
+      return { status: 'not-found' as const, message: 'Start with the house or building number (for example, 1450 Government St).' };
+    }
+    const oneLine = [line, input.city || '', `AL ${input.zip || ''}`.trim()].filter(Boolean).join(', ');
+
+    // 1. Official U.S. Census Bureau address-range + county verification (JSONP)
+    const census = await censusJsonpLookup(oneLine);
+    const match = census?.result?.addressMatches?.[0];
+    if (match) {
+      const c = match.addressComponents || {};
+      const num = (String(match.matchedAddress || '').match(/^(\d+[A-Z]?)/i) || [])[1] || typedNumber;
+      const streetParts = [c.preQualifier, c.preDirection, c.preType, c.streetName, c.suffixType, c.suffixDirection, c.suffixQualifier]
+        .filter(Boolean)
+        .join(' ');
+      const county = match.geographies?.Counties?.[0] || {};
+      const fips = String(county.GEOID || '');
+      if (fips && fips !== '01097' && fips !== '01003') {
+        return {
+          status: 'outside-area' as const,
+          message: `That address appears to be in ${county.NAME || 'another county'}, outside our Mobile & Baldwin County service area. Call ${PHONE} if you are right on the line.`
+        };
+      }
+      return {
+        status: 'verified' as const,
+        source: 'census',
+        address: {
+          line: titleCaseAddr(`${num} ${streetParts}`),
+          city: titleCaseAddr(c.city || input.city || ''),
+          state: String(c.state || 'AL').toUpperCase(),
+          zip: String(c.zip || input.zip || ''),
+          lat: Number(Number(match.coordinates?.y).toFixed(6)),
+          lng: Number(Number(match.coordinates?.x).toFixed(6)),
+          countyFips: fips || '01097',
+          countyName: fips === '01003' ? 'Baldwin County' : 'Mobile County'
+        }
+      };
+    }
+
+    // 2. OpenStreetMap Photon house-number fallback (brand-new subdivisions)
+    try {
+      const res = await fetch(
+        'https://photon.komoot.io/api/?' + new URLSearchParams({ q: oneLine, limit: '5', lang: 'en', bbox: SERVICE_BBOX.join(',') }).toString(),
+        { headers: { Accept: 'application/json' } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        for (const f of data.features || []) {
+          const p = f.properties || {};
+          const [lng, lat] = f.geometry?.coordinates || [];
+          if (String(p.housenumber || '') !== typedNumber) continue;
+          const county = countyFromText(p.county || '');
+          if (!county || !inServiceBbox(lat, lng)) continue;
+          return {
+            status: 'map-match' as const,
+            source: 'openstreetmap',
+            address: {
+              line: `${typedNumber} ${titleCaseAddr(p.street || p.name || '')}`,
+              city: titleCaseAddr(p.city || p.locality || input.city || ''),
+              state: 'AL',
+              zip: p.postcode ? String(p.postcode).slice(0, 5) : input.zip || '',
+              lat: Number(lat.toFixed(6)),
+              lng: Number(lng.toFixed(6)),
+              countyFips: county.fips,
+              countyName: county.name
+            }
+          };
+        }
+      } else if (!census) {
+        return { status: 'unavailable' as const };
+      }
+    } catch {
+      if (!census) return { status: 'unavailable' as const };
+    }
+
+    return {
+      status: 'not-found' as const,
+      message: `We couldn't confirm that street address in Mobile or Baldwin County. Double-check the house number and street name, or call ${PHONE}.`
+    };
+  }
+
+  function browserScreen(body: Record<string, any>) {
+    const fieldErrors: Record<string, string> = {};
+    const flags: string[] = [];
+    let score = 0;
+    let d = String(body.phone || '').replace(/\D/g, '');
+    if (d.length === 11 && d.startsWith('1')) d = d.slice(1);
+    if (d.length !== 10) fieldErrors.phone = 'Enter a 10-digit US phone number.';
+    else {
+      const area = d.slice(0, 3);
+      const exch = d.slice(3, 6);
+      const line = d.slice(6);
+      if (/^[01]/.test(area) || /^[01]/.test(exch) || /^\d11$/.test(area)) fieldErrors.phone = 'That phone number is not a valid US number.';
+      else if (/^(\d)\1{9}$/.test(d) || d === '1234567890' || d === '0123456789' || d === '9876543210') {
+        fieldErrors.phone = 'Please enter your real phone number so we can reach you.';
+      } else if (exch === '555' && /^01\d\d$/.test(line)) {
+        fieldErrors.phone = '555-01xx numbers are fictional. Please enter your real phone number.';
+      }
+    }
+    for (const key of ['firstName', 'lastName']) {
+      const v = String(body[key] || '');
+      if (!v.trim()) continue;
+      if (URL_TEST.test(v)) fieldErrors[key] = 'Names cannot contain links.';
+      else if (!/\p{L}/u.test(v)) fieldErrors[key] = 'Please enter your real name.';
+    }
+    const email = String(body.email || '').trim().toLowerCase();
+    if (email) {
+      const domain = email.split('@')[1] || '';
+      if (DISPOSABLE_DOMAINS.has(domain)) {
+        fieldErrors.email = 'Please use an email you actually check (temporary inboxes are not accepted), or leave it blank.';
+      }
+    }
+    const text = ['itemDescription', 'otherItemDescription', 'accessInstructions', 'customerNotes'].map((k) => String(body[k] || '')).join(' \n ');
+    const urlCount = (text.match(URL_RE) || []).length;
+    if (urlCount) {
+      flags.push(`${urlCount} link(s) in message`);
+      score += Math.min(2, urlCount) * 35;
+    }
+    let promoHits = 0;
+    for (const re of PROMO_PATTERNS) if (re.test(text)) promoHits++;
+    if (promoHits) {
+      flags.push(`Promotional wording (${promoHits})`);
+      score += Math.min(3, promoHits) * 25;
+    }
+    const startedAt = Number(body.formStartedAt || 0);
+    if (startedAt > 0 && Date.now() - startedAt < 3500) {
+      flags.push('Submitted very quickly');
+      score += 35;
+    }
+    const blocked = score >= 70;
+    return {
+      blocked,
+      message: blocked ? `This request looks automated or promotional, so it was not sent. If you need a pickup, please call ${PHONE}.` : undefined,
+      fieldErrors,
+      score,
+      flags
+    };
+  }
+
+  function bytesToBase64(bytes: Uint8Array): string {
+    let bin = '';
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      bin += String.fromCharCode(...bytes.subarray(i, i + chunk));
+    }
+    return btoa(bin);
+  }
+  function base64ToBytes(b64: string): Uint8Array {
+    const clean = b64.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = clean + '='.repeat((4 - (clean.length % 4)) % 4);
+    const bin = atob(pad);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  async function compressPhotoToJpegB64(file: File, maxDim = 920, quality = 0.74): Promise<string> {
+    const bitmapUrl = URL.createObjectURL(file);
+    try {
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const el = new Image();
+        el.onload = () => resolve(el);
+        el.onerror = () => reject(new Error('Image decode failed'));
+        el.src = bitmapUrl;
+      });
+      let w = img.naturalWidth || 640;
+      let h = img.naturalHeight || 480;
+      if (w > maxDim || h > maxDim) {
+        const ratio = Math.min(maxDim / w, maxDim / h);
+        w = Math.max(1, Math.round(w * ratio));
+        h = Math.max(1, Math.round(h * ratio));
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx2d = canvas.getContext('2d');
+      if (!ctx2d) throw new Error('Canvas unavailable');
+      ctx2d.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      return dataUrl.split(',')[1] || '';
+    } finally {
+      URL.revokeObjectURL(bitmapUrl);
+    }
+  }
+
+  async function fileToBase64(file: File): Promise<string> {
+    const buf = await file.arrayBuffer();
+    return bytesToBase64(new Uint8Array(buf));
+  }
+
+  async function encryptSealedForOwner(payloadObj: unknown, publicKeySpkiB64: string) {
+    const spkiBytes = base64ToBytes(publicKeySpkiB64);
+    const rsaKey = await crypto.subtle.importKey(
+      'spki',
+      spkiBytes.buffer as ArrayBuffer,
+      { name: 'RSA-OAEP', hash: 'SHA-256' },
+      false,
+      ['encrypt']
+    );
+    const aesKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt']);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const plainBytes = new TextEncoder().encode(JSON.stringify(payloadObj));
+    const ctBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aesKey, plainBytes);
+    const rawAes = await crypto.subtle.exportKey('raw', aesKey);
+    const wrappedKeyBuf = await crypto.subtle.encrypt({ name: 'RSA-OAEP' }, rsaKey, rawAes);
+    return {
+      v: 1,
+      alg: 'RSA-OAEP-256+A256GCM',
+      ek: bytesToBase64(new Uint8Array(wrappedKeyBuf)),
+      iv: bytesToBase64(iv),
+      ct: bytesToBase64(new Uint8Array(ctBuf))
+    };
   }
 
   /* ----------------------------- tile map ----------------------------- */
@@ -888,19 +1260,41 @@ const STEPS = [
       saveDraft();
     };
 
+    const cloudRelayAllowed = form.dataset.cloudRelay === '1' || /\.github\.io$/i.test(window.location.hostname);
+    const relayUrl = (form.dataset.relayUrl || 'https://ntfy.sh').replace(/\/+$/, '');
+    const relayTopic = form.dataset.relayTopic || '';
+    const relayPubKey = form.dataset.relayPubkey || '';
+    const relayClick = form.dataset.relayClick || `${window.location.origin}/owner/command-center/?sync=1`;
+    let useBrowserGeo = false;
+
     const verifyEndpoint = form.dataset.verifyEndpoint || '';
     const verifyAddress = async (input: { line: string; city?: string; zip?: string }): Promise<'ok' | 'bad' | 'offline'> => {
-      if (!verifyEndpoint) return 'offline';
+      if (!verifyEndpoint && !cloudRelayAllowed) return 'offline';
       busy(true);
       setErr('pickupAddress', '');
       try {
-        const { data } = await postJson(verifyEndpoint, { line: input.line, city: input.city || '', state: 'AL', zip: input.zip || '' });
+        let data: any = null;
+        if (verifyEndpoint && !useBrowserGeo) {
+          const res = await postJson(verifyEndpoint, { line: input.line, city: input.city || '', state: 'AL', zip: input.zip || '' }).catch(() => ({ data: null }));
+          data = res.data;
+        }
+        if (!data && cloudRelayAllowed) {
+          useBrowserGeo = true;
+          data = await browserVerify(input);
+        }
         if (!data) {
           lookupOffline = true;
           return 'offline';
         }
         if ((data.status === 'verified' || data.status === 'map-match') && data.address) {
-          showVerified({ ...data.address, token: data.token || '', status: data.status, countyName: data.address.countyName || '' });
+          showVerified({
+            ...data.address,
+            token: data.token || 'browser-verified',
+            status: data.status,
+            source: data.source || '',
+            countyFips: data.address.countyFips || '',
+            countyName: data.address.countyName || ''
+          });
           return 'ok';
         }
         if (data.status === 'unavailable') return 'offline';
@@ -929,20 +1323,28 @@ const STEPS = [
       setErr('pickupAddress', '');
       window.clearTimeout(suggestTimer);
       const q = addrInput.value.trim();
-      if (q.length < 4 || lookupOffline || !suggestEndpoint) return closeList();
+      if (q.length < 4 || lookupOffline || (!suggestEndpoint && !cloudRelayAllowed)) return closeList();
       suggestTimer = window.setTimeout(async () => {
         const seq = ++suggestSeq;
         busy(true);
         try {
-          const { data } = await postJson(suggestEndpoint, { q });
-          if (seq !== suggestSeq) return;
-          if (!data) {
+          let items: Suggestion[] | null = null;
+          if (suggestEndpoint && !useBrowserGeo) {
+            const { data } = await postJson(suggestEndpoint, { q }).catch(() => ({ data: null }));
+            if (seq !== suggestSeq) return;
+            if (data) items = data.suggestions || [];
+          }
+          if (items === null && cloudRelayAllowed) {
+            useBrowserGeo = true;
+            items = await browserSuggest(q).catch(() => null);
+            if (seq !== suggestSeq) return;
+          }
+          if (items === null) {
             lookupOffline = true;
             closeList();
             enterManual('Address search is unavailable right now — please type your address below.');
             return;
           }
-          const items: Suggestion[] = data.suggestions || [];
           renderList(items, /^\d/.test(q) ? 'No match yet — keep typing, or tap "Check this address".' : 'Start with your house number, e.g. 1450 Government St');
         } catch {
           lookupOffline = true;
@@ -991,7 +1393,7 @@ const STEPS = [
 
     $('[data-address-locate]')?.addEventListener('click', () => {
       const reverseUrl = form.dataset.reverseEndpoint || '';
-      if (!('geolocation' in navigator) || !reverseUrl) {
+      if (!('geolocation' in navigator) || (!reverseUrl && !cloudRelayAllowed)) {
         setErr('pickupAddress', 'Location is not available on this device — please type your address.');
         return;
       }
@@ -999,7 +1401,15 @@ const STEPS = [
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
           try {
-            const { data } = await postJson(reverseUrl, { lat: pos.coords.latitude, lng: pos.coords.longitude });
+            let data: any = null;
+            if (reverseUrl && !useBrowserGeo) {
+              const res = await postJson(reverseUrl, { lat: pos.coords.latitude, lng: pos.coords.longitude }).catch(() => ({ data: null }));
+              data = res.data;
+            }
+            if (!data && cloudRelayAllowed) {
+              useBrowserGeo = true;
+              data = await browserReverse(pos.coords.latitude, pos.coords.longitude);
+            }
             if (!data) {
               enterManual('Address lookup is unavailable right now — please type your address below.');
               return;
@@ -1263,7 +1673,7 @@ const STEPS = [
 
     async function finalize() {
       if (!savedInquiry) return;
-      if (queuedMedia.length) {
+      if (queuedMedia.length && savedInquiry.uploadToken && savedInquiry.uploadToken !== 'cloud-relay') {
         try {
           await fetch(form.dataset.uploadCompleteEndpoint || '/api/public/uploads/complete', {
             method: 'POST',
@@ -1382,18 +1792,170 @@ const STEPS = [
             utmCampaign: utm.campaign || '',
             deviceCategory: window.innerWidth < 768 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop'
           };
-          const res = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Idempotency-Key': idempotencyKey },
-            body: JSON.stringify(payload)
-          });
-          const ct = res.headers.get('content-type') || '';
-          if ((res.status === 404 || res.status === 405) && !ct.includes('application/json')) {
-            showStatus('info', `Online requests are offline on this preview, so your request was <strong>not saved</strong>. Please call <a href="tel:+12519308621">${PHONE}</a> and we will take it by phone.`);
+          let res: Response | null = null;
+          let ct = '';
+          try {
+            res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Idempotency-Key': idempotencyKey },
+              body: JSON.stringify(payload)
+            });
+            ct = res.headers.get('content-type') || '';
+          } catch (netErr) {
+            if (!cloudRelayAllowed || !relayTopic || !relayPubKey) throw netErr;
+          }
+
+          const staticNoApi = !res || ((res.status === 404 || res.status === 405) && !ct.includes('application/json'));
+          if (staticNoApi) {
+            if (!cloudRelayAllowed || !relayTopic || !relayPubKey) {
+              showStatus('info', `Online requests are offline on this preview, so your request was <strong>not saved</strong>. Please call <a href="tel:+12519308621">${PHONE}</a> and we will take it by phone.`);
+              return;
+            }
+
+            // 1. Run full anti-spam / anti-scam validation in browser
+            const screen = browserScreen(payload);
+            if (screen.blocked) {
+              showStatus('error', esc(screen.message || 'Request blocked by spam filter.'));
+              return;
+            }
+            if (Object.keys(screen.fieldErrors).length) {
+              let firstStep = TOTAL;
+              for (const [k, msg] of Object.entries(screen.fieldErrors)) {
+                setErr(k, msg);
+                firstStep = Math.min(firstStep, stepForField[k] || TOTAL);
+              }
+              if (firstStep !== step) goTo(firstStep);
+              showStatus('error', 'Please fix the highlighted fields and try again.');
+              return;
+            }
+
+            // 2. Ensure address is verified when online
+            if (!verified) {
+              const vCheck = await browserVerify({ line: payload.pickupAddress, city: payload.city, zip: payload.zipCode });
+              if (vCheck.status === 'verified' || vCheck.status === 'map-match') {
+                showVerified({
+                  ...vCheck.address,
+                  token: 'browser-verified',
+                  status: vCheck.status,
+                  source: vCheck.source || '',
+                  countyFips: vCheck.address.countyFips || '',
+                  countyName: vCheck.address.countyName || ''
+                });
+                payload.pickupAddress = vCheck.address.line;
+                payload.city = vCheck.address.city;
+                payload.zipCode = vCheck.address.zip;
+              } else if (vCheck.status === 'outside-area' || vCheck.status === 'not-found') {
+                setErr('pickupAddress', vCheck.message);
+                goTo(3);
+                showStatus('error', esc(vCheck.message));
+                return;
+              }
+            }
+
+            // 3. Compress photos & prepare encrypted payload
+            const relayMedia: Array<{ filename: string; mime: string; kind: 'photo' | 'video'; dataB64: string }> = [];
+            let photoCapCount = 0;
+            for (const item of queuedMedia) {
+              item.state = 'uploading';
+              item.progress = 35;
+              renderMedia();
+              try {
+                if (item.kind === 'photo' && photoCapCount < 6) {
+                  const dataB64 = await compressPhotoToJpegB64(item.file, 920, 0.74);
+                  relayMedia.push({
+                    filename: item.file.name.replace(/\.[^.]+$/, '') + '.jpg',
+                    mime: 'image/jpeg',
+                    kind: 'photo',
+                    dataB64
+                  });
+                  photoCapCount++;
+                } else if (item.kind === 'video' && item.file.size <= 1200 * 1024) {
+                  const dataB64 = await fileToBase64(item.file);
+                  relayMedia.push({
+                    filename: item.file.name,
+                    mime: item.file.type || 'video/mp4',
+                    kind: 'video',
+                    dataB64
+                  });
+                } else {
+                  payload.customerNotes = [
+                    payload.customerNotes,
+                    `[Customer also selected ${item.kind} "${item.file.name}" (${fmtBytes(item.file.size)}) — ask customer to text if needed]`
+                  ]
+                    .filter(Boolean)
+                    .join('\n');
+                }
+                item.state = 'uploaded';
+                item.progress = 100;
+                renderMedia();
+              } catch {
+                item.state = 'uploaded';
+                item.progress = 100;
+                renderMedia();
+              }
+            }
+
+            const randBuf = new Uint32Array(1);
+            crypto.getRandomValues(randBuf);
+            const leadNumber = `ZJ-${new Date().getFullYear()}-${String(100000 + (randBuf[0] % 900000))}`;
+            const verifiedGeo = verified
+              ? {
+                  status: verified.status,
+                  source: verified.source || 'us-census',
+                  address: {
+                    line: verified.line,
+                    city: verified.city,
+                    state: verified.state || 'AL',
+                    zip: verified.zip,
+                    lat: verified.lat,
+                    lng: verified.lng,
+                    countyFips: verified.countyFips || '',
+                    countyName: verified.countyName || ''
+                  }
+                }
+              : null;
+
+            const sealedEnvelope = await encryptSealedForOwner(
+              {
+                leadNumber,
+                submittedAt: new Date().toISOString(),
+                inquiry: { ...payload, expectedFiles: relayMedia.length },
+                verifiedGeo,
+                media: relayMedia
+              },
+              relayPubKey
+            );
+
+            const alertSummary = [
+              `${payload.city || 'Mobile'}, AL`,
+              `${payload.requestedService}${payload.estimatedQuantity ? ` (${payload.estimatedQuantity})` : ''}`,
+              relayMedia.length ? `${relayMedia.length} file(s) attached` : 'No photos'
+            ].join(' · ');
+
+            const qs = new URLSearchParams({
+              title: `New Zoiris Pickup Request (${leadNumber})`,
+              message: `${alertSummary} - Tap to open Zoiris App`,
+              priority: 'high',
+              tags: 'truck,bell',
+              filename: 'zoiris-lead.enc',
+              click: relayClick
+            });
+
+            const relayRes = await fetch(`${relayUrl}/${encodeURIComponent(relayTopic)}?${qs.toString()}`, {
+              method: 'POST',
+              body: JSON.stringify(sealedEnvelope)
+            });
+            if (!relayRes.ok) {
+              throw new Error(`Cloud dispatch HTTP ${relayRes.status}`);
+            }
+
+            savedInquiry = { leadId: idempotencyKey, leadNumber, uploadToken: 'cloud-relay' };
+            await finalize();
             return;
           }
-          const data = ct.includes('application/json') ? await res.json() : {};
-          if (!res.ok || data.ok === false) {
+
+          const data = ct.includes('application/json') ? await res!.json() : {};
+          if (!res!.ok || data.ok === false) {
             if (data.fieldErrors && typeof data.fieldErrors === 'object') {
               let firstStep = TOTAL;
               for (const [k, msg] of Object.entries(data.fieldErrors as Record<string, string>)) {
@@ -1405,7 +1967,7 @@ const STEPS = [
               showStatus('error', `Please fix the highlighted ${firstStep === step ? 'fields' : 'step'} — ${esc(data.error || 'something needs a second look')}.`);
               return;
             }
-            throw new Error(data.error || `HTTP ${res.status}`);
+            throw new Error(data.error || `HTTP ${res!.status}`);
           }
           savedInquiry = { leadId: data.leadId || 'external', leadNumber: data.leadNumber || 'SUBMITTED', uploadToken: data.uploadToken || '' };
         }

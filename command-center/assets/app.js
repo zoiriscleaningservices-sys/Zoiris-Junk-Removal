@@ -232,7 +232,9 @@
     layers: '<path d="m12 4 8.5 4.5L12 13 3.5 8.5z"/><path d="m3.5 12.5 8.5 4.5 8.5-4.5M3.5 16.5 12 21l8.5-4.5"/>',
     smartphone: '<rect x="6.5" y="2.8" width="11" height="18.4" rx="2.3"/><path d="M10.5 18h3"/>',
     tablet: '<rect x="4.5" y="3" width="15" height="18" rx="2.3"/><path d="M11 18h2"/>',
-    monitor: '<rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20h7M12 16.5V20"/>'
+    monitor: '<rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M8.5 20h7M12 16.5V20"/>',
+    bell: '<path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 15 18 9z"/><path d="M10.2 20a2 2 0 0 0 3.6 0"/>',
+    copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'
   };
   function deviceIconName(kind) {
     if (kind === 'phone') return 'smartphone';
@@ -695,6 +697,240 @@
     return stripBase(window.location.pathname).replace(/\/+$/, '') + '/';
   }
 
+  function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) outputArray[i] = rawData.charCodeAt(i);
+    return outputArray;
+  }
+
+  async function getBrowserPushSubscription() {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return null;
+    try {
+      const reg = await navigator.serviceWorker.getRegistration(ownerUrl('/owner/'));
+      if (!reg || !reg.pushManager) return null;
+      return await reg.pushManager.getSubscription();
+    } catch {
+      return null;
+    }
+  }
+
+  async function subscribeDeviceWebPush(vapidPublicKey) {
+    if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) {
+      if (window.ZOIRIS_PWA?.isIos() && !window.ZOIRIS_PWA?.isStandalone()) {
+        throw new Error('On iPhone/iPad, tap Share → Add to Home Screen first (or use 1-Tap ntfy Lock-Screen Alerts below).');
+      }
+      throw new Error('Browser push is not available here — use 1-Tap ntfy Lock-Screen Alerts below.');
+    }
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') {
+      throw new Error('Allow notifications in your browser settings so alerts can reach your lock screen.');
+    }
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey)
+      });
+    }
+    return api('/api/owner/push/subscribe', {
+      method: 'POST',
+      body: {
+        subscription: sub.toJSON(),
+        deviceLabel: state.currentDevice || 'Owner Device',
+        deviceKind: state.deviceKind || 'phone'
+      }
+    });
+  }
+
+  async function copyTextSafe(text, label = 'Copied to clipboard') {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast(label);
+    } catch {
+      prompt('Copy this:', text);
+    }
+  }
+
+  function renderPushControlCard(ps, { inModal = false } = {}) {
+    const relay = ps?.relay || {};
+    const topic = relay.topic || 'zoiris_pickup_eeaf07c6f04d03eee2';
+    const ntfyDeep = relay.ntfyAppDeepLink || `ntfy://ntfy.sh/${topic}`;
+    const isLocal = Boolean(ps?.localVaultMode || window.__ZOIRIS_LOCAL_VAULT__);
+    const subCount = Number(ps?.subscriptionCount || 0);
+    const pairLink = relay.pairingFragment
+      ? `${window.location.origin}${ownerUrl('/owner/login/')}#${relay.pairingFragment}`
+      : '';
+
+    return `
+      <div class="cc-push-box ${inModal ? 'cc-push-box--modal' : ''}">
+        <div class="cc-push-step">
+          <div class="cc-push-step__head">
+            <span class="cc-push-step__num">1</span>
+            <div>
+              <strong>24/7 Lock-Screen Phone Alerts (Works When App Is Closed)</strong>
+              <p class="cc-fine">Get an instant chime &amp; lock-screen banner the second any customer submits a form — even when Zoiris and your computer are completely closed.</p>
+            </div>
+          </div>
+          <div class="cc-push-actions">
+            ${
+              !isLocal && ps?.vapidPublicKey
+                ? `<button type="button" class="cc-btn cc-btn--primary cc-btn--sm" data-enable-webpush="${esc(ps.vapidPublicKey)}">${ico('bell')}${subCount > 0 ? `Push active (${subCount} device${subCount === 1 ? '' : 's'})` : 'Turn on push on this device'}</button>`
+                : ''
+            }
+            <a class="cc-btn ${isLocal ? 'cc-btn--primary' : 'cc-btn--navy'} cc-btn--sm" href="${esc(ntfyDeep)}">${ico('smartphone')}1-Tap Open in ntfy App</a>
+            <button type="button" class="cc-btn cc-btn--ghost cc-btn--sm" data-copy-topic="${esc(topic)}">${ico('copy')}Copy topic ID</button>
+            <button type="button" class="cc-btn cc-btn--ghost cc-btn--sm" data-send-test-push>${ico('sparkle')}Send test alert</button>
+          </div>
+          <p class="cc-fine cc-push-stores">
+            Don’t have the free <strong>ntfy</strong> alert app yet? Download on
+            <a href="https://apps.apple.com/us/app/ntfy/id1625396347" target="_blank" rel="noopener">iPhone App Store</a> or
+            <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener">Android Google Play</a>,
+            then tap <strong>1-Tap Open in ntfy App</strong> (or subscribe to <code>${esc(topic)}</code>).
+          </p>
+        </div>
+
+        <div class="cc-push-step">
+          <div class="cc-push-step__head">
+            <span class="cc-push-step__num">2</span>
+            <div>
+              <strong>Encrypted Website Form Sync ${relay.configured ? '<span class="cc-pill cc-pill--done">Connected</span>' : '<span class="cc-pill cc-pill--new">Pair this device</span>'}</strong>
+              <p class="cc-fine">${
+                relay.configured
+                  ? `Customer requests, verified map pins &amp; photos submitted on your live website decrypt automatically into your CRM${relay.lastSyncAt ? ` · Last checked ${esc(timeAgo(relay.lastSyncAt))}` : ''}.`
+                  : 'Paste your private Phone Pairing Link once so this device can decrypt customer photos, phone numbers &amp; addresses from your public website.'
+              }</p>
+            </div>
+          </div>
+          ${
+            relay.configured
+              ? `<div class="cc-push-actions">
+                   <button type="button" class="cc-btn cc-btn--navy cc-btn--sm" data-sync-relay-now>${ico('history')}Check for new website requests now</button>
+                   ${pairLink ? `<button type="button" class="cc-btn cc-btn--ghost cc-btn--sm" data-copy-pair="${esc(pairLink)}">${ico('copy')}Copy pairing link for another phone</button>` : ''}
+                 </div>`
+              : `<form class="cc-form cc-push-pair-form" data-pair-relay-form>
+                   <div class="cc-field">
+                     <label for="pair-relay-input-${inModal ? 'm' : 's'}">Phone Pairing Link or Key</label>
+                     <input id="pair-relay-input-${inModal ? 'm' : 's'}" class="cc-input" type="password" autocomplete="off" placeholder="Paste your #pair=… link here" required />
+                   </div>
+                   <button class="cc-btn cc-btn--primary cc-btn--sm" type="submit">${ico('shield')}Connect &amp; sync customer requests</button>
+                 </form>`
+          }
+        </div>
+      </div>`;
+  }
+
+  function wirePushControls(container, onRefresh) {
+    if (!container) return;
+    container.querySelectorAll('[data-enable-webpush]').forEach((btn) =>
+      bindClick(btn, async () => {
+        const out = await subscribeDeviceWebPush(btn.dataset.enableWebpush);
+        toast(`Background push enabled (${out.subscriptionCount || 1} device${out.subscriptionCount === 1 ? '' : 's'})!`);
+        if (onRefresh) await onRefresh();
+      })
+    );
+    container.querySelectorAll('[data-copy-topic]').forEach((btn) =>
+      btn.addEventListener('click', () => copyTextSafe(btn.dataset.copyTopic, 'Topic ID copied! Paste in ntfy app → + button'))
+    );
+    container.querySelectorAll('[data-copy-pair]').forEach((btn) =>
+      btn.addEventListener('click', () => copyTextSafe(btn.dataset.copyPair, 'Private phone pairing link copied!'))
+    );
+    container.querySelectorAll('[data-send-test-push]').forEach((btn) =>
+      bindClick(btn, async () => {
+        const out = await api('/api/owner/push/test', {
+          method: 'POST',
+          body: {
+            includeRelay: true,
+            clickUrl: window.location.origin + ownerUrl('/owner/command-center/')
+          }
+        });
+        const sentWeb = Number(out.webPush?.sent || 0);
+        const sentRelay = Boolean(out.relay?.ok);
+        if (sentWeb || sentRelay) {
+          toast('Test alert sent! Lock your phone screen to see it arrive.');
+        } else {
+          toast('Enable device push or open ntfy first so your phone can receive the alert.', true);
+        }
+      })
+    );
+    container.querySelectorAll('[data-sync-relay-now]').forEach((btn) =>
+      bindClick(btn, async () => {
+        const out = await api('/api/owner/push/sync-relay', { method: 'POST' });
+        if (out.imported > 0) {
+          toast(`Synced ${out.imported} new customer request${out.imported === 1 ? '' : 's'}!`);
+          refreshNotifications();
+          refreshUnreadLeadBadge();
+        } else {
+          toast('All caught up — no new website requests waiting.');
+        }
+        if (onRefresh) await onRefresh();
+      })
+    );
+    const pairForm = container.querySelector('[data-pair-relay-form]');
+    if (pairForm) {
+      pairForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = pairForm.querySelector('input');
+        const submit = pairForm.querySelector('[type="submit"]');
+        if (submit) submit.disabled = true;
+        try {
+          const out = await api('/api/owner/push/pair', {
+            method: 'POST',
+            body: { pairingInput: input?.value || '' }
+          });
+          toast(`Connected! ${out.imported ? `Synced ${out.imported} request(s).` : 'Ready for 24/7 website requests.'}`);
+          refreshNotifications();
+          refreshUnreadLeadBadge();
+          if (onRefresh) await onRefresh();
+        } catch (err) {
+          toast(err.message || 'Could not pair key', true);
+        } finally {
+          if (submit && submit.isConnected) submit.disabled = false;
+        }
+      });
+    }
+  }
+
+  async function openPhoneAlertsModal() {
+    const ps = await api('/api/owner/push/status').catch(() => ({ localVaultMode: Boolean(window.__ZOIRIS_LOCAL_VAULT__), relay: {} }));
+    openModal('Background phone alerts & 24/7 form sync', renderPushControlCard(ps, { inModal: true }));
+    wirePushControls(modalBody, async () => {
+      await openPhoneAlertsModal();
+      const p = currentPath();
+      if (p === '/owner/command-center/' || p === '/owner/settings/' || p === '/owner/leads/') softRefresh();
+    });
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (ev) => {
+      if (ev.data?.type === 'zoiris:push-navigate' && ev.data.url) {
+        navigate(ev.data.url);
+      }
+    });
+  }
+
+  window.addEventListener('zoiris:vault-lead-synced', (ev) => {
+    const { imported, latestLead } = ev.detail || {};
+    if (latestLead?.leadNumber) state.fresh.add(latestLead.leadNumber);
+    toast(
+      latestLead
+        ? `New request from ${latestLead.fullName || 'customer'} (${latestLead.leadNumber})`
+        : `${imported || 1} new pickup request(s) synced!`
+    );
+    playChime();
+    desktopNotify(
+      `New request ${latestLead?.leadNumber || ''}`,
+      `${latestLead?.fullName || 'Customer'} — ${latestLead?.requestedService || 'Pickup request'}`
+    );
+    refreshNotifications();
+    refreshUnreadLeadBadge();
+    const p = currentPath();
+    if (p === '/owner/command-center/' || p === '/owner/leads/' || p === '/owner/map/') softRefresh();
+  });
+
   function connectRealtime() {
     if (window.__ZOIRIS_LOCAL_VAULT__) {
       ssePill.textContent = '24/7 App';
@@ -822,6 +1058,12 @@
   });
 
   document.addEventListener('click', (e) => {
+    const pushTrigger = e.target.closest('[data-setup-push]');
+    if (pushTrigger) {
+      e.preventDefault();
+      openPhoneAlertsModal();
+      return;
+    }
     const installTrigger = e.target.closest('[data-install-app]');
     if (installTrigger) {
       e.preventDefault();
@@ -1104,11 +1346,12 @@
   /* ---------------------------------------------------------------------- */
   async function renderToday(seq) {
     const today = todayIso();
-    const [ov, list, cal, pins] = await Promise.all([
+    const [ov, list, cal, pins, pushSt] = await Promise.all([
       api('/api/owner/overview'),
       api('/api/owner/leads?pageSize=60'),
       api(`/api/owner/calendar?from=${today}&to=${addDaysIso(today, 13)}`),
-      api('/api/owner/map/pins').catch(() => ({ pins: [] }))
+      api('/api/owner/map/pins').catch(() => ({ pins: [] })),
+      api('/api/owner/push/status').catch(() => null)
     ]);
     if (seq !== state.navSeq) return;
     const k = ov.kpis || {};
@@ -1196,11 +1439,30 @@
           }
           <div class="cc-hello__actions">
             <button type="button" class="cc-btn cc-btn--primary cc-btn--sm" data-log-lead>${ico('plus')}Log request</button>
+            <button type="button" class="cc-btn cc-btn--ghost cc-btn--sm" data-setup-push>${ico('bell')}Phone alerts</button>
             ${!window.ZOIRIS_PWA?.isStandalone() ? `<button type="button" class="cc-btn cc-btn--navy cc-btn--sm" data-install-app>${ico('smartphone')}Download on phone</button>` : ''}
           </div>
         </header>
 
         ${focus}
+
+        ${
+          pushSt && ((pushSt.localVaultMode && !pushSt.relay?.configured) || (!pushSt.localVaultMode && !pushSt.subscriptionCount && !readPref('zoiris.hidePushHint', '')))
+            ? `<section class="cc-push-banner" aria-label="Background phone notifications">
+                 <div class="cc-push-banner__text">
+                   <strong>${ico('bell')}Get lock-screen alerts even when Zoiris is closed</strong>
+                   <span>${
+                     pushSt.localVaultMode && !pushSt.relay?.configured
+                       ? 'Connect your Phone Pairing Link + 1-tap ntfy alert app so every customer request rings your phone 24/7.'
+                       : 'Turn on background phone notifications so new customer pickup requests pop up on your lock screen.'
+                   }</span>
+                 </div>
+                 <div class="cc-push-banner__btns">
+                   <button type="button" class="cc-btn cc-btn--primary cc-btn--sm" data-setup-push>Set up alerts</button>
+                 </div>
+               </section>`
+            : ''
+        }
 
         <section class="cc-big4" aria-label="Quick numbers">
           ${big
@@ -1523,7 +1785,7 @@
   }
 
   function addressSourceText(l) {
-    if (l.addressSource === 'census') return 'Matched by the U.S. Census Bureau address database.';
+    if (l.addressSource === 'census' || l.addressSource === 'us-census') return 'Matched by the U.S. Census Bureau address database.';
     if (l.addressSource === 'openstreetmap') return 'Matched an OpenStreetMap house number.';
     if (l.addressSource === 'mock') return 'Checked by the offline test geocoder.';
     return 'We couldn’t auto-check this address — confirm it with the customer on the phone.';
@@ -3169,14 +3431,23 @@
   /* 15. SETTINGS (/owner/settings/)                                        */
   /* ---------------------------------------------------------------------- */
   async function renderSettings(seq) {
-    const [res, notifRes] = await Promise.all([api('/api/owner/settings'), api('/api/owner/notifications')]);
+    const [res, notifRes, pushSt] = await Promise.all([
+      api('/api/owner/settings'),
+      api('/api/owner/notifications'),
+      api('/api/owner/push/status').catch(() => ({ localVaultMode: Boolean(window.__ZOIRIS_LOCAL_VAULT__), relay: {} }))
+    ]);
     if (seq !== state.navSeq) return;
     const s = res.settings;
     const np = notifRes.preferences;
     const H = ['Service', 'Provider', 'Status'];
 
     workspace.innerHTML = `
-      ${pageHead('Settings', 'Changes apply right away to your public upload form and private storage.')}
+      ${pageHead('Settings', 'Changes apply right away to your public upload form, phone alerts, and private storage.')}
+
+      <div class="cc-card" id="settings-push-card">
+        <h2>Background phone notifications &amp; 24/7 form sync</h2>
+        ${renderPushControlCard(pushSt)}
+      </div>
 
       <div class="cc-grid-2">
         <div class="cc-card">
@@ -3262,6 +3533,8 @@
       });
       toast('Alert settings saved');
     });
+
+    wirePushControls(document.getElementById('settings-push-card'), () => renderSettings(state.navSeq));
   }
 
   /* ---------------------------------------------------------------------- */
@@ -3534,6 +3807,10 @@
         sessionStorage.removeItem('zoiris_just_signed_in');
         toast(`Logged in from ${justSignedIn}`);
       }
+      if (sessionStorage.getItem('zoiris_just_paired_push') === '1') {
+        sessionStorage.removeItem('zoiris_just_paired_push');
+        toast('24/7 encrypted website form & phone alerts paired!');
+      }
     } catch {}
     try {
       const ghSpaPath = sessionStorage.getItem('zoiris_gh_spa_path');
@@ -3545,6 +3822,15 @@
     startClock();
     connectRealtime();
     refreshNotifications();
+    api('/api/owner/push/sync-relay', { method: 'POST' })
+      .then((r) => {
+        if (r?.imported > 0) {
+          refreshNotifications();
+          refreshUnreadLeadBadge();
+          softRefresh();
+        }
+      })
+      .catch(() => {});
     await route();
   }
 

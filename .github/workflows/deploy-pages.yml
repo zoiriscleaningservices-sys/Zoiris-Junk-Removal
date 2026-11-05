@@ -37,6 +37,7 @@ jobs:
       - name: Build & validate static website
         env:
           PUBLIC_API_BASE: ${{ vars.PUBLIC_API_BASE || '' }}
+          PUBLIC_STATIC_CLOUD_MODE: '1'
         run: npm run build
 
       - name: Prepare GitHub Pages subpath & .nojekyll

@@ -12,7 +12,7 @@
  */
 import { randomUUID } from 'node:crypto';
 
-export function createRealtimeAndNotifications({ ctx }) {
+export function createRealtimeAndNotifications({ ctx, webPush = null }) {
   const { db } = ctx;
   const clients = new Map(); // clientId -> { res, ownerId }
 
@@ -57,9 +57,10 @@ export function createRealtimeAndNotifications({ ctx }) {
       unreadNotifications: countUnreadNotifications(),
       payload
     });
+    const namedData = JSON.stringify(payload || {});
     for (const [id, client] of clients.entries()) {
       try {
-        client.res.write(`event: message\ndata: ${envelope}\n\n`);
+        client.res.write(`event: message\ndata: ${envelope}\n\nevent: ${eventType}\ndata: ${namedData}\n\n`);
       } catch {
         clients.delete(id);
       }
@@ -74,9 +75,15 @@ export function createRealtimeAndNotifications({ ctx }) {
     return Number(db.prepare("SELECT COUNT(*) AS n FROM notifications WHERE channel = 'in_app' AND is_read = 0").get().n);
   }
 
-  async function notifyOwners({ kind, title, body, leadId = null }) {
+  async function notifyOwners({ kind, title, body, leadId = null, metadata = {} }) {
     const now = new Date().toISOString();
     const owners = db.prepare('SELECT id, email FROM owner_profiles WHERE is_active = 1').all();
+    let leadNumber = metadata?.leadNumber || '';
+    if (!leadNumber && leadId) {
+      const l = db.prepare('SELECT lead_number FROM leads WHERE id = ?').get(leadId);
+      if (l?.lead_number) leadNumber = l.lead_number;
+    }
+    const targetUrl = metadata?.url || (leadNumber ? `/owner/leads/${leadNumber}` : '/owner/command-center/');
 
     // Always record an internal notification even before the first owner logs in
     if (owners.length === 0) {
@@ -84,7 +91,7 @@ export function createRealtimeAndNotifications({ ctx }) {
         `INSERT INTO notifications (id, owner_id, lead_id, kind, title, body, channel, delivery_status, is_read, created_at, updated_at)
          VALUES (?, NULL, ?, ?, ?, ?, 'in_app', 'unread', 0, ?, ?)`
       ).run(randomUUID(), leadId, kind, title, body, now, now);
-      broadcast('notification.created', { kind, title, body, leadId });
+      broadcast('notification.created', { kind, title, body, leadId, leadNumber });
       return;
     }
 
@@ -108,6 +115,20 @@ export function createRealtimeAndNotifications({ ctx }) {
           `INSERT INTO notifications (id, owner_id, lead_id, kind, title, body, channel, delivery_status, is_read, created_at, updated_at)
            VALUES (?, ?, ?, ?, ?, ?, 'in_app', 'unread', 0, ?, ?)`
         ).run(randomUUID(), owner.id, leadId, kind, title, body, now, now);
+      }
+
+      if (webPush && kind !== 'security') {
+        await webPush
+          .sendPushToOwner(owner.id, {
+            kind,
+            title,
+            body,
+            leadId,
+            leadNumber,
+            url: targetUrl,
+            tag: leadNumber ? `lead-${leadNumber}` : `zoiris-${kind}`
+          })
+          .catch(() => {});
       }
 
       if (prefs.email_enabled) {

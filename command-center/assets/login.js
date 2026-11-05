@@ -37,6 +37,11 @@
   }
 
   /* PWA Install Banner on Login */
+  try {
+    if (sessionStorage.getItem('zoiris_just_paired_push') === '1') {
+      showMsg('Phone notifications & customer form decryption paired on this device! Sign in (or finish creating your device password below) to view and sync requests.', 'ok');
+    }
+  } catch {}
   function refreshInstallBanner() {
     if (!installCard || !window.ZOIRIS_PWA) return;
     if (window.ZOIRIS_PWA.isStandalone()) {
