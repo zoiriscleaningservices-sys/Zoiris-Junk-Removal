@@ -59,7 +59,7 @@ Once `npm run crm` is running:
 ## GitHub CI, GitHub Pages & Cloud CRM Deployment
 
 - **Automated CI (`.github/workflows/ci.yml`):** Runs `npm run check`, `npm run build`, `npm test` (unit + Playwright headless Chrome E2E), and `npm run test:responsive` (`320px–1920px`) on every push and pull request to `main`.
-- **GitHub Pages (`.github/workflows/deploy-pages.yml`):** Builds the static website, writes `.nojekyll`, rewrites subpath asset/route URLs via `scripts/prepare-github-pages.mjs` (when hosted under `/Zoiris-Junk-Removal/`), and deploys automatically to GitHub Pages.
+- **GitHub Pages & Custom Domain (`.github/workflows/deploy-pages.yml` + `public/CNAME`):** Builds and validates the static website + `/owner/*` PWA for **`https://www.zoirisjunkremoval.com/`** (`public/CNAME` = `www.zoirisjunkremoval.com`), wires 24/7 Cloud Bridge real-time lead sync and native Web Push notifications, and deploys automatically on push to `main`.
 - **Full-Stack Cloud CRM (`Dockerfile` & `render.yaml`):** Deploys the Node 24 + SQLite Private Owner Command Center and public website together with a persistent private vault disk (`ZOIRIS_DATA_DIR=/var/data/zoiris-private`).
 
 See [docs/deployment-and-setup.md](docs/deployment-and-setup.md) for full production deployment instructions (static CDN + Node/VPS or Supabase + Cloudflare R2), backup/restore workflows, and free-tier vs. paid storage quota comparisons.

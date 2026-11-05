@@ -7,15 +7,16 @@
  * (empty string = same origin when hosted behind the Zoiris Command Center server
  * or reverse proxy, or a dedicated API origin such as `https://crm.zoirisjunkremoval.com`).
  *
- * On static GitHub Pages (`github.io`), when no `/api/public/*` server is reachable,
- * `QuoteForm.astro` encrypts pickup requests end-to-end in the browser using ONLY the
- * one-way RSA-OAEP-2048 Public Key below and dispatches an instant lock-screen push alert.
+ * On https://www.zoirisjunkremoval.com (and static GitHub Pages), `QuoteForm.astro`
+ * submits directly to the encrypted 24/7 Cloud Bridge (with E2E RSA-OAEP-2048 fallback)
+ * and dispatches instant real-time browser sync + installed-app Web Push notifications.
  */
 export type FormProvider = 'zoiris-crm' | 'formspree' | 'gohighlevel' | 'custom' | 'none';
 
 const env = import.meta.env;
 
 const apiBase = (env.PUBLIC_API_BASE ?? '').trim().replace(/\/+$/, '');
+const staticCloudOnly = env.PUBLIC_STATIC_CLOUD_MODE === '1' && !apiBase;
 const externalEndpoint = (env.PUBLIC_FORM_ENDPOINT ?? '').trim();
 const explicitProvider = (env.PUBLIC_FORM_PROVIDER ?? '').trim() as FormProvider | '';
 
@@ -49,11 +50,11 @@ export const integrations = {
       'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1Ag5ROEE2hWFrLfIqhIljK2LsuqatCQPuE/XnT17uv9YMsO7HJ98HzzXH/Ol8tw/5gSmuIT7Chzt/B8ZyXk9eZVxtJMk81B919LOQbwORfz8o/yyauplw8BXLvBUAReEchbhboN6l8iqSCmj4zaglObNEAxnxZPijJBnPR5ujDa1xKA+/vY42metVDXAgLmytlgK9gwKrJ+8cJVt/nFMdiLpI+4nu7Dqyw9I45S4KlXzkLLIpvB3DG3axxFN7dGhH8f1JM3VP0uAw29xASMQ/S/G/x4zGOgplqz3Zs4ZLdI6hpIriN3WBfrMQ6ClwbD3WUT+smnDzAaithEclr+hQIDAQAB'
     ).trim(),
     ownerClickUrl: (
-      env.PUBLIC_OWNER_APP_URL ?? 'https://zoiriscleaningservices-sys.github.io/Zoiris-Junk-Removal/owner/command-center/?sync=1'
+      env.PUBLIC_OWNER_APP_URL ?? 'https://www.zoirisjunkremoval.com/owner/command-center/?sync=1'
     ).trim()
   },
   analytics: {
-    eventsEndpoint: `${apiBase}/api/public/events`,
+    eventsEndpoint: staticCloudOnly ? '' : `${apiBase}/api/public/events`,
     ga4Id: (env.PUBLIC_GA4_ID ?? '').trim() || null
   },
   searchConsole: {

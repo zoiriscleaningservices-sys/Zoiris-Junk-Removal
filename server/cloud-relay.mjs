@@ -248,7 +248,7 @@ export function createCloudRelaySync({ ctx, crm, fetchImpl = globalThis.fetch, a
     }
   }
 
-  async function sendTestRelayAlert({ clickUrl = 'https://zoiriscleaningservices-sys.github.io/Zoiris-Junk-Removal/owner/command-center/' } = {}) {
+  async function sendTestRelayAlert({ clickUrl = 'https://www.zoirisjunkremoval.com/owner/command-center/' } = {}) {
     if (!cfg) {
       const err = new Error('24/7 Cloud Push Relay is not configured in .zoiris-private/relay-keypair.json.');
       err.status = 400;

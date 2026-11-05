@@ -41,8 +41,8 @@
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!hadControllerAtBoot) return;
       try {
-        if (!sessionStorage.getItem('zoiris_sw_upgraded_v4')) {
-          sessionStorage.setItem('zoiris_sw_upgraded_v4', '1');
+        if (!sessionStorage.getItem('zoiris_sw_upgraded_v5')) {
+          sessionStorage.setItem('zoiris_sw_upgraded_v5', '1');
           window.location.reload();
         }
       } catch {}

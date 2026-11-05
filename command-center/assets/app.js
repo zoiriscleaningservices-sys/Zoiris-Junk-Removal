@@ -160,6 +160,7 @@
   const sheetScrim = document.getElementById('cc-sheet-scrim');
   const ownerUrl = (p) => (window.zoirisOwnerUrl ? window.zoirisOwnerUrl(p) : p);
   const stripBase = (p) => (window.zoirisStripBase ? window.zoirisStripBase(p) : p);
+  const publicUrl = (p) => (window.zoirisPublicUrl ? window.zoirisPublicUrl(p) : p);
 
   /* ---------------------------------------------------------------------- */
   /* Helpers                                                                */
@@ -3311,9 +3312,13 @@
         ${table(
           H,
           res.pages
-            .map((p) =>
-              tr(H, [
-                `<code>${esc(p.path)}</code><br/><small class="cc-muted">${esc(p.id)}</small>`,
+            .map((p) => {
+              const isLivePage = p.status === 'published' || p.status === 'noindex';
+              const liveHref = esc(publicUrl(p.path));
+              return tr(H, [
+                isLivePage
+                  ? `<a href="${liveHref}" target="_blank" rel="noopener"><code>${esc(p.path)}</code></a><br/><small class="cc-muted">${esc(p.id)}</small>`
+                  : `<code>${esc(p.path)}</code><br/><small class="cc-muted">${esc(p.id)}</small>`,
                 esc(p.type),
                 statusPill(p.status),
                 esc(p.primaryKeyword),
@@ -3321,9 +3326,9 @@
                 p.passesGate ? '<span class="cc-pill cc-pill--done">Pass</span>' : `<span class="cc-pill cc-pill--follow">${p.blockers.length} to fix</span>`,
                 ['draft', 'idea', 'research'].includes(p.status)
                   ? `<button type="button" class="cc-btn cc-btn--sm cc-btn--danger" data-del-draft="${esc(p.id)}" data-del-draft-path="${esc(p.path)}">${ico('trash')}Delete</button>`
-                  : '<span class="cc-muted">Live</span>'
-              ])
-            )
+                  : `<a class="cc-btn cc-btn--sm cc-btn--ghost" href="${liveHref}" target="_blank" rel="noopener">${ico('external')}Open</a>`
+              ]);
+            })
             .join('')
         )}
       </div>`;
@@ -3671,11 +3676,11 @@
           ${
             res.localVaultMode || readPref('zoiris.cloudApiUrl', '')
               ? `<div class="login-section">
-                   <h3 class="cc-h3">Live Cloud CRM Sync (Optional)</h3>
-                   <p class="cc-fine">Right now your app runs 24/7 in encrypted On-Device Vault mode on GitHub Pages. If you deploy the Node CRM server to Render/Docker later, paste its URL here to sync across devices.</p>
+                   <h3 class="cc-h3">Custom Dedicated API Server (Optional)</h3>
+                   <p class="cc-fine">Your website (<strong>www.zoirisjunkremoval.com</strong>) and mobile app already sync requests and lock-screen push notifications live 24/7. Leave this blank unless you host a separate custom Node/SQLite server.</p>
                    <form id="cloud-url-form" class="cc-form">
-                     <div class="cc-field"><label for="cloud-api-url">Cloud CRM Server URL</label><input id="cloud-api-url" class="cc-input" type="url" placeholder="https://crm.zoirisjunkremoval.com" value="${esc(readPref('zoiris.cloudApiUrl', ''))}" /></div>
-                     <button class="cc-btn cc-btn--ghost cc-btn--block" type="submit">Save sync URL &amp; reload</button>
+                     <div class="cc-field"><label for="cloud-api-url">Custom Node CRM Server URL</label><input id="cloud-api-url" class="cc-input" type="url" placeholder="https://api.zoirisjunkremoval.com" value="${esc(readPref('zoiris.cloudApiUrl', ''))}" /></div>
+                     <button class="cc-btn cc-btn--ghost cc-btn--block" type="submit">Save custom URL &amp; reload</button>
                    </form>
                  </div>`
               : ''

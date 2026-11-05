@@ -12,9 +12,9 @@ This guide covers deploying and operating both components of the Zoiris Junk Rem
 1. **Public Website (`dist/`):** Deploy `dist/` to **Cloudflare Pages**, **Netlify**, or **GitHub Pages** with:
    - Build command: `npm run build`
    - Output directory: `dist`
-   - Build environment variable: `PUBLIC_API_BASE=https://crm.zoirisjunkremoval.com` (and `SITE_URL=https://zoirisjunkremoval.com`)
-2. **Private Command Center (`crm.zoirisjunkremoval.com`):** Run `node server/index.mjs` (`npm run crm`) behind Caddy or Nginx with automatic TLS on a small Linux VPS or private host:
-   - Set `SERVE_PUBLIC_DIST=0` if the server only serves `/owner/*` and `/api/*`, or leave default (`1`) if serving both the static website and `/owner/*` from a single domain (`zoirisjunkremoval.com`).
+   - Build environment variable: `PUBLIC_API_BASE=https://api.zoirisjunkremoval.com` (and `SITE_URL=https://www.zoirisjunkremoval.com`)
+2. **Private Command Center (`www.zoirisjunkremoval.com/owner/` or custom VPS):** Run `node server/index.mjs` (`npm run crm`) behind Caddy or Nginx with automatic TLS on a small Linux VPS or private host:
+   - Set `SERVE_PUBLIC_DIST=0` if the server only serves `/owner/*` and `/api/*`, or leave default (`1`) if serving both the static website and `/owner/*` from `https://www.zoirisjunkremoval.com`.
    - Mount `.zoiris-private/` (`ZOIRIS_DATA_DIR`) on persistent encrypted disk storage outside any public web root.
    - Optionally set `STORAGE_PROVIDER=r2` to offload customer photos and walkthrough videos to a private **Cloudflare R2** bucket (`10 GB/month` free, **$0 egress fees**).
 

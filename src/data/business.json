@@ -6,7 +6,7 @@
   "phoneHref": "tel:+12519308621",
   "email": null,
   "website": "https://www.zoirisjunkremoval.com",
-  "websiteVerified": false,
+  "websiteVerified": true,
   "serviceAreaBusiness": true,
   "address": null,
   "primaryCity": "Mobile",
@@ -32,7 +32,6 @@
     "dataDestruction": false
   },
   "ownerVerification": [
-    "Confirm the production domain (currently configured as https://www.zoirisjunkremoval.com; override with the SITE_URL environment variable).",
     "Confirm whether the business operates from a public storefront. The site is configured as a service-area business with no published street address.",
     "Confirm business hours before any hours are displayed or added to structured data.",
     "Confirm a public contact email address, if one should be listed.",

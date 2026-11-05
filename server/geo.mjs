@@ -25,7 +25,7 @@ export const SERVICE_COUNTIES = {
 
 // [minLon, minLat, maxLon, maxLat] — generous box around Mobile + Baldwin counties
 const SERVICE_BBOX = [-88.48, 30.13, -87.36, 31.34];
-const UA = 'ZoirisJunkRemoval/2.0 (+https://zoirisjunkremoval.com; pickup address verification)';
+const UA = 'ZoirisJunkRemoval/2.0 (+https://www.zoirisjunkremoval.com; pickup address verification)';
 const TOKEN_TTL_MS = 2 * 60 * 60 * 1000;
 
 const DIRECTIONALS = new Set(['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW']);

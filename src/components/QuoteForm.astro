@@ -1063,8 +1063,9 @@ const STEPS = [
     /* ------------------------------ step 2: media ------------------------------ */
     const mediaGrid = $('[data-media-grid]')!;
     const mediaErr = $('[data-media-error]')!;
+    const staticCloudOnly = form.dataset.cloudRelay === '1' && !/^https?:\/\//i.test(form.dataset.endpoint || '');
     const cfgUrl = form.dataset.uploadConfigEndpoint || '';
-    if (cfgUrl) {
+    if (cfgUrl && !staticCloudOnly) {
       fetch(cfgUrl, { headers: { Accept: 'application/json' } })
         .then((r) => (r.ok && (r.headers.get('content-type') || '').includes('json') ? r.json() : null))
         .then((d) => {
@@ -1261,13 +1262,14 @@ const STEPS = [
       saveDraft();
     };
 
-    const cloudRelayAllowed = form.dataset.cloudRelay === '1' || /\.github\.io$/i.test(window.location.hostname);
+    const cloudRelayAllowed =
+      form.dataset.cloudRelay === '1' || /^(?:(?:www\.)?zoirisjunkremoval\.com|.*\.github\.io)$/i.test(window.location.hostname);
     const cloudBridgeUrl = (form.dataset.cloudBridge ?? 'https://zoiris-cloud-bridge.vercel.app').replace(/\/+$/, '');
     const relayUrl = (form.dataset.relayUrl || 'https://ntfy.sh').replace(/\/+$/, '');
     const relayTopic = form.dataset.relayTopic || '';
     const relayPubKey = form.dataset.relayPubkey || '';
     const relayClick = form.dataset.relayClick || `${window.location.origin}/owner/command-center/?sync=1`;
-    let useBrowserGeo = false;
+    let useBrowserGeo = staticCloudOnly;
 
     const verifyEndpoint = form.dataset.verifyEndpoint || '';
     const verifyAddress = async (input: { line: string; city?: string; zip?: string }): Promise<'ok' | 'bad' | 'offline'> => {
@@ -1796,15 +1798,17 @@ const STEPS = [
           };
           let res: Response | null = null;
           let ct = '';
-          try {
-            res = await fetch(endpoint, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Idempotency-Key': idempotencyKey },
-              body: JSON.stringify(payload)
-            });
-            ct = res.headers.get('content-type') || '';
-          } catch (netErr) {
-            if (!cloudRelayAllowed || (!cloudBridgeUrl && (!relayTopic || !relayPubKey))) throw netErr;
+          if (!staticCloudOnly) {
+            try {
+              res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Idempotency-Key': idempotencyKey },
+                body: JSON.stringify(payload)
+              });
+              ct = res.headers.get('content-type') || '';
+            } catch (netErr) {
+              if (!cloudRelayAllowed || (!cloudBridgeUrl && (!relayTopic || !relayPubKey))) throw netErr;
+            }
           }
 
           const staticNoApi = !res || ((res.status === 404 || res.status === 405) && !ct.includes('application/json'));

@@ -109,7 +109,7 @@ if (existsSync(notFoundPath)) {
 /* ---------------- 2. Subpath Rewriting (when PAGES_BASE_PATH is set) ---------------- */
 const rawBase = String(process.env.PAGES_BASE_PATH || '').trim();
 const base = rawBase && rawBase !== '/' ? '/' + rawBase.replace(/^\/+|\/+$/g, '') : '';
-const hasCname = existsSync(join(TARGET_DIST, 'CNAME'));
+const hasCname = !process.env.PAGES_DIST_DIR && existsSync(join(TARGET_DIST, 'CNAME'));
 
 const escapedBase = base ? base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') : '';
 const attrRe = base ? new RegExp(`(\\b(?:href|src|action)=["'])\\/(?!(?:\\/|${escapedBase.slice(1)}\\/))`, 'g') : null;
@@ -138,7 +138,9 @@ for (const file of walk(TARGET_DIST)) {
 
   if (ext === '.html') {
     // Enable live browser geocoding + encrypted cloud push relay on static GitHub Pages deployments
-    after = after.replace(/data-cloud-relay="0"/g, 'data-cloud-relay="1"');
+    after = after
+      .replace(/data-cloud-relay="0"/g, 'data-cloud-relay="1"')
+      .replace(/eventsEndpoint\s*=\s*"\/api\/public\/events"/g, 'eventsEndpoint = ""');
     if (base && !hasCname) {
       after = after
         .replace(attrRe, `$1${base}/`)
