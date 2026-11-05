@@ -19,16 +19,43 @@ const ewasteHub = getPage('ew-electronics-pickup');
 const flagship = getPage('svc-junk-removal-mobile-al');
 
 const company = [
-  { id: 'core-about', label: 'About Zoiris', icon: 'info' },
-  { id: 'core-faq', label: 'FAQs', icon: 'clipboard' },
-  { id: 'core-accepted-items', label: 'Accepted Items', icon: 'check-circle' },
-  { id: 'core-restricted-items', label: 'Restricted Items', icon: 'warning' },
-  { id: 'core-responsible-disposal', label: 'Responsible Disposal', icon: 'recycle' },
-  { id: 'core-guides', label: 'Guides', icon: 'sparkle' },
-  { id: 'core-contact', label: 'Contact', icon: 'mail' }
+  { id: 'core-about', label: 'About Zoiris', icon: 'info', keywords: 'company story team local mobile alabama' },
+  { id: 'core-faq', label: 'FAQs', icon: 'clipboard', keywords: 'questions answers help policies' },
+  { id: 'core-accepted-items', label: 'Accepted Items', icon: 'check-circle', keywords: 'what we take list directory furniture appliances electronics' },
+  { id: 'core-restricted-items', label: 'Restricted Items', icon: 'warning', keywords: 'cant take hazardous paint chemicals batteries tires' },
+  { id: 'core-responsible-disposal', label: 'Responsible Disposal', icon: 'recycle', keywords: 'recycling sorting reuse donation eco' },
+  { id: 'core-guides', label: 'Guides', icon: 'sparkle', keywords: 'articles tips checklists preparation how to' },
+  { id: 'core-contact', label: 'Contact', icon: 'mail', keywords: 'phone call text reach us mobile al' }
 ]
   .map((c) => ({ ...c, page: opt(c.id) }))
   .filter((c) => c.page);
+
+const serviceKeywords: Record<string, string> = {
+  'residential-junk-removal': 'home house household clutter rooms',
+  'commercial-junk-removal': 'business office retail store warehouse property',
+  'furniture-removal': 'couch sofa sectional loveseat table chair desk dresser',
+  'mattress-removal': 'bed box spring king queen twin frame',
+  'appliance-removal': 'fridge refrigerator freezer washer dryer stove oven dishwasher',
+  'garage-cleanouts': 'shed tools boxes storage clutter',
+  'estate-cleanouts': 'whole house property Probate downsizing family',
+  'construction-debris-removal': 'renovation remodel drywall wood tile flooring contractor',
+  'computer-recycling': 'laptop desktop pc mac tower server',
+  'tv-monitor-pickup': 'television flatscreen crt screen led oled display',
+  'office-electronics-pickup': 'it equipment workstations networking business tech',
+  'printer-copier-removal': 'scanner fax machine toner office',
+  'phone-tablet-pickup': 'ipad iphone android cell smartphone mobile devices'
+};
+
+const shortMobileName: Record<string, string> = {
+  'Construction & Renovation Debris Removal': 'Construction Debris',
+  'Residential Junk Removal': 'Residential Hauling',
+  'Commercial Junk Removal': 'Commercial Hauling',
+  'Computer Recycling Pickup': 'Computers & Laptops',
+  'Office & IT Equipment Pickup': 'Office & IT Tech',
+  'Office Electronics Pickup': 'Office Electronics',
+  'Printer & Copier Removal': 'Printers & Copiers',
+  'Phone & Tablet Pickup': 'Phones & Tablets'
+};
 
 const isCurrent = (path: string) => (currentPath === path ? 'page' : undefined);
 const inJunk =
@@ -43,6 +70,10 @@ const inEwaste =
 const inAreas = currentPath === '/areas/' || currentPath.startsWith('/areas/');
 const inCompany =
   currentPath.startsWith('/guides/') || company.some((c) => c.page?.path === currentPath);
+const initialDeck = inEwaste ? 1 : inAreas || inCompany || currentPath === '/pricing/' || currentPath === '/how-it-works/' ? 2 : 0;
+
+const gridCompany = company.slice(0, 6);
+const contactCompany = company.slice(6);
 ---
 
 <div class="topbar">
@@ -120,42 +151,280 @@ const inCompany =
 
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
       <span class="sr-only" data-menu-label>Open menu</span>
-      <Icon name="menu" class="menu-icon-open" />
-      <Icon name="close" class="menu-icon-close" />
+      <span class="menu-toggle__word" aria-hidden="true">
+        <span class="menu-toggle__word-open">Menu</span>
+        <span class="menu-toggle__word-close">Close</span>
+      </span>
+      <span class="zburger" aria-hidden="true">
+        <span class="zburger__bar zburger__bar--top"></span>
+        <span class="zburger__mid">
+          <span class="zburger__bar zburger__bar--teal"></span>
+          <span class="zburger__spark"></span>
+        </span>
+        <span class="zburger__bar zburger__bar--bot"></span>
+      </span>
     </button>
   </div>
 </header>
 
-<div class="mobile-nav" id="mobile-nav" data-mobile-nav>
-  <nav aria-label="Mobile">
-    <div class="mobile-nav__group">
-      <h2>Junk Removal</h2>
-      <ul>
-        <li><a href={flagship.path} aria-current={isCurrent(flagship.path)}>Junk Removal in Mobile</a></li>
-        {junk.map(({ service, page }) => <li><a href={page.path} aria-current={isCurrent(page.path)}>{service.name}</a></li>)}
-        <li><a href="/services/" aria-current={isCurrent('/services/')}>All services</a></li>
-      </ul>
+<div class="mobile-nav" id="mobile-nav" data-mobile-nav data-initial-deck={initialDeck} style={`--active-deck:${initialDeck}`}>
+  <nav class="mdeck" aria-label="Mobile">
+    <div class="mdeck__top">
+      <div class="mdeck__search-wrap">
+        <svg class="mdeck__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="m20 20-3.5-3.5"></path>
+        </svg>
+        <input
+          type="search"
+          class="mdeck__search"
+          data-mnav-search
+          placeholder="Find couch, TV, fridge, pricing, areas..."
+          aria-label="Filter Zoiris services and pages"
+          autocomplete="off"
+        />
+        <button type="button" class="mdeck__clear" data-mnav-clear hidden aria-label="Clear filter">
+          <Icon name="close" />
+        </button>
+      </div>
+
+      <div class="mdeck__tabs" role="tablist" aria-label="Navigation decks">
+        <span class="mdeck__glider" aria-hidden="true"></span>
+        <button type="button" role="tab" class="mdeck__tab" data-deck-btn="0" aria-selected={initialDeck === 0 ? 'true' : 'false'}>
+          <Icon name="truck" />
+          <span>Hauling</span>
+        </button>
+        <button type="button" role="tab" class="mdeck__tab" data-deck-btn="1" aria-selected={initialDeck === 1 ? 'true' : 'false'}>
+          <Icon name="chip" />
+          <span>E-Waste</span>
+        </button>
+        <button type="button" role="tab" class="mdeck__tab" data-deck-btn="2" aria-selected={initialDeck === 2 ? 'true' : 'false'}>
+          <Icon name="pin" />
+          <span>Explore</span>
+        </button>
+      </div>
     </div>
-    <div class="mobile-nav__group">
-      <h2>Electronics &amp; E-Waste</h2>
-      <ul>
-        <li><a href={ewasteHub.path} aria-current={isCurrent(ewasteHub.path)}>Electronics Pickup</a></li>
-        {ewaste.map(({ service, page }) => <li><a href={page.path} aria-current={isCurrent(page.path)}>{service.name}</a></li>)}
-        <li><a href="/accepted-items/" aria-current={isCurrent('/accepted-items/')}>Accepted Items</a></li>
-      </ul>
+
+    <div class="mdeck__results" data-mnav-results hidden>
+      <p class="mdeck__hint" data-mnav-count>Matching routes</p>
+      <div class="mdeck__results-grid" data-mnav-results-list></div>
     </div>
-    <div class="mobile-nav__group">
-      <h2>Company</h2>
-      <ul>
-        <li><a href="/areas/" aria-current={isCurrent('/areas/')}>Service Areas</a></li>
-        <li><a href="/how-it-works/" aria-current={isCurrent('/how-it-works/')}>How It Works</a></li>
-        <li><a href="/pricing/" aria-current={isCurrent('/pricing/')}>Pricing &amp; Estimates</a></li>
-        {company.map((c) => <li><a href={c.page!.path} aria-current={isCurrent(c.page!.path)}>{c.label}</a></li>)}
-      </ul>
+
+    <div class="mdeck__track" data-mnav-track>
+      <!-- Deck 01: Junk Removal & Cleanouts -->
+      <section class="mdeck__panel" data-deck-panel="0" aria-label="Junk Removal">
+        <div class="mdeck__panel-head">
+          <span class="mdeck__badge"><span class="mdeck__pulse" aria-hidden="true"></span> 01 · Hauling &amp; Cleanouts</span>
+          <span class="mdeck__swipe-cue" aria-hidden="true">Swipe for E-Waste →</span>
+        </div>
+
+        <a
+          class="mdeck__hero-card"
+          href={flagship.path}
+          aria-current={isCurrent(flagship.path)}
+          data-mnav-item
+          data-title="Junk Removal in Mobile"
+          data-keywords="mobile alabama hauling pickup flagship local"
+        >
+          <span class="mdeck__hero-icon"><Icon name="truck" /></span>
+          <span class="mdeck__hero-copy">
+            <strong>Junk Removal in Mobile</strong>
+            <small>Full-service lifting, loading &amp; haul-away</small>
+          </span>
+          <span class="mdeck__hero-arrow"><Icon name="arrow-right" /></span>
+        </a>
+
+        <ul class="mdeck__bento">
+          {junk.map(({ service, page }) => (
+            <li>
+              <a
+                class="mdeck__tile"
+                href={page.path}
+                aria-current={isCurrent(page.path)}
+                data-mnav-item
+                data-title={service.name}
+                data-keywords={serviceKeywords[service.id] ?? service.name.toLowerCase()}
+              >
+                <span class="mdeck__tile-icon"><Icon name={service.icon} /></span>
+                <span class="mdeck__tile-label">{shortMobileName[service.name] ?? service.name}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <a
+          class="mdeck__wide-link"
+          href="/services/"
+          aria-current={isCurrent('/services/')}
+          data-mnav-item
+          data-title="All Junk Removal Services"
+          data-keywords="all services cleanouts apartment moving storage property bulk"
+        >
+          <span>Browse all 16 hauling &amp; cleanout services</span>
+          <Icon name="arrow-right" />
+        </a>
+      </section>
+
+      <!-- Deck 02: Electronics & E-Waste -->
+      <section class="mdeck__panel" data-deck-panel="1" aria-label="Electronics and E-Waste">
+        <div class="mdeck__panel-head">
+          <span class="mdeck__badge mdeck__badge--teal"><span class="mdeck__pulse" aria-hidden="true"></span> 02 · Electronics &amp; E-Waste</span>
+          <span class="mdeck__swipe-cue" aria-hidden="true">← Swipe →</span>
+        </div>
+
+        <a
+          class="mdeck__hero-card mdeck__hero-card--teal"
+          href={ewasteHub.path}
+          aria-current={isCurrent(ewasteHub.path)}
+          data-mnav-item
+          data-title="Electronics Pickup"
+          data-keywords="ewaste e-waste electronics tech recycling cables consoles"
+        >
+          <span class="mdeck__hero-icon"><Icon name="chip" /></span>
+          <span class="mdeck__hero-copy">
+            <strong>Electronics Pickup</strong>
+            <small>Qualifying TVs, computers &amp; office tech</small>
+          </span>
+          <span class="mdeck__hero-arrow"><Icon name="arrow-right" /></span>
+        </a>
+
+        <ul class="mdeck__bento">
+          {ewaste.map(({ service, page }) => (
+            <li>
+              <a
+                class="mdeck__tile"
+                href={page.path}
+                aria-current={isCurrent(page.path)}
+                data-mnav-item
+                data-title={service.name}
+                data-keywords={serviceKeywords[service.id] ?? service.name.toLowerCase()}
+              >
+                <span class="mdeck__tile-icon mdeck__tile-icon--teal"><Icon name={service.icon} /></span>
+                <span class="mdeck__tile-label">{shortMobileName[service.name] ?? service.name}</span>
+              </a>
+            </li>
+          ))}
+          <li>
+            <a
+              class="mdeck__tile"
+              href="/accepted-items/"
+              aria-current={isCurrent('/accepted-items/')}
+              data-mnav-item
+              data-title="Accepted Items"
+              data-keywords="items list directory accepted electronics appliances"
+            >
+              <span class="mdeck__tile-icon mdeck__tile-icon--teal"><Icon name="check-circle" /></span>
+              <span class="mdeck__tile-label">Accepted Items</span>
+            </a>
+          </li>
+        </ul>
+
+        <a
+          class="mdeck__wide-link mdeck__wide-link--amber"
+          href="/restricted-items/"
+          aria-current={isCurrent('/restricted-items/')}
+          data-mnav-item
+          data-title="Batteries & Restricted Items"
+          data-keywords="lithium battery swollen hazardous paint chemicals"
+        >
+          <span><Icon name="battery" /> Loose or damaged batteries? Check rules</span>
+          <Icon name="arrow-right" />
+        </a>
+      </section>
+
+      <!-- Deck 03: Areas, Pricing & Company -->
+      <section class="mdeck__panel" data-deck-panel="2" aria-label="Explore Zoiris">
+        <div class="mdeck__panel-head">
+          <span class="mdeck__badge"><span class="mdeck__pulse" aria-hidden="true"></span> 03 · Areas, Pricing &amp; Info</span>
+          <span class="mdeck__swipe-cue" aria-hidden="true">← Swipe back</span>
+        </div>
+
+        <a
+          class="mdeck__hero-card"
+          href="/areas/"
+          aria-current={isCurrent('/areas/')}
+          data-mnav-item
+          data-title="Service Areas"
+          data-keywords="cities neighborhoods coverage mobile county baldwin zip"
+        >
+          <span class="mdeck__hero-icon"><Icon name="pin" /></span>
+          <span class="mdeck__hero-copy">
+            <strong>Service Areas</strong>
+            <small>City of Mobile &amp; Gulf Coast coverage</small>
+          </span>
+          <span class="mdeck__hero-arrow"><Icon name="arrow-right" /></span>
+        </a>
+
+        <div class="mdeck__duo">
+          <a
+            class="mdeck__feature"
+            href="/pricing/"
+            aria-current={isCurrent('/pricing/')}
+            data-mnav-item
+            data-title="Pricing & Estimates"
+            data-keywords="cost rates quote how much volume load estimate"
+          >
+            <Icon name="dollar" />
+            <strong>Pricing &amp; Estimates</strong>
+            <small>Volume-based quotes</small>
+          </a>
+          <a
+            class="mdeck__feature"
+            href="/how-it-works/"
+            aria-current={isCurrent('/how-it-works/')}
+            data-mnav-item
+            data-title="How It Works"
+            data-keywords="steps process photo pickup walkthrough"
+          >
+            <Icon name="route" />
+            <strong>How It Works</strong>
+            <small>From photo to haul-away</small>
+          </a>
+        </div>
+
+        <ul class="mdeck__bento">
+          {gridCompany.map((c) => (
+            <li>
+              <a
+                class="mdeck__tile"
+                href={c.page!.path}
+                aria-current={isCurrent(c.page!.path)}
+                data-mnav-item
+                data-title={c.label}
+                data-keywords={c.keywords}
+              >
+                <span class="mdeck__tile-icon"><Icon name={c.icon} /></span>
+                <span class="mdeck__tile-label">{c.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {contactCompany.map((c) => (
+          <a
+            class="mdeck__wide-link"
+            href={c.page!.path}
+            aria-current={isCurrent(c.page!.path)}
+            data-mnav-item
+            data-title={c.label}
+            data-keywords={c.keywords}
+          >
+            <span><Icon name={c.icon} /> {c.label} Zoiris</span>
+            <Icon name="arrow-right" />
+          </a>
+        ))}
+      </section>
     </div>
+
     <div class="mobile-nav__cta">
-      <a class="btn btn--primary btn--lg" href="/request-pickup/" aria-current={isCurrent('/request-pickup/')}>Request a Pickup</a>
-      <a class="btn btn--outline btn--lg" href={business.phoneHref} data-track="call" data-track-location="mobile-menu"><Icon name="call" /> Call {business.phoneDisplay}</a>
+      <a class="btn btn--primary mdeck__cta-primary" href="/request-pickup/" aria-current={isCurrent('/request-pickup/')} data-track="cta" data-track-location="mobile-menu">
+        <Icon name="camera" />
+        <span>Request Pickup</span>
+      </a>
+      <a class="btn mdeck__cta-call" href={business.phoneHref} data-track="call" data-track-location="mobile-menu">
+        <Icon name="call" />
+        <span>{business.phoneDisplay}</span>
+      </a>
     </div>
   </nav>
 </div>
@@ -172,6 +441,17 @@ const inCompany =
   @media (max-width: 767px) {
     .header-request {
       display: none !important;
+    }
+    .header-call-mobile {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0;
+      border-radius: 999px;
+      box-shadow: 0 6px 16px -6px rgba(15, 118, 110, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    }
+    .header-call-mobile span {
+      display: none;
     }
   }
   @media (hover: hover) and (min-width: 1200px) {
@@ -194,6 +474,13 @@ const inCompany =
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const panel = document.querySelector<HTMLElement>('[data-mobile-nav]');
   const label = document.querySelector<HTMLElement>('[data-menu-label]');
+  const track = document.querySelector<HTMLElement>('[data-mnav-track]');
+  const deckBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-deck-btn]'));
+  const searchInput = document.querySelector<HTMLInputElement>('[data-mnav-search]');
+  const clearBtn = document.querySelector<HTMLButtonElement>('[data-mnav-clear]');
+  const resultsWrap = document.querySelector<HTMLElement>('[data-mnav-results]');
+  const resultsList = document.querySelector<HTMLElement>('[data-mnav-results-list]');
+  const resultsCount = document.querySelector<HTMLElement>('[data-mnav-count]');
 
   // Header shadow once the page scrolls.
   let ticking = false;
@@ -243,16 +530,150 @@ const inCompany =
     if (!target.closest('[data-dropdown]') || target.closest('.nav__panel a')) closeAll();
   });
 
-  // Mobile menu.
+  // Mobile Dispatch Deck switcher & swipe sync.
+  const setActiveDeck = (idx: number, scrollMode: 'none' | 'instant' | 'smooth' = 'none') => {
+    const clamped = Math.max(0, Math.min(2, idx));
+    panel?.style.setProperty('--active-deck', String(clamped));
+    deckBtns.forEach((b, i) => b.setAttribute('aria-selected', String(i === clamped)));
+    if (track && scrollMode !== 'none') {
+      const w = track.clientWidth;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      track.scrollTo({
+        left: clamped * w,
+        behavior: scrollMode === 'smooth' && !reduced ? 'smooth' : 'instant'
+      });
+    }
+  };
+
+  deckBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (searchInput && searchInput.value) {
+        searchInput.value = '';
+        renderSearch('');
+      }
+      setActiveDeck(Number(btn.dataset.deckBtn || 0), 'smooth');
+    });
+  });
+
+  let trackTick = false;
+  track?.addEventListener(
+    'scroll',
+    () => {
+      if (trackTick) return;
+      trackTick = true;
+      requestAnimationFrame(() => {
+        if (track && track.clientWidth > 0) {
+          const idx = Math.round(track.scrollLeft / track.clientWidth);
+          setActiveDeck(idx, 'none');
+        }
+        trackTick = false;
+      });
+    },
+    { passive: true }
+  );
+
+  // Instant route & item finder inside mobile deck.
+  const indexedItems = (() => {
+    const seen = new Set<string>();
+    const list: { href: string; title: string; hay: string; current: boolean }[] = [];
+    document.querySelectorAll<HTMLAnchorElement>('[data-mnav-item]').forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      if (!href || seen.has(href)) return;
+      seen.add(href);
+      const title = a.dataset.title || a.textContent?.trim() || '';
+      const kw = a.dataset.keywords || '';
+      list.push({
+        href,
+        title,
+        hay: `${title} ${kw}`.toLowerCase(),
+        current: a.getAttribute('aria-current') === 'page'
+      });
+    });
+    return list;
+  })();
+
+  const renderSearch = (raw: string) => {
+    const q = raw.trim().toLowerCase();
+    if (clearBtn) clearBtn.hidden = !q;
+    panel?.toggleAttribute('data-searching', Boolean(q));
+    if (!resultsWrap || !resultsList || !track) return;
+    if (!q) {
+      resultsWrap.hidden = true;
+      track.hidden = false;
+      return;
+    }
+    const terms = q.split(/\s+/).filter(Boolean);
+    const matches = indexedItems.filter((item) => terms.every((t) => item.hay.includes(t)));
+    track.hidden = true;
+    resultsWrap.hidden = false;
+    if (resultsCount) {
+      resultsCount.textContent = matches.length
+        ? `${matches.length} matching destination${matches.length === 1 ? '' : 's'}`
+        : 'No exact match — send a photo for a quick answer';
+    }
+    resultsList.innerHTML = '';
+    if (matches.length) {
+      for (const m of matches.slice(0, 8)) {
+        const a = document.createElement('a');
+        a.className = 'mdeck__result-card';
+        a.href = m.href;
+        if (m.current) a.setAttribute('aria-current', 'page');
+        const span = document.createElement('span');
+        span.textContent = m.title;
+        const arrow = document.createElement('span');
+        arrow.className = 'mdeck__result-go';
+        arrow.textContent = 'Open →';
+        a.append(span, arrow);
+        resultsList.appendChild(a);
+      }
+    } else {
+      const fallback = document.createElement('a');
+      fallback.className = 'mdeck__result-card mdeck__result-card--cta';
+      fallback.href = '/request-pickup/';
+      const span = document.createElement('span');
+      span.textContent = 'Snap a photo & ask about your item';
+      const arrow = document.createElement('span');
+      arrow.className = 'mdeck__result-go';
+      arrow.textContent = 'Start →';
+      fallback.append(span, arrow);
+      resultsList.appendChild(fallback);
+    }
+  };
+
+  searchInput?.addEventListener('input', () => renderSearch(searchInput.value));
+  clearBtn?.addEventListener('click', () => {
+    if (!searchInput) return;
+    searchInput.value = '';
+    renderSearch('');
+    searchInput.focus();
+  });
+
+  // Mobile menu open/close with portal origin & initial active deck alignment.
   const setMenu = (open: boolean) => {
     if (!toggle || !panel) return;
-    const top = header ? Math.round(header.getBoundingClientRect().bottom) : 72;
-    panel.style.setProperty('--mobile-nav-top', `${Math.max(0, top)}px`);
+    if (open && toggle) {
+      const r = toggle.getBoundingClientRect();
+      const hdrBottom = header ? Math.round(header.getBoundingClientRect().bottom) : 72;
+      const originX = Math.round(r.left + r.width / 2);
+      const originY = Math.round(r.top + r.height / 2 - hdrBottom);
+      panel.style.setProperty('--mobile-nav-top', `${Math.max(0, hdrBottom)}px`);
+      panel.style.setProperty('--portal-x', `${originX}px`);
+      panel.style.setProperty('--portal-y', `${originY}px`);
+    }
     panel.toggleAttribute('data-open', open);
+    header?.toggleAttribute('data-menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     if (label) label.textContent = open ? 'Close menu' : 'Open menu';
     document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      const initIdx = Number(panel.dataset.initialDeck || 0);
+      requestAnimationFrame(() => setActiveDeck(initIdx, 'instant'));
+    } else if (searchInput && searchInput.value) {
+      searchInput.value = '';
+      renderSearch('');
+    }
   };
+
   toggle?.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
   panel?.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('a')) setMenu(false);
