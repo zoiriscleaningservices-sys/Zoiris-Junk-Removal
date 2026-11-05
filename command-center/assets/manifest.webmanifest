@@ -2,6 +2,7 @@
   "name": "Zoiris Command Center",
   "short_name": "Zoiris",
   "description": "Private owner app for Zoiris Junk Removal — requests, map, schedule and photos.",
+  "id": "/owner/command-center/",
   "start_url": "/owner/command-center/",
   "scope": "/owner/",
   "display": "standalone",

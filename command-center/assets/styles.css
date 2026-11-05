@@ -4128,6 +4128,40 @@ body[data-view='map'] .cc-workspace {
 .login-recovery-row .cc-input {
   flex: 1 1 180px;
 }
+.login-install {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 0.8rem;
+  margin-top: 1.15rem;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--teal-50);
+  border: 1px solid var(--teal-300);
+}
+.login-install__text {
+  display: grid;
+  gap: 0.15rem;
+  flex: 1 1 180px;
+  min-width: 0;
+}
+.login-install__text strong {
+  font-size: 0.88rem;
+  color: var(--navy-950);
+}
+.login-install__text span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.cc-hello__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
 .login-foot {
   position: relative;
   margin-top: 18px;

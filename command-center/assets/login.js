@@ -7,36 +7,22 @@
   const recoveryPanel = document.getElementById('recovery-panel');
   const toggleRecovery = document.getElementById('toggle-recovery');
   const submitBtn = document.getElementById('login-submit');
+  const installCard = document.getElementById('login-install-card');
+  const installBtn = document.getElementById('login-install-btn');
+  const installHint = document.getElementById('login-install-hint');
+
+  const ownerUrl = window.zoirisOwnerUrl || ((p) => p);
+  const stripBase = window.zoirisStripBase || ((p) => p);
 
   const params = new URLSearchParams(window.location.search);
-  const nextUrl = params.get('next') && params.get('next').startsWith('/owner/') ? params.get('next') : '/owner/command-center/';
+  const rawNext = stripBase(params.get('next') || '');
+  const nextUrl = ownerUrl(rawNext && rawNext.startsWith('/owner/') ? rawNext : '/owner/command-center/');
 
   function showMsg(text, kind) {
     notice.textContent = text;
     notice.className = 'cc-alert ' + (kind === 'error' ? 'cc-alert--error' : kind === 'warn' ? 'cc-alert--warn' : 'cc-alert--ok');
     notice.hidden = false;
   }
-
-  fetch('/api/auth/status', { headers: { Accept: 'application/json' } })
-    .then((r) => r.json())
-    .then((st) => {
-      if (st.authenticated) {
-        window.location.replace(nextUrl);
-        return;
-      }
-      if (st.needsInitialSetup) {
-        if (st.setupSecretConfigured) {
-          setupForm.hidden = false;
-          loginForm.hidden = true;
-        } else {
-          showMsg(
-            'No owner account is provisioned yet. Run `npm run owner:provision -- --email <you> --password <strong-pass>` on the server or configure OWNER_SETUP_SECRET.',
-            'warn'
-          );
-        }
-      }
-    })
-    .catch(() => {});
 
   function getDeviceHint() {
     let standalone = false;
@@ -49,6 +35,86 @@
       standalone
     };
   }
+
+  /* PWA Install Banner on Login */
+  function refreshInstallBanner() {
+    if (!installCard || !window.ZOIRIS_PWA) return;
+    if (window.ZOIRIS_PWA.isStandalone()) {
+      installCard.hidden = true;
+      return;
+    }
+    if (window.ZOIRIS_PWA.canPrompt()) {
+      installCard.hidden = false;
+      installHint.textContent = 'Tap Install to put the Zoiris app icon right on your phone.';
+      installBtn.textContent = 'Download app';
+    } else if (window.ZOIRIS_PWA.isIos()) {
+      installCard.hidden = false;
+      installHint.textContent = 'iPhone / iPad: tap Share (⬆) at the bottom of Safari, then tap “Add to Home Screen”.';
+      installBtn.textContent = 'How to install';
+    } else {
+      installCard.hidden = false;
+      installHint.textContent = 'Open your browser menu (⋮) and tap “Install app” or “Add to Home screen”.';
+      installBtn.textContent = 'How to install';
+    }
+  }
+  refreshInstallBanner();
+  window.addEventListener('zoiris:pwa-ready', refreshInstallBanner);
+  window.addEventListener('zoiris:pwa-installed', refreshInstallBanner);
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (window.ZOIRIS_PWA?.canPrompt()) {
+        await window.ZOIRIS_PWA.triggerInstall();
+        refreshInstallBanner();
+        return;
+      }
+      if (window.ZOIRIS_PWA?.isIos()) {
+        showMsg('On iPhone / iPad: tap the Share button (square with arrow ⬆) in Safari, scroll down, and tap “Add to Home Screen”. Then open Zoiris from your Home Screen!', 'ok');
+      } else {
+        showMsg('Tap your browser’s ⋮ menu in the corner and choose “Install app” or “Add to Home screen” to install Zoiris on your phone.', 'ok');
+      }
+    });
+  }
+
+  fetch('/api/auth/status', { headers: { Accept: 'application/json' } })
+    .then((r) => r.json())
+    .then((st) => {
+      if (st.authenticated) {
+        window.location.replace(nextUrl);
+        return;
+      }
+      if (st.needsInitialSetup) {
+        if (st.noSecretNeeded) {
+          // On-Device Phone Vault (24/7 GitHub Pages mode)
+          const secretWrap = document.getElementById('setup-secret-wrap');
+          const secretInput = document.getElementById('setup-secret');
+          const heading = document.getElementById('setup-heading');
+          const desc = document.getElementById('setup-desc');
+          const title = document.getElementById('cc-login-title');
+          const sub = document.querySelector('.login-sub');
+          if (secretWrap) secretWrap.hidden = true;
+          if (secretInput) secretInput.required = false;
+          if (title) title.textContent = 'Set up this device';
+          if (sub) sub.textContent = 'Create your private owner login for this phone or computer. Your password is encrypted on your device and stays signed in for 30 days.';
+          if (heading) heading.hidden = true;
+          if (desc) desc.hidden = true;
+          setupForm.style.marginTop = '0';
+          setupForm.style.paddingTop = '0';
+          setupForm.style.borderTop = '0';
+          setupForm.hidden = false;
+          loginForm.hidden = true;
+        } else if (st.setupSecretConfigured) {
+          setupForm.hidden = false;
+          loginForm.hidden = true;
+        } else {
+          showMsg(
+            'No owner account is provisioned yet. Run `npm run owner:provision -- --email <you> --password <strong-pass>` on the server or configure OWNER_SETUP_SECRET.',
+            'warn'
+          );
+        }
+      }
+    })
+    .catch(() => {});
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -99,7 +165,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          setupSecret: document.getElementById('setup-secret').value,
+          setupSecret: document.getElementById('setup-secret')?.value || '',
           displayName: document.getElementById('setup-name').value.trim(),
           email: document.getElementById('setup-email').value.trim(),
           password: document.getElementById('setup-password').value,
@@ -114,7 +180,7 @@
       try {
         if (data.currentDevice) sessionStorage.setItem('zoiris_just_signed_in', data.currentDevice);
       } catch {}
-      window.location.replace('/owner/command-center/');
+      window.location.replace(ownerUrl('/owner/command-center/'));
     } catch (_err) {
       showMsg('Provisioning request failed.', 'error');
     }

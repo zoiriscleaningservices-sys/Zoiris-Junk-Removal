@@ -66,11 +66,11 @@
         <button id="login-submit" class="cc-btn cc-btn--primary cc-btn--lg cc-btn--block" type="submit">Sign in</button>
       </form>
 
-      <!-- INITIAL PROTECTED SETUP (only shown if 0 owners exist & OWNER_SETUP_SECRET is configured) -->
+      <!-- INITIAL PROTECTED SETUP (shown on first open) -->
       <form id="setup-form" class="cc-form login-section" hidden>
-        <h2>Create the owner account</h2>
-        <p class="cc-fine" style="margin:0 0 .8rem">No owner account exists yet. Enter your server <code>OWNER_SETUP_SECRET</code> to create the primary owner.</p>
-        <div class="cc-field">
+        <h2 id="setup-heading">Create the owner account</h2>
+        <p id="setup-desc" class="cc-fine" style="margin:0 0 .8rem">No owner account exists yet. Enter your server <code>OWNER_SETUP_SECRET</code> to create the primary owner.</p>
+        <div id="setup-secret-wrap" class="cc-field">
           <label for="setup-secret">Setup secret</label>
           <input id="setup-secret" class="cc-input" type="password" required />
         </div>
@@ -80,14 +80,23 @@
         </div>
         <div class="cc-field">
           <label for="setup-email">Owner email</label>
-          <input id="setup-email" class="cc-input" type="email" required />
+          <input id="setup-email" class="cc-input" type="email" value="owner@zoirisjunkremoval.com" required />
         </div>
         <div class="cc-field">
-          <label for="setup-password">Strong password (12+ characters)</label>
-          <input id="setup-password" class="cc-input" type="password" minlength="12" autocomplete="new-password" required />
+          <label for="setup-password">Owner password (8+ characters)</label>
+          <input id="setup-password" class="cc-input" type="password" minlength="8" autocomplete="new-password" required />
         </div>
-        <button class="cc-btn cc-btn--navy cc-btn--block" type="submit">Create owner account</button>
+        <button class="cc-btn cc-btn--primary cc-btn--lg cc-btn--block" type="submit">Save &amp; sign in on this device</button>
       </form>
+
+      <!-- INSTALL TO PHONE (PWA) -->
+      <div id="login-install-card" class="login-install" hidden>
+        <div class="login-install__text">
+          <strong>Put Zoiris on your phone Home Screen</strong>
+          <span id="login-install-hint">Opens full-screen like a native app &amp; works 24/7.</span>
+        </div>
+        <button id="login-install-btn" type="button" class="cc-btn cc-btn--navy cc-btn--sm">Install app</button>
+      </div>
 
       <!-- ACCOUNT RECOVERY -->
       <div class="login-links">
@@ -120,6 +129,7 @@
 
     <p class="login-foot">Private owner area · Zoiris Junk Removal · <a href="tel:+12519308621">251-930-8621</a></p>
 
+    <script src="/owner/assets/local-vault.js"></script>
     <script src="/owner/assets/login.js" defer></script>
   </body>
 </html>

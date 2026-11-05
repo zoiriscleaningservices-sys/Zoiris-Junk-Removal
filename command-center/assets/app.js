@@ -158,6 +158,8 @@
   const moreSheet = document.getElementById('cc-more-sheet');
   const moreBtn = document.getElementById('cc-more-btn');
   const sheetScrim = document.getElementById('cc-sheet-scrim');
+  const ownerUrl = (p) => (window.zoirisOwnerUrl ? window.zoirisOwnerUrl(p) : p);
+  const stripBase = (p) => (window.zoirisStripBase ? window.zoirisStripBase(p) : p);
 
   /* ---------------------------------------------------------------------- */
   /* Helpers                                                                */
@@ -441,7 +443,7 @@
     }
     const res = await fetch(url, { method, headers, body });
     if (res.status === 401) {
-      window.location.replace('/owner/login/?next=' + encodeURIComponent(window.location.pathname));
+      window.location.replace(ownerUrl('/owner/login/') + '?next=' + encodeURIComponent(stripBase(window.location.pathname)));
       throw new Error('Session expired');
     }
     const data = await res.json().catch(() => ({}));
@@ -503,7 +505,7 @@
 
   function emptyState(title, body = '', action = '') {
     return `<div class="cc-empty">
-      <img class="cc-empty__mark" src="/owner/assets/logo-mark.svg" alt="" width="44" height="44" />
+      <img class="cc-empty__mark" src="${esc(ownerUrl('/owner/assets/logo-mark.svg'))}" alt="" width="44" height="44" />
       <strong>${title}</strong>${body ? `<span>${body}</span>` : ''}${action}
     </div>`;
   }
@@ -636,7 +638,7 @@
   function desktopNotify(title, body) {
     if (!state.prefs.desktop_enabled || !('Notification' in window) || Notification.permission !== 'granted') return;
     try {
-      new Notification(title, { body, icon: '/owner/assets/icon-192.png' });
+      new Notification(title, { body, icon: ownerUrl('/owner/assets/icon-192.png') });
     } catch {}
   }
 
@@ -690,10 +692,16 @@
   }
 
   function currentPath() {
-    return window.location.pathname.replace(/\/+$/, '') + '/';
+    return stripBase(window.location.pathname).replace(/\/+$/, '') + '/';
   }
 
   function connectRealtime() {
+    if (window.__ZOIRIS_LOCAL_VAULT__) {
+      ssePill.textContent = '24/7 App';
+      ssePill.className = 'cc-live is-live';
+      ssePill.title = 'Live 24/7 on GitHub Pages — stored privately on your device';
+      return;
+    }
     const es = new EventSource('/api/owner/realtime');
     es.addEventListener('connected', () => {
       ssePill.textContent = 'Live';
@@ -750,8 +758,10 @@
   /* Navigation, sheet & shell wiring                                       */
   /* ---------------------------------------------------------------------- */
   function navigate(path) {
-    if (window.location.pathname + window.location.search !== path) {
-      history.pushState(null, '', path);
+    const clean = stripBase(path);
+    const full = ownerUrl(clean);
+    if (window.location.pathname + window.location.search !== full) {
+      history.pushState(null, '', full);
     }
     closeSheet();
     closeNotif();
@@ -779,7 +789,7 @@
   }
 
   document.getElementById('cc-more-grid').innerHTML = TOOLS.map(
-    (t) => `<a class="cc-tile" href="${t.href}" data-spa>
+    (t) => `<a class="cc-tile" href="${ownerUrl(t.href)}" data-spa>
       <span class="cc-tile__ico">${ico(t.icon)}</span>
       <span class="cc-tile__label">${esc(t.label)}</span>
       <span class="cc-tile__desc">${esc(t.desc)}</span>
@@ -812,11 +822,25 @@
   });
 
   document.addEventListener('click', (e) => {
+    const installTrigger = e.target.closest('[data-install-app]');
+    if (installTrigger) {
+      e.preventDefault();
+      openInstallPhoneGuide();
+      return;
+    }
+    const logTrigger = e.target.closest('[data-log-lead]');
+    if (logTrigger) {
+      e.preventDefault();
+      openNewLeadModal();
+      return;
+    }
     const a = e.target.closest('a[data-route], a[data-spa]');
-    if (a && a.getAttribute('href')?.startsWith('/owner/') && !e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
+    const rawHref = a?.getAttribute('href') || '';
+    const cleanHref = stripBase(rawHref);
+    if (a && cleanHref.startsWith('/owner/') && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey && e.button === 0) {
       e.preventDefault();
       if (modal.open && modal.contains(a)) modal.close();
-      navigate(a.getAttribute('href'));
+      navigate(cleanHref);
       return;
     }
     if (!notifPanel.hidden && !notifPanel.contains(e.target) && !notifBtn.contains(e.target)) closeNotif();
@@ -899,10 +923,115 @@
     try {
       await api('/api/auth/logout', { method: 'POST' });
     } catch {}
-    window.location.replace('/owner/login/');
+    window.location.replace(ownerUrl('/owner/login/'));
   }
   document.getElementById('cc-logout-btn').addEventListener('click', logout);
   document.getElementById('cc-logout-btn-m').addEventListener('click', logout);
+
+  const installBtnMobile = document.getElementById('cc-install-btn-m');
+  function syncInstallButtons() {
+    if (!installBtnMobile) return;
+    installBtnMobile.hidden = Boolean(window.ZOIRIS_PWA?.isStandalone());
+  }
+  syncInstallButtons();
+  window.addEventListener('zoiris:pwa-ready', syncInstallButtons);
+  window.addEventListener('zoiris:pwa-installed', () => {
+    syncInstallButtons();
+    toast('Zoiris App installed on your device!');
+  });
+  installBtnMobile?.addEventListener('click', () => {
+    closeSheet();
+    openInstallPhoneGuide();
+  });
+
+  async function openInstallPhoneGuide() {
+    if (window.ZOIRIS_PWA?.canPrompt()) {
+      const outcome = await window.ZOIRIS_PWA.triggerInstall();
+      if (outcome === 'accepted') return;
+    }
+    const isIos = Boolean(window.ZOIRIS_PWA?.isIos());
+    openModal(
+      'Download Zoiris App on your phone',
+      isIos
+        ? `<div class="cc-alert cc-alert--ok"><strong>iPhone / iPad (Safari):</strong><br/>1. Tap the <strong>Share</strong> button (square with arrow at the bottom of Safari).<br/>2. Scroll down and tap <strong>Add to Home Screen</strong> → <strong>Add</strong>.</div>
+           <p class="cc-fine">Once added, Zoiris opens full-screen from your Home Screen with its own icon and stays ready 24/7.</p>`
+        : `<div class="cc-alert cc-alert--ok"><strong>Android / Chrome / Edge:</strong><br/>1. Tap the browser menu (<strong>⋮</strong> in the top-right corner).<br/>2. Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>.</div>
+           <p class="cc-fine">Once installed, Zoiris opens full-screen from your Home Screen with its own icon and stays ready 24/7.</p>`
+    );
+  }
+
+  function openNewLeadModal() {
+    openModal(
+      'Log a pickup request',
+      `<form id="quick-lead-form" class="cc-form">
+        <div class="cc-form-row">
+          <div class="cc-field"><label for="ql-name">Customer name</label><input id="ql-name" class="cc-input" type="text" placeholder="Jane Smith" required /></div>
+          <div class="cc-field"><label for="ql-phone">Phone number</label><input id="ql-phone" class="cc-input" type="tel" inputmode="tel" placeholder="251-555-0199" required /></div>
+        </div>
+        <div class="cc-field"><label for="ql-addr">Pickup street address</label><input id="ql-addr" class="cc-input" type="text" placeholder="104 Dauphin St" required /></div>
+        <div class="cc-form-row">
+          <div class="cc-field"><label for="ql-city">City</label><input id="ql-city" class="cc-input" type="text" value="Mobile" required /></div>
+          <div class="cc-field"><label for="ql-zip">ZIP code</label><input id="ql-zip" class="cc-input" type="text" inputmode="numeric" value="36602" required /></div>
+        </div>
+        <div class="cc-form-row">
+          <div class="cc-field"><label for="ql-svc">Service</label>
+            <select id="ql-svc" class="cc-select">
+              <option value="Junk Removal">Junk Removal</option>
+              <option value="Furniture Removal">Furniture Removal</option>
+              <option value="Appliance Removal">Appliance Removal</option>
+              <option value="Garage &amp; Property Cleanouts">Garage &amp; Property Cleanout</option>
+              <option value="Electronics &amp; E-Waste Pickup">Electronics &amp; E-Waste Pickup</option>
+              <option value="Commercial Junk Removal">Commercial Junk Removal</option>
+            </select>
+          </div>
+          <div class="cc-field"><label for="ql-date">Preferred date (optional)</label><input id="ql-date" class="cc-input" type="date" /></div>
+        </div>
+        <div class="cc-field"><label for="ql-desc">What needs to be picked up?</label><textarea id="ql-desc" class="cc-textarea" rows="2" placeholder="Sectional sofa, old fridge in garage…"></textarea></div>
+        <div class="cc-field"><label for="ql-files">Photos or videos (camera or gallery)</label><input id="ql-files" class="cc-input" type="file" accept="image/*,video/*" multiple /></div>
+        <button class="cc-btn cc-btn--primary cc-btn--lg cc-btn--block" type="submit">${ico('plus')}Save request</button>
+      </form>`
+    );
+    bindForm('quick-lead-form', async () => {
+      const files = Array.from(document.getElementById('ql-files')?.files || []);
+      const svc = document.getElementById('ql-svc').value;
+      const created = await api('/api/owner/leads', {
+        method: 'POST',
+        body: {
+          fullName: document.getElementById('ql-name').value.trim(),
+          phone: document.getElementById('ql-phone').value.trim(),
+          pickupAddress: document.getElementById('ql-addr').value.trim(),
+          city: document.getElementById('ql-city').value.trim(),
+          zipCode: document.getElementById('ql-zip').value.trim(),
+          requestedService: svc,
+          hasElectronics: /electronic|e-waste/i.test(svc),
+          preferredDate: document.getElementById('ql-date').value,
+          itemDescription: document.getElementById('ql-desc').value.trim() || svc,
+          expectedFiles: files.length
+        }
+      });
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append('file', file);
+        if (created.uploadToken) {
+          fd.append('uploadToken', created.uploadToken);
+          await fetch('/api/public/uploads', { method: 'POST', body: fd });
+        } else {
+          await api(`/api/owner/leads/${encodeURIComponent(created.lead.id)}/media`, { method: 'POST', body: fd });
+        }
+      }
+      if (created.uploadToken && files.length) {
+        await fetch('/api/public/uploads/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uploadToken: created.uploadToken })
+        }).catch(() => {});
+      }
+      modal.close();
+      toast(`Saved ${created.lead.leadNumber}`);
+      refreshUnreadLeadBadge();
+      navigate(`/owner/leads/${encodeURIComponent(created.lead.leadNumber)}`);
+    });
+  }
 
   /* ---------------------------------------------------------------------- */
   /* Shared lead card                                                       */
@@ -1062,9 +1191,13 @@
           <h1>${hello}${name ? `, ${name}` : ''}</h1>
           ${
             state.currentDevice
-              ? `<a class="cc-hello__device" href="/owner/security/" data-spa>${ico(deviceIconName(state.deviceKind))}<span>Logged in from <strong>${esc(state.currentDevice)}</strong>${state.activeDeviceCount > 1 ? ` · ${esc(state.activeDeviceCount)} devices` : ''}</span></a>`
+              ? `<a class="cc-hello__device" href="${ownerUrl('/owner/security/')}" data-spa>${ico(deviceIconName(state.deviceKind))}<span>Logged in from <strong>${esc(state.currentDevice)}</strong>${state.activeDeviceCount > 1 ? ` · ${esc(state.activeDeviceCount)} devices` : ''}</span></a>`
               : ''
           }
+          <div class="cc-hello__actions">
+            <button type="button" class="cc-btn cc-btn--primary cc-btn--sm" data-log-lead>${ico('plus')}Log request</button>
+            ${!window.ZOIRIS_PWA?.isStandalone() ? `<button type="button" class="cc-btn cc-btn--navy cc-btn--sm" data-install-app>${ico('smartphone')}Download on phone</button>` : ''}
+          </div>
         </header>
 
         ${focus}
@@ -1303,7 +1436,8 @@
       ${pageHead(
         'Requests',
         `${res.total} ${view.id === 'all' ? 'active' : view.label.toLowerCase()} request${res.total === 1 ? '' : 's'}${q ? ` matching “${esc(q)}”` : ''}`,
-        `<a class="cc-btn cc-btn--ghost cc-btn--sm" href="/api/owner/exports/leads.csv">${ico('download')}Export CSV</a>
+        `<button type="button" class="cc-btn cc-btn--primary cc-btn--sm" data-log-lead>${ico('plus')}Log request</button>
+         <a class="cc-btn cc-btn--ghost cc-btn--sm" href="/api/owner/exports/leads.csv">${ico('download')}Export CSV</a>
          ${res.leads.length ? `<button id="leads-purge-view" type="button" class="cc-btn cc-btn--danger cc-btn--sm">${ico('trash')}Delete ${q || view.id !== 'all' ? `shown (${res.leads.length})` : `all (${res.total})`}</button>` : ''}`
       )}
 
@@ -1553,6 +1687,7 @@
               <h2>${ico('media')}Photos &amp; videos</h2>
               <span class="cc-inline-actions">
                 <span class="cc-muted">${photos} photo${photos === 1 ? '' : 's'} · ${videos} video${videos === 1 ? '' : 's'}</span>
+                ${window.__ZOIRIS_LOCAL_VAULT__ ? `<input id="ld-upload-input" type="file" accept="image/*,video/*" multiple hidden /><button id="ld-add-media" type="button" class="cc-btn cc-btn--navy cc-btn--sm">${ico('camera')}Add</button>` : ''}
                 ${d.attachments.length ? `<button id="ld-del-all-media" type="button" class="cc-btn cc-btn--danger cc-btn--sm">${ico('trash')}Delete all (${d.attachments.length})</button>` : ''}
               </span>
             </div>
@@ -1869,6 +2004,30 @@
         await rerender();
       })
     );
+
+    const uploadBtn = document.getElementById('ld-add-media');
+    const uploadInp = document.getElementById('ld-upload-input');
+    if (uploadBtn && uploadInp) {
+      uploadBtn.addEventListener('click', () => uploadInp.click());
+      uploadInp.addEventListener('change', async () => {
+        const files = Array.from(uploadInp.files || []);
+        if (!files.length) return;
+        uploadBtn.disabled = true;
+        try {
+          for (const f of files) {
+            const fd = new FormData();
+            fd.append('file', f);
+            await api(`/api/owner/leads/${encodeURIComponent(l.id)}/media`, { method: 'POST', body: fd });
+          }
+          toast(`Added ${files.length} file(s)`);
+          await rerender();
+        } catch (err) {
+          toast(err.message, true);
+        } finally {
+          uploadBtn.disabled = false;
+        }
+      });
+    }
 
     bindClick(document.getElementById('ld-del-all-media'), async () => {
       if (!confirm(`Permanently delete all ${d.attachments.length} photo(s)/video(s) on this request from storage?`)) return;
@@ -3048,8 +3207,29 @@
 
           <h3 class="cc-h3">Connected services</h3>
           ${table(H, res.integrations.map((i) => tr(H, [esc(i.id), esc(i.name), statusPill(i.status)])).join(''))}
+
+          ${
+            res.localVaultMode || readPref('zoiris.cloudApiUrl', '')
+              ? `<div class="login-section">
+                   <h3 class="cc-h3">Live Cloud CRM Sync (Optional)</h3>
+                   <p class="cc-fine">Right now your app runs 24/7 in encrypted On-Device Vault mode on GitHub Pages. If you deploy the Node CRM server to Render/Docker later, paste its URL here to sync across devices.</p>
+                   <form id="cloud-url-form" class="cc-form">
+                     <div class="cc-field"><label for="cloud-api-url">Cloud CRM Server URL</label><input id="cloud-api-url" class="cc-input" type="url" placeholder="https://crm.zoirisjunkremoval.com" value="${esc(readPref('zoiris.cloudApiUrl', ''))}" /></div>
+                     <button class="cc-btn cc-btn--ghost cc-btn--block" type="submit">Save sync URL &amp; reload</button>
+                   </form>
+                 </div>`
+              : ''
+          }
         </div>
       </div>`;
+
+    bindForm('cloud-url-form', async () => {
+      const val = document.getElementById('cloud-api-url').value.trim().replace(/\/+$/, '');
+      if (val) writePref('zoiris.cloudApiUrl', val);
+      else localStorage.removeItem('zoiris.cloudApiUrl');
+      toast('Sync setting saved — reloading…');
+      setTimeout(() => window.location.reload(), 500);
+    });
 
     bindForm('settings-form', async () => {
       await api('/api/owner/settings', {
@@ -3189,7 +3369,7 @@
         if (isCurrent && !confirm('Sign out on this device now?')) return;
         const out = await api(`/api/owner/security/sessions/${encodeURIComponent(btn.dataset.revokeSess)}`, { method: 'DELETE' });
         if (out.signedOutCurrent) {
-          window.location.replace('/owner/login/');
+          window.location.replace(ownerUrl('/owner/login/'));
           return;
         }
         toast('Device signed out');
@@ -3278,7 +3458,7 @@
     const entry = ROUTES[p] || (isDetail ? ['leads', null] : null);
 
     if (!entry) {
-      history.replaceState(null, '', '/owner/command-center/');
+      history.replaceState(null, '', ownerUrl('/owner/command-center/'));
       return route();
     }
 
@@ -3306,7 +3486,7 @@
     if (!keepScroll) window.scrollTo(0, 0);
     try {
       if (isDetail) {
-        const seg = decodeURIComponent(window.location.pathname.slice('/owner/leads/'.length).replace(/\/+$/, ''));
+        const seg = decodeURIComponent(stripBase(window.location.pathname).slice('/owner/leads/'.length).replace(/\/+$/, ''));
         await renderLeadDetail(seg, seq);
       } else {
         await entry[1](seq);
@@ -3338,7 +3518,7 @@
   async function init() {
     const st = await api('/api/auth/status');
     if (!st.authenticated) {
-      window.location.replace('/owner/login/');
+      window.location.replace(ownerUrl('/owner/login/'));
       return;
     }
     state.owner = st.owner;
@@ -3355,11 +3535,18 @@
         toast(`Logged in from ${justSignedIn}`);
       }
     } catch {}
+    try {
+      const ghSpaPath = sessionStorage.getItem('zoiris_gh_spa_path');
+      if (ghSpaPath) {
+        sessionStorage.removeItem('zoiris_gh_spa_path');
+        history.replaceState(null, '', ghSpaPath);
+      }
+    } catch {}
     startClock();
     connectRealtime();
     refreshNotifications();
     await route();
   }
 
-  init().catch(() => window.location.replace('/owner/login/'));
+  init().catch(() => window.location.replace(ownerUrl('/owner/login/')));
 })();

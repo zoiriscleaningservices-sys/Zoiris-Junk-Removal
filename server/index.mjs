@@ -466,6 +466,39 @@ async function routeRequest(req, res, deps) {
       return sendJson(res, 200, { ok: true, ...result });
     }
 
+    if (pathname === '/api/owner/leads' && method === 'POST') {
+      const body = await readJsonBody(req, 128 * 1024);
+      const nameParts = String(body.fullName || '').trim().split(/\s+/).filter(Boolean);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || 'Customer';
+      const created = await crm.submitCustomerInquiry(
+        {
+          firstName,
+          lastName,
+          phone: body.phone || '',
+          email: body.email || '',
+          pickupAddress: body.pickupAddress || '',
+          city: body.city || 'Mobile',
+          state: 'AL',
+          zipCode: body.zipCode || '36602',
+          requestedService: body.requestedService || 'Junk Removal',
+          itemDescription: body.itemDescription || body.requestedService || 'Logged by owner',
+          accessInstructions: body.accessInstructions || '',
+          preferredDate: body.preferredDate || '',
+          consentGiven: true,
+          expectedFiles: Number(body.expectedFiles || 0),
+          sourcePagePath: 'owner_logged',
+          formOpenedAt: Date.now() - 8000
+        },
+        { ip: clientIp(req), userAgent: req.headers['user-agent'] || '' }
+      );
+      return sendJson(res, 201, {
+        ok: true,
+        uploadToken: created.uploadToken || null,
+        lead: { id: created.leadId, leadNumber: created.leadNumber }
+      });
+    }
+
     if (pathname === '/api/owner/pipeline' && method === 'GET') {
       return sendJson(res, 200, { ok: true, ...crm.getPipelineBoard() });
     }
@@ -1297,6 +1330,22 @@ async function routeRequest(req, res, deps) {
   /* ---------------------------------------------------------------------- */
   if (pathname === '/owner' || pathname.startsWith('/owner/')) {
     applyPrivateHeaders(res);
+
+    if (pathname === '/owner/sw.js') {
+      const swFile = resolve(COMMAND_CENTER_DIR, 'sw.js');
+      if (!existsSync(swFile)) {
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, {
+        'Content-Type': 'text/javascript; charset=utf-8',
+        'Service-Worker-Allowed': '/owner/',
+        'Cache-Control': 'no-cache'
+      });
+      res.end(readFileSync(swFile));
+      return;
+    }
 
     // Serve static Command Center UI assets (/owner/assets/*)
     if (pathname.startsWith('/owner/assets/')) {

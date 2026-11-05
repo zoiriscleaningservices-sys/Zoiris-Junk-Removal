@@ -53,25 +53,42 @@ export function detectDeviceCategory(explicitDevice = '', userAgent = '') {
   return 'desktop';
 }
 
+function chicagoDayBoundsUtc(ymd) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  const probe = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const tzPart =
+    new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', timeZoneName: 'shortOffset' })
+      .formatToParts(probe)
+      .find((p) => p.type === 'timeZoneName')?.value || 'GMT-6';
+  const offsetHours = Number(tzPart.replace('GMT', '')) || -6;
+  const startMs = Date.UTC(y, m - 1, d, 0, 0, 0, 0) - offsetHours * 3600000;
+  return {
+    fromIso: new Date(startMs).toISOString(),
+    toIso: new Date(startMs + 86400000 - 1).toISOString()
+  };
+}
+
 export function resolveDateWindow(range = '30d', customFrom = '', customTo = '') {
   const now = new Date();
   const todayStr = chicagoDate(now);
   const dayMs = 86400000;
 
   if (range === 'today') {
-    return { range, fromDate: todayStr, toDate: todayStr, fromIso: `${todayStr}T00:00:00.000Z`, toIso: `${todayStr}T23:59:59.999Z` };
+    const b = chicagoDayBoundsUtc(todayStr);
+    return { range, fromDate: todayStr, toDate: todayStr, fromIso: b.fromIso, toIso: b.toIso };
   }
   if (range === 'yesterday') {
     const y = chicagoDate(new Date(now.getTime() - dayMs));
-    return { range, fromDate: y, toDate: y, fromIso: `${y}T00:00:00.000Z`, toIso: `${y}T23:59:59.999Z` };
+    const b = chicagoDayBoundsUtc(y);
+    return { range, fromDate: y, toDate: y, fromIso: b.fromIso, toIso: b.toIso };
   }
   if (range === 'custom' && /^\d{4}-\d{2}-\d{2}$/.test(customFrom) && /^\d{4}-\d{2}-\d{2}$/.test(customTo)) {
     return {
       range: 'custom',
       fromDate: customFrom,
       toDate: customTo,
-      fromIso: `${customFrom}T00:00:00.000Z`,
-      toIso: `${customTo}T23:59:59.999Z`
+      fromIso: chicagoDayBoundsUtc(customFrom).fromIso,
+      toIso: chicagoDayBoundsUtc(customTo).toIso
     };
   }
   const days = range === '7d' ? 7 : range === '90d' ? 90 : 30;
@@ -80,8 +97,8 @@ export function resolveDateWindow(range = '30d', customFrom = '', customTo = '')
     range: `${days}d`,
     fromDate: start,
     toDate: todayStr,
-    fromIso: `${start}T00:00:00.000Z`,
-    toIso: `${todayStr}T23:59:59.999Z`
+    fromIso: chicagoDayBoundsUtc(start).fromIso,
+    toIso: chicagoDayBoundsUtc(todayStr).toIso
   };
 }
 
