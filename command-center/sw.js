@@ -1,7 +1,7 @@
 /* command-center/sw.js
  * Service Worker for Zoiris Command Center PWA (offline + 24/7 standalone app shell + background Web Push).
  */
-const CACHE_NAME = 'zoiris-cc-v5';
+const CACHE_NAME = 'zoiris-cc-v6';
 
 function scopeUrl(rel) {
   return new URL(rel, self.registration.scope).href;

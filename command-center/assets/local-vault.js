@@ -41,8 +41,8 @@
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       if (!hadControllerAtBoot) return;
       try {
-        if (!sessionStorage.getItem('zoiris_sw_upgraded_v5')) {
-          sessionStorage.setItem('zoiris_sw_upgraded_v5', '1');
+        if (!sessionStorage.getItem('zoiris_sw_upgraded_v6')) {
+          sessionStorage.setItem('zoiris_sw_upgraded_v6', '1');
           window.location.reload();
         }
       } catch {}
@@ -646,6 +646,11 @@
       try {
         cloudOrigin = (localStorage.getItem('zoiris.cloudApiUrl') || '').trim().replace(/\/+$/, '');
       } catch {}
+      if (!cloudOrigin && window.__ZOIRIS_STATIC_HOST__) {
+        window.__ZOIRIS_LOCAL_VAULT__ = true;
+        startRelayLiveStream();
+        return { local: true, cloudOrigin: '' };
+      }
       const probeUrl = (cloudOrigin || '') + '/api/auth/status';
       try {
         const res = await nativeFetch(probeUrl, { headers: { Accept: 'application/json' }, credentials: cloudOrigin ? 'include' : 'same-origin' });

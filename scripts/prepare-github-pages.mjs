@@ -26,6 +26,8 @@ mkdirSync(join(ownerOut, 'assets'), { recursive: true });
 mkdirSync(join(ownerOut, 'login'), { recursive: true });
 
 cpSync(join(ccDir, 'assets'), join(ownerOut, 'assets'), { recursive: true });
+const lvPath = join(ownerOut, 'assets', 'local-vault.js');
+writeFileSync(lvPath, `window.__ZOIRIS_STATIC_HOST__ = true;\n${readFileSync(lvPath, 'utf8')}`, 'utf8');
 cpSync(join(ccDir, 'sw.js'), join(ownerOut, 'sw.js'));
 cpSync(join(ccDir, 'login.html'), join(ownerOut, 'login', 'index.html'));
 
